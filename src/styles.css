@@ -368,3 +368,19 @@ h4.mini{margin:0 0 10px;font-family:var(--f-text);font-size:12px;letter-spacing:
 .ilist li::before{content:"✓";color:var(--teal);margin-right:10px}
 .cta .ctabtn{font-size:17px;padding:14px 22px;margin-top:6px}
 .cta .ctasub{font-size:14px;opacity:.75;margin-top:12px}
+
+/* Hoja de ruta: plan + recursos */
+.iswide .wrap{max-width:1120px}
+.iswide .wrap>.top,.iswide .tabsbar{max-width:none}
+.hgrid{display:grid;gap:18px;align-items:start}
+@media (min-width:920px){.hgrid{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}.hres{position:sticky;top:76px}}
+.hres h2{font-size:24px;margin-bottom:4px}
+.hres .dlc{grid-template-columns:auto 1fr}.hres .dlc .btn{grid-column:1/-1}
+.dlc .uso{display:block;margin-top:6px;font-size:14px;color:var(--ink)!important}
+.btn.big{font-size:17px;min-height:54px;padding:0 24px}
+.retos{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px;counter-reset:rt}
+.retos li{background:var(--tint);border-radius:12px;padding:12px 14px;margin:0}
+.retos li b{display:block;margin-bottom:4px}
+.retos li span{display:block;padding-left:16px;position:relative;color:var(--ink)}
+.retos li span::before{content:"";position:absolute;left:2px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--teal)}
+.warn{background:#fff6dd;border:1px solid #f0d58a;border-radius:12px;padding:12px 14px;margin-top:12px;color:#5b4500}

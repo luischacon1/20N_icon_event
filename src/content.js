@@ -282,6 +282,6 @@ export const METAS = {
 };
 export const STEPS = [
   ['inicio','Inicio'],['diagnostico','Dónde estás'],['mitos','Mito o realidad'],['casos','Los casos'],
-  ['charlas','Ideas clave'],['plan','Tu plan'],['hoja','Tu hoja de ruta'],['herramientas','Recursos']
+  ['charlas','Ideas clave'],['plan','Tu plan'],['hoja','Tu hoja de ruta'],['herramientas','Herramientas']
 ];
 export const HORAS = ['','1','2','3','5','8','10'];

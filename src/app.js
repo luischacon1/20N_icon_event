@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795181168';
+import {CONFIG,MITOS,CASOS,CHARLAS,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795181438';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -339,10 +339,14 @@ function calLink(){
   return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Repetir el diagnóstico del Cuaderno ICON')}&dates=${f(d)}/${f(e)}&details=${encodeURIComponent(det)}`;
 }
 function rHoja(){
-  const r=diagScores();const weeks=planWeeks();const mc=mapaResult();
+  const D=hojaDoc(),r=D.r;const weeks=D.weeks;const mc=D.mc;
   const back=new Date();back.setDate(back.getDate()+30);
   return `<div class="kick">Paso 6 · 5 minutos</div><h1 class="ph">Tu hoja de ruta</h1>
-  <p class="lead">Todo lo que has ido escribiendo, en una sola hoja. Cópiala en tus notas o hazle una captura.</p>
+  <p class="lead">Tu plan para el próximo mes, hecho con tus respuestas: qué hacer cada semana, tus retos y lo que has aprendido.</p>
+  ${r.done?'':'<p class="warn">Te falta el diagnóstico del paso 1. Sin él, tu hoja de ruta sale incompleta. <button class="linkbtn" data-go="diagnostico">Hacerlo ahora</button></p>'}
+  <div class="row" style="margin:14px 0 18px"><button class="btn big" id="dlHoja">Descargar mi hoja de ruta en PDF</button><button class="btn alt" id="copyAll">Copiar como texto</button></div>
+  <div id="copyHost"></div>
+  <div class="hgrid">
   <div class="sheet" id="sheet">
     <div class="k" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700">${esc(val('nombre')||'Mi hoja de ruta')} · ${esc(CONFIG.eventName)} · ${esc(CONFIG.eventDate)}</div>
     <h2>Quién soy</h2>${kv('Mi frase',bioText(),'diagnostico')}
@@ -353,16 +357,19 @@ function rHoja(){
     ${r.done?`<p><b>${r.lv[1]}</b> · <span class="num">${r.total} sobre 100</span>. Área a trabajar: <b>${AREAS[r.weak].l}</b>.</p>`:'<p class="empty">Haz el diagnóstico del paso 1 para ver tu nivel.</p>'}
     ${mc?`<p>Mi punto de partida se parece al de <b>${CASOS[mc].n}</b>.</p>`:''}
     ${val('meLlevo')?kv('Lo que me llevo',val('meLlevo')):''}
+    ${D.ins.length?`<h2>Lo que he aprendido</h2>${D.ins.map(([k,v])=>`<div class="kv"><div class="k">${k}</div><div class="v">${esc(v)}</div></div>`).join('')}`:''}
     <h2>Mis objetivos a 90 días</h2>${list([1,2,3].map(i=>val('obj'+i)&&(val('obj'+i)+(val('objM'+i)?` (lo mido con: ${val('objM'+i)})`:''))))}
     <h2>Mis próximas cuatro semanas</h2>
     <div class="wk">${weeks.map((w,i)=>`<div class="w4"><div class="h">Semana ${i+1}</div>${w.map((t,j)=>`<label><input type="checkbox" data-plan="${i}-${j}" ${S.plan[i+'-'+j]?'checked':''}><span>${esc(t)}</span></label>`).join('')}</div>`).join('')}</div>
+    <h2>Mis retos del mes</h2>
+    <ol class="retos">${D.retos.map((x,i)=>`<li><b>Semana ${i+1} · ${x.t}</b>${x.d.map(t=>`<span>${esc(t)}</span>`).join('')}</li>`).join('')}</ol>
     ${val('teDirias')?`<h2>Lo que me digo hoy</h2><p style="color:var(--ink)">${esc(val('teDirias'))}</p>`:''}
   </div>
-  <div class="row" style="margin-top:16px"><button class="btn" id="copyAll">Copiar mi hoja de ruta</button></div>
-  <div id="copyHost"></div>
+  <aside class="hres"><h2>Tus recursos</h2><p class="sub">Descárgalos ahora. Los usarás durante el mes.</p>
+    <div class="dls">${['hoja','informe','cal','plan','dosier'].map(k=>dlCard(k,true)).join('')}</div></aside>
+  </div>
 
   <div class="block"><h2>Tus imágenes para stories</h2><p class="sub">Tres imágenes hechas con tus respuestas. Súbelas etiquetando a ${esc(RETO.cuenta)}: es tu primera acción del reto.</p>
-    <div class="dls" style="margin-bottom:14px">${dlCard('informe')}</div>
     <div id="cardHost"><p class="count">Creando tus imágenes…</p></div>
     <div class="row" style="margin-top:6px"><button class="btn alt" id="mkCard">Actualizar las imágenes</button>${Object.keys(S.mito).length>1?'<button class="btn alt" id="nextMito">Otra frase en la de opinión</button>':''}</div>
     <p class="count" style="margin-top:8px">En el móvil, mantén pulsada una imagen para guardarla. En el ordenador, clic derecho y "Guardar imagen".</p></div>
@@ -377,7 +384,47 @@ function rHoja(){
     
     <div class="row"><a class="btn alt" href="${calLink()}" target="_blank" rel="noopener">Ponerme un recordatorio en Google Calendar</a></div></div></div>
 
-  <div class="block"><div class="card tocard"><div><h3 style="font-size:20px;margin-bottom:4px">Llévalo al día a día</h3><p style="margin:0">Plantillas descargables, calendario de contenidos y panel de métricas.</p></div><button class="btn" data-go="herramientas">Ir a recursos →</button></div></div>`;
+  <div class="block"><div class="card tocard"><div><h3 style="font-size:20px;margin-bottom:4px">Llévalo al día a día</h3><p style="margin:0">Calendario de contenidos, panel de métricas y lecturas para seguir aprendiendo.</p></div><button class="btn" data-go="herramientas">Ir a herramientas →</button></div></div>`;
+}
+const INS_AREA={
+  identidad:'Si no se entiende quién eres en diez segundos, el resto de tu contenido trabaja a medias.',
+  contenido:'Un ritmo que aguantes tres meses vale más que una semana perfecta.',
+  datos:'Sin mirar los datos decides a ciegas. Diez minutos a la semana bastan para saber qué repetir.',
+  comunidad:'Cien personas que responden valen más que diez mil que solo miran.',
+  conversion:'El alcance no sirve de mucho si no llevas a la gente a un siguiente paso claro.'
+};
+const RETO_AREA={
+  identidad:'Fija en tu perfil una publicación que te presente.',
+  contenido:'Graba en una sola sesión el contenido de toda una semana.',
+  datos:'Rellena el informe de audiencia los cuatro lunes, sin saltarte ninguno.',
+  comunidad:'Responde a todos los comentarios y mensajes en menos de 24 horas.',
+  conversion:'Deja un único enlace en tu bio y nómbralo en cada pieza.'
+};
+/* Todo lo que sale en la hoja de ruta (pantalla y PDF) se calcula aquí a partir de las respuestas */
+function hojaDoc(){
+  const r=diagScores(),prof=pf()==='profesional',mc=mapaResult(),tag=RETO.cuenta;
+  const strong=[...AKEYS].sort((x,y)=>r.pc[y]-r.pc[x])[0];
+  const temas=[val('pil1'),val('pil2'),val('pil3')].filter(Boolean),n=Math.min(5,Math.max(1,+S.pilFreq||3));
+  const all=mitoItems().flatMap(g=>g.items),ops=all.filter(m=>S.mito[m.id]),pruebas=all.filter(m=>S.prueba[m.id]);
+  const cnt=v=>ops.filter(m=>S.mito[m.id]===v).length;
+  const ins=[];
+  if(r.done){
+    ins.push(['Tu punto fuerte',`${AREAS[strong].l} (${r.pc[strong]} sobre 100). Apóyate en ella para mejorar el resto.`]);
+    ins.push(['Tu prioridad',`${AREAS[r.weak].l} (${r.pc[r.weak]} sobre 100). ${INS_AREA[r.weak]}`]);
+  }
+  if(mc)ins.push(['Tu situación',`Se parece a la de ${CASOS[mc].n}: ${CASOS[mc].tabla.punto.toLowerCase()}. El freno habitual: ${CASOS[mc].tabla.freno.toLowerCase()}.`]);
+  if(ops.length)ins.push(['Lo que piensas',`De ${ops.length} frases de la industria, ves ${cnt('mito')} como mito, ${cnt('realidad')} como realidad y ${cnt('depende')} como «depende». Lo que marcaste «depende» es lo que te toca probar en tu cuenta.`]);
+  if(temas.length)ins.push(['De qué hablas',`${temas.join(', ')}. Con ${n} ${n===1?'publicación':'publicaciones'} a la semana.`]);
+  const no=[val('no1'),val('no2'),val('no3')].filter(Boolean);if(no.length)ins.push(['Tu límite',`No compartes: ${no.join(', ')}. Tenerlo decidido te ahorra dudas cada vez que publicas.`]);
+  if(val('meLlevo'))ins.push(['Lo que te llevas',val('meLlevo')]);
+  const retos=[
+    {t:'Preséntate',d:[`Publica tu presentación en 15 segundos${bioText()?` con tu frase («${bioText()}»)`:''} y etiqueta a ${tag}.`,'Apunta tus cifras de hoy en el informe de audiencia: son tu punto de partida.']},
+    {t:'Coge ritmo',d:[`Publica ${n} ${n===1?'pieza':'piezas'}${temas.length?` sobre tus temas (${temas.join(', ')})`:''}. Etiqueta a ${tag} en todas.`,r.done?RETO_AREA[r.weak]:RETO_AREA.identidad]},
+    {t:'Prueba algo',d:[pruebas[0]?`Haz este experimento: ${pruebas[0].x}`:'Publica el mismo contenido con tres arranques distintos y compara cuál retiene más.','Mira en tu informe qué pieza ha funcionado mejor y repite el formato.']},
+    {t:'Pide un paso',d:[prof?'Publica un caso de trabajo (qué pasaba, qué hiciste, qué resultado tuvo) y pide una conversación a quien le interese.':'Lleva a tu audiencia a una sola acción: guardar una canción, apuntarse a tu lista o venir a verte.',`Cierra tu informe y ten a mano tu alcance total etiquetando a ${tag}: es la cifra del reto.`]}
+  ];
+  return {r,strong,mc,ins,retos,weeks:planWeeks(),objs:[1,2,3].map(i=>val('obj'+i)&&(val('obj'+i)+(val('objM'+i)?` (lo mido con: ${val('objM'+i)})`:''))).filter(Boolean),
+    recursos:['informe','cal','plan','dosier'].map(k=>DL[k])};
 }
 function hojaText(){
   const r=diagScores(),w=planWeeks();
@@ -474,25 +521,53 @@ async function dlCalXlsx(){
   ws.getCell(`A${6+rows.length}`).value='ICON Music Business School · iconmbs.com · @iconmbs';ws.getCell(`A${6+rows.length}`).font={name:'Arial',size:9,color:{argb:'FF5F6664'}};
   dl('ICON-calendario-contenidos.xlsx',new Blob([await wb.xlsx.writeBuffer()],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
 }
+function imgData(src){return new Promise((ok,ko)=>{const i=new Image();i.onload=()=>{const c=document.createElement('canvas');c.width=i.naturalWidth;c.height=i.naturalHeight;c.getContext('2d').drawImage(i,0,0);ok({url:c.toDataURL('image/png'),w:i.naturalWidth,h:i.naturalHeight})};i.onerror=ko;i.src=src})}
 async function dlHojaPdf(){
-  await lib('assets/vendor/jspdf.umd.min.js');const lg=await logoPng();
-  const doc=new jspdf.jsPDF({unit:'mm',format:'a4'}),M=18,W=210-2*M;let y=M;
-  const clean=t=>String(t).replace(/→/g,'>').replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/…/g,'...').replace(/[\u2013\u2014]/g,'-').replace(/[^\x00-\xFF]/g,'');
-  const foot=()=>{doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(95,102,100);doc.text('ICON Music Business School · iconmbs.com · '+RETO.cuenta,M,287)};
-  const need=h=>{if(y+h>278){foot();doc.addPage();y=M}};
-  doc.addImage(lg.url,'PNG',M,y,11*lg.w/lg.h,11);y+=20;
-  const L=hojaText().split('\n');
-  doc.setFont('helvetica','bold');doc.setFontSize(22);doc.setTextColor(20,22,21);doc.text('Mi hoja de ruta',M,y);y+=7;
-  doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(95,102,100);doc.text(clean([val('nombre'),'Marca personal y redes'].filter(Boolean).join(' · ')),M,y);y+=9;
-  L.slice(1).forEach(t=>{t=clean(t).trim();
-    if(!t){y+=2.5;return}
-    const isH=t.length<60&&t===t.toUpperCase()&&/[A-ZÁÉÍÓÚÑ]/.test(t);
-    if(isH){need(14);y+=4;doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(0,117,111);doc.text(t,M,y);doc.setDrawColor(0,160,153);doc.setLineWidth(.5);doc.line(M,y+1.8,M+W,y+1.8);y+=7.5;return}
-    const bul=t.startsWith('- ');if(bul)t=t.slice(2);
-    doc.setFont('helvetica',/^Semana \d/.test(t)?'bold':'normal');doc.setFontSize(10.5);doc.setTextColor(20,22,21);
-    doc.splitTextToSize(t,W-(bul?6:0)).forEach((ln,k)=>{need(6);if(bul&&k===0){doc.setFillColor(0,160,153);doc.circle(M+1.5,y-1.3,.8,'F')}doc.text(ln,M+(bul?6:0),y);y+=5.4});y+=.8});
+  await lib('assets/vendor/jspdf.umd.min.js');
+  const [lgD,lgT]=await Promise.all([imgData(CONFIG.logos.dark),imgData(CONFIG.logos.teal)]);
+  const D=hojaDoc(),r=D.r,doc=new jspdf.jsPDF({unit:'mm',format:'a4'}),M=18,W=210-2*M;let y=0;
+  const T=[0,160,153],TT=[0,117,111],K=[20,22,21],G=[95,102,100],TINT=[225,243,241];
+  const clean=t=>String(t??'').replace(/→/g,'>').replace(/[‘’]/g,"'").replace(/[“”]/g,'"').replace(/…/g,'...').replace(/[–—]/g,'-').replace(/[^\x00-\xFF]/g,'').trim();
+  const font=(b,s,c)=>{doc.setFont('helvetica',b?'bold':'normal');doc.setFontSize(s);doc.setTextColor(...c)};
+  const foot=()=>{font(0,8.5,G);doc.text('ICON Music Business School · iconmbs.com · '+RETO.cuenta,M,288);doc.addImage(lgT.url,'PNG',210-M-7*lgT.w/lgT.h,282,7*lgT.w/lgT.h,7)};
+  const need=h=>{if(y+h>274){foot();doc.addPage();y=20}};
+  const P=(t,o={})=>{const x=M+(o.in||0),w=W-(o.in||0);font(o.b,o.s||10.5,o.c||K);doc.splitTextToSize(clean(t),w).forEach(l=>{need(6);doc.text(l,x,y);y+=(o.s||10.5)*.5});y+=o.gap??1.5};
+  const H=t=>{need(22);y+=7;font(1,15,K);doc.text(clean(t),M,y);doc.setDrawColor(...T);doc.setLineWidth(.7);doc.line(M,y+2.5,M+W,y+2.5);y+=10};
+  const KV=(k,v)=>{need(12);font(1,8.5,TT);doc.text(clean(k).toUpperCase(),M,y);y+=4.6;P(v,{gap:3.5})};
+  const B=(t,o={})=>{const lines=doc.splitTextToSize(clean(t),W-8-(o.in||0));font(0,10.5,K);lines.forEach((l,i)=>{need(6);if(i===0){if(o.box){doc.setDrawColor(...T);doc.setLineWidth(.35);doc.rect(M+(o.in||0),y-3.2,3.4,3.4)}else{doc.setFillColor(...T);doc.circle(M+(o.in||0)+1.4,y-1.3,.8,'F')}}doc.text(l,M+(o.in||0)+6.5,y);y+=5.3});y+=1};
+  // Portada
+  doc.setFillColor(...T);doc.rect(0,0,210,74,'F');doc.addImage(lgD.url,'PNG',M,14,12*lgD.w/lgD.h,12);
+  font(1,9,[3,33,31]);doc.text('MI HOJA DE RUTA · RETO ICON · UN MES',M,42);
+  font(1,26,[255,255,255]);doc.text(clean(val('nombre')||'Tu plan de marca personal').slice(0,36),M,54);
+  font(0,11,[255,255,255]);doc.text(clean([pf()==='profesional'?'Profesional de la industria':'Artista',new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})].join(' · ')),M,63);
+  y=86;
+  if(bioText()){font(1,8.5,TT);doc.text('MI FRASE',M,y);y+=6;P(bioText(),{s:14,b:1,gap:4})}
+  // Punto de partida
+  H('1 · Dónde estás');
+  if(r.done){P(`${r.lv[1]} · ${r.total} sobre 100`,{b:1,s:12,gap:1});P(r.lv[2],{c:G,gap:4});
+    AKEYS.forEach(k=>{need(8);font(k===r.weak,10,K);doc.text(AREAS[k].l,M,y);doc.setFillColor(...TINT);doc.rect(M+38,y-3.2,100,3.6,'F');doc.setFillColor(...(k===r.weak?K:T));doc.rect(M+38,y-3.2,Math.max(1,r.pc[k]),3.6,'F');font(0,9.5,G);doc.text(String(r.pc[k]),M+142,y);if(k===r.weak){font(1,8.5,K);doc.text('PRIORIDAD',M+152,y)}y+=7});y+=2}
+  else P('Haz el diagnóstico del paso 1 para ver aquí tu nivel y tu área prioritaria.',{c:G});
+  // Aprendizajes
+  if(D.ins.length){H('2 · Lo que has aprendido');D.ins.forEach(([k,v])=>KV(k,v))}
+  // Plan
+  H('3 · Qué hacer las próximas cuatro semanas');
+  if(D.objs.length){font(1,8.5,TT);need(8);doc.text('TUS OBJETIVOS A 90 DÍAS',M,y);y+=5.5;D.objs.forEach(o=>B(o));y+=2}
+  D.weeks.forEach((w,i)=>{need(14);P('Semana '+(i+1),{b:1,s:11,gap:1.5});w.forEach(t=>B(t,{box:1}));y+=2});
+  // Retos
+  H('4 · Tus retos del mes');
+  P(`Cuenta el alcance de todo lo que publiques etiquetando a ${RETO.cuenta} hasta el ${RETO.finTexto}. Quien más consiga gana un diagnóstico de carrera y una asesoría 1:1.`,{c:G,gap:4});
+  D.retos.forEach((x,i)=>{need(20);doc.setFillColor(...T);doc.circle(M+3.5,y-1.5,3.5,'F');font(1,10,[255,255,255]);doc.text(String(i+1),M+3.5,y-.2,{align:'center'});font(1,11,K);doc.text(clean(`Semana ${i+1} · ${x.t}`),M+10,y);y+=6.5;x.d.forEach(t=>B(t,{box:1,in:10}));y+=2.5});
+  // Recursos
+  H('5 · Tus recursos y cómo usarlos');
+  D.recursos.forEach(x=>{need(14);P(`${x.t} (${x.f})`,{b:1,gap:.5});P(x.uso,{c:G,gap:3.5})});
+  P('Descárgalos en el paso «Tu hoja de ruta» del cuaderno.',{c:G,s:9.5,gap:4});
+  // Cierre
+  need(38);y+=4;doc.setFillColor(...K);doc.roundedRect(M,y,W,30,3,3,'F');font(1,13,[255,255,255]);doc.text('Esto es la punta del iceberg',M+7,y+10);
+  font(0,10,[211,220,218]);doc.text('Cuéntanos tu caso y vemos cómo llevarlo más lejos.',M+7,y+16.5);
+  font(1,10.5,[63,210,199]);doc.textWithLink(clean(CONFIG.equipo.boton)+' >',M+7,y+24,{url:CONFIG.equipo.url});
   foot();dl('ICON-mi-hoja-de-ruta.pdf',doc.output('blob'));
 }
+
 const csv=rows=>'\ufeff'+rows.map(r=>r.map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
 function calRows(){
   const prof=S.calProf||pf(),obj=S.calObj||(prof==='profesional'?'profesional':'cancion'),n=+S.calNum||Math.min(5,Math.max(1,+S.pilFreq||3));
@@ -505,14 +580,16 @@ function calRows(){
 }
 const DL={
   plan:{t:'Plan de lanzamiento de un single',f:'XLSX',href:'assets/descargas/plan-lanzamiento-single.xlsx',name:'ICON-plan-lanzamiento-single.xlsx',
-    d:()=>pf()==='profesional'?'Lleva el control del lanzamiento de un artista: 35 tareas con fechas, responsables y contactos.':'Tu lanzamiento semana a semana: 35 tareas con fechas, responsables y contactos.'},
+    d:()=>pf()==='profesional'?'Lleva el control del lanzamiento de un artista: 35 tareas con fechas, responsables y contactos.':'Tu lanzamiento semana a semana: 35 tareas con fechas, responsables y contactos.',
+    uso:'Cuando tengas fecha de salida: ponla en la hoja «Plan» y las fechas límite se calculan solas.'},
   informe:{t:'Informe semanal de audiencia',f:'XLSX',href:'assets/descargas/informe-semanal-audiencia.xlsx',name:'ICON-informe-semanal-audiencia.xlsx',
-    d:()=>`Seguidores, oyentes y alcance semana a semana. Suma solo el alcance de lo que publiques etiquetando a ${RETO.cuenta}.`},
-  dosier:{t:'Plantilla de dosier en una página',d:()=>'Lo que un sello, un programador o un artista necesita saber de ti, en una hoja.',f:'PDF',href:'assets/descargas/plantilla-dosier.pdf',name:'ICON-plantilla-dosier.pdf'},
-  cal:{t:'Calendario de contenidos · 4 semanas',d:()=>'Ideas, ganchos y fechas según tu perfil.',f:'XLSX',id:'dlCal'},
-  hoja:{t:'Tu hoja de ruta',d:()=>'Tu plan con lo que has escrito en el cuaderno.',f:'PDF',id:'dlHoja'}
+    d:()=>`Seguidores, oyentes y alcance semana a semana. Suma solo el alcance de lo que publiques etiquetando a ${RETO.cuenta}.`,
+    uso:'Cada lunes, diez minutos: apunta tus cifras y cada pieza publicada. Es tu marcador del reto.'},
+  dosier:{t:'Plantilla de dosier en una página',d:()=>'Lo que un sello, un programador o un artista necesita saber de ti, en una hoja.',f:'PDF',href:'assets/descargas/plantilla-dosier.pdf',name:'ICON-plantilla-dosier.pdf',uso:'Antes de escribir a un sello, una sala o un medio: rellénala y pásala a limpio con tu imagen.'},
+  cal:{t:'Calendario de contenidos · 4 semanas',d:()=>'Ideas, ganchos y fechas según tu perfil.',f:'XLSX',id:'dlCal',uso:'Cada domingo: elige las piezas de la semana y marca «Hecho» según publiques.'},
+  hoja:{t:'Tu hoja de ruta',d:()=>'Tu plan del mes, tus retos y lo que has aprendido.',f:'PDF',id:'dlHoja2',uso:'Hoy: léela entera y pon la primera tarea en tu agenda.'}
 };
-const dlCard=k=>{const x=DL[k];return `<div class="dlc"><span class="dlf">${x.f}</span><div><b>${x.t}</b><span>${x.d()}</span></div>${x.href?`<a class="btn sm" href="${x.href}" download="${x.name}">Descargar</a>`:`<button class="btn sm" id="${x.id}">Descargar</button>`}</div>`};
+const dlCard=(k,uso)=>{const x=DL[k];return `<div class="dlc"><span class="dlf">${x.f}</span><div><b>${x.t}</b><span>${x.d()}</span>${uso&&x.uso?`<span class="uso"><b>Cómo usarlo.</b> ${x.uso}</span>`:''}</div>${x.href?`<a class="btn sm" href="${x.href}" download="${x.name}">Descargar</a>`:`<button class="btn sm" id="${x.id}">Descargar</button>`}</div>`};
 
 /* ---------- Herramientas: calendario, métricas y recursos ---------- */
 const MET_DEF={
@@ -533,10 +610,10 @@ const numIn=x=>Number(String(x).replace(/[^\d.,-]/g,'').replace(/\./g,'').replac
 const fmtR=(x,pct)=>x==null||!isFinite(x)?'–':pct?(x*100).toLocaleString('es-ES',{maximumFractionDigits:1})+' %':x.toLocaleString('es-ES',{maximumFractionDigits:2});
 
 function rHerramientas(){
-  if(!S.toolTab||!S.vistoDesc){S.toolTab='descargas';S.vistoDesc=1}
-  const T=[['descargas','Descargables'],['calendario','Calendario de contenidos'],['metricas','Panel de métricas'],['recursos','Recursos para aprender']];
-  return `<div class="kick">Paso 7 · Para usar cuando quieras</div><h1 class="ph">Recursos</h1>
-  <p class="lead">Plantillas para descargar y herramientas para aplicar tu plan en el día a día.</p>
+  if(!S.toolTab||S.toolTab==='descargas')S.toolTab='calendario';
+  const T=[['calendario','Calendario de contenidos'],['metricas','Panel de métricas'],['recursos','Recursos para aprender']];
+  return `<div class="kick">Paso 7 · Para usar cuando quieras</div><h1 class="ph">Herramientas</h1>
+  <p class="lead">Para aplicar tu plan en el día a día. Las plantillas descargables están en tu hoja de ruta.</p>
   <div class="ctabs" role="tablist">${T.map(([k,l])=>`<button class="ctab" role="tab" data-tool="${k}" aria-selected="${S.toolTab===k}">${l}</button>`).join('')}</div>
   <div id="toolPanel">${rTool(S.toolTab)}</div>
   <section class="cta"><img src="${CONFIG.logos.dark}" alt="ICON Music Business School"><h2>Esto es la punta del iceberg</h2>
@@ -545,7 +622,7 @@ function rHerramientas(){
     <p class="ctasub">O escríbenos a ${esc(CONFIG.equipo.email)}</p></section>`;
 }
 function rTool(k){
-  if(k==='descargas')return `<div class="dls">${['informe','plan','dosier','cal','hoja'].map(dlCard).join('')}</div>`;
+  if(k==='descargas')return `<div class="dls">${['hoja','informe','cal','plan','dosier'].map(k=>dlCard(k,true)).join('')}</div>`;
   if(k==='calendario'){
     const d=new Date();const dow=(d.getDay()+6)%7;d.setDate(d.getDate()+(dow===0?0:7-dow));
     const iso=d.toISOString().slice(0,10);
@@ -676,7 +753,7 @@ function softCta(id){
 function go(id,push){
   if(!R[id])id='inicio';cur=id;S.visto[id]=true;save();
   const i=STEPS.findIndex(s=>s[0]===id),prev=STEPS[i-1],next=STEPS[i+1];
-  document.body.classList.toggle('isintro',id==='inicio');
+  document.body.classList.toggle('isintro',id==='inicio');document.body.classList.toggle('iswide',id==='hoja');
   $('#main').innerHTML=id==='inicio'?R[id]():R[id]()+softCta(id)+`<div class="nav">${prev?`<button class="btn alt" data-go="${prev[0]}">← ${prev[1]}</button>`:'<span></span>'}${next?`<button class="btn" data-go="${next[0]}">${i===0?'Empezar':next[1]} →</button>`:''}</div>`;
   rSteps(id);
   if(id==='diagnostico'){rDiagRes();updBio();updPil()}
@@ -737,7 +814,7 @@ document.addEventListener('click',async e=>{
   if(b.id==='maddr'){S.met[S.metTab].push(JSON.parse(JSON.stringify(MET_DEF[S.metTab].blank)));save();buildMet();return}
   if(b.id==='mclr'){S.met[S.metTab]=[JSON.parse(JSON.stringify(MET_DEF[S.metTab].blank))];save();buildMet();return}
   if(b.id==='cgen'){genCal();return}
-  if(b.id==='dlCal'||b.id==='dlHoja'){const t=b.textContent;b.disabled=true;b.textContent='Preparando…';(b.id==='dlCal'?dlCalXlsx():dlHojaPdf()).catch(()=>{b.textContent='No se pudo crear';}).then(()=>{b.disabled=false;if(b.textContent==='Preparando…')b.textContent=t});return}
+  if(b.id==='dlCal'||b.id==='dlHoja'||b.id==='dlHoja2'){const t=b.textContent;b.disabled=true;b.textContent='Preparando…';(b.id==='dlCal'?dlCalXlsx():dlHojaPdf()).catch(()=>{b.textContent='No se pudo crear';}).then(()=>{b.disabled=false;if(b.textContent==='Preparando…')b.textContent=t});return}
   if(b.id==='ccopy'){try{await navigator.clipboard.writeText(S.calText);b.textContent='Copiado';setTimeout(()=>b.textContent='Copiar calendario',1800)}catch(err){const h=$('#cph');let t=h.querySelector('textarea');if(!t){t=document.createElement('textarea');t.className='copyfb';t.readOnly=true;h.after(t)}t.value=S.calText;t.focus();t.select()}return}
   if(b.id==='copyAll'){const t=hojaText();try{await navigator.clipboard.writeText(t);b.textContent='Copiada';setTimeout(()=>b.textContent='Copiar mi hoja de ruta',1800)}catch(err){const h=$('#copyHost');h.innerHTML='<p class="count" style="margin-top:10px">Selecciona el texto y cópialo:</p><textarea class="copyfb" readonly></textarea>';const ta=h.querySelector('textarea');ta.value=t;ta.focus();ta.select()}return}
   if(b.id==='mkCard'){b.disabled=true;await showCard();b.disabled=false;return}
