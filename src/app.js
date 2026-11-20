@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795217393';
+import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795217488';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -23,6 +23,11 @@ const exHead=(n,t,how,hoja)=>`<div class="exn">Ejercicio ${n}${hoja?'<span class
 const vLabel={mito:'Mito',realidad:'Realidad',depende:'Depende'};
 const pf=()=>S.perfil||(S.mapa[0]===2?'profesional':'artista');
 const qText=q=>q.t||(pf()==='profesional'?q.p:q.a);
+
+/* ---------- Ponentes ---------- */
+const rolDe=n=>(PONENTES[n]||{}).rol||'';
+const quien=n=>`<b>${esc(n)}</b>${rolDe(n)?`<span class="rol">${esc(rolDe(n))}</span>`:''}`;
+const ponentes=(titulo,ns)=>`<div class="pons"><div class="k">${titulo}</div>${ns.map(n=>`<div class="pon"><b>${esc(n)}</b><span class="rol">${esc(rolDe(n))}</span><p>${esc(PONENTES[n].bio)}</p></div>`).join('')}</div>`;
 
 /* ---------- Tiempo ---------- */
 const MIN={diagnostico:10,mitos:10,casos:15,charlas:10,plan:10,hoja:5};
@@ -120,6 +125,7 @@ function rMitos(){
   const all=mitoItems().flatMap(g=>g.items);
   return `<div class="kick">Paso 2 · 10 minutos</div><h1 class="ph">Mito o realidad</h1>
   <p class="lead">Las frases que se debatieron en el evento. Decide tú primero: al elegir verás qué dijo cada ponente y una prueba para hacer en tu cuenta.</p>
+  ${ponentes('Quién las debatió',['Ana Pavlyuk','César Manzanera','Álvaro Rebollo'])}
   <p class="count" id="mitoCount"></p>
   ${all.map((m,i)=>`<div class="card myth" id="c-${m.id}"><div class="num">${i+1} de ${all.length}</div><button class="t tbtn" data-open="${m.id}" aria-expanded="${!!S.mito[m.id]}">${m.t}</button>
     <div class="seg" role="group" aria-label="Tu opinión">${['mito','realidad','depende'].map(v=>`<button data-mito="${m.id}" data-v="${v}" aria-pressed="${S.mito[m.id]===v}">${vLabel[v]}</button>`).join('')}</div>
@@ -128,7 +134,7 @@ function rMitos(){
     ${ta('mitoCambio','La frase que más me ha hecho pensar es… porque…',3)}</div></div>`;
 }
 function rMitoReveal(m){
-  const said=m.dijeron.length?`<div class="said">${m.dijeron.map(d=>`<div class="q2"><p>${esc(d.f)}</p><div class="who">${esc(d.q)}<span class="tag">${vLabel[d.v]||''}</span></div></div>`).join('')}</div>`:pend('lo que dijo cada ponente sobre esta frase.');
+  const said=m.dijeron.length?`<div class="said">${m.dijeron.map(d=>`<div class="q2"><p>${esc(d.f)}</p><div class="who">${quien(d.q)}<span class="tag">${vLabel[d.v]||''}</span></div></div>`).join('')}</div>`:pend('lo que dijo cada ponente sobre esta frase.');
   return `<div><h4>Por qué se dice tanto</h4><p>${m.w}</p></div>
     ${(m.dijeron.length||D)?`<div><h4>Lo que dijeron los ponentes</h4>${said}</div>`:''}
     <div><h4>Ponlo a prueba en tu cuenta</h4><p>${m.x}</p></div>
@@ -152,6 +158,7 @@ function rCasos(){
   return `<div class="kick">Paso 3 · 15 minutos</div><h1 class="ph">Los tres casos</h1>
   <p class="lead">Tres casos que María Muñoz, Ro Sánchez y Jorge Platero resolvieron en directo. Mira a cuál te pareces, ponte en su lugar y escribe tu propio caso.</p>
   <img class="cimg solo" src="${CONFIG.fotos.mesa}" alt="La mesa de debate del evento" loading="lazy">
+  ${ponentes('Quién los resolvió',['María Muñoz','Ro Sánchez','Jorge Platero'])}
   <div class="card ex">${exHead(5,'¿A quién te pareces?','Cuatro preguntas para ver qué caso se acerca más a tu punto de partida.')}
     ${MAPA.map((q,i)=>`<div class="q"><p><b>${q.q}</b></p><div class="mx">${q.o.map((o,j)=>`<button class="opt ${S.mapa[i]===j?'on':''}" data-mapa="${i}" data-v="${j}"><span class="o">${'ABC'[j]}</span><span>${o}</span></button>`).join('')}</div></div>`).join('')}
     <div id="mapaRes"></div></div>
@@ -181,7 +188,7 @@ function rMapaRes(){
 }
 function rCaso(k){
   const c=CASOS[k];
-  const props=c.propuestas.length?`<div class="said">${c.propuestas.map(p=>`<div class="q2"><p>${esc(p.f)}</p><div class="who">${esc(p.q)}</div></div>`).join('')}</div>`:pend(`la propuesta de cada ponente para ${c.n}.`);
+  const props=c.propuestas.length?`<div class="said">${c.propuestas.map(p=>`<div class="q2"><p>${esc(p.f)}</p><div class="who">${quien(p.q)}</div></div>`).join('')}</div>`:pend(`la propuesta de cada ponente para ${c.n}.`);
   let exer='';
   if(k==='lucia'){
     exer=`<div class="card ex" id="luciaCard">${exHead(6,'Reparte tú los 1.000 €','No hay reparto correcto. Muévelos como lo harías tú y responde a las preguntas que te haría un profesional.')}
@@ -247,10 +254,10 @@ function rCharlas(){
   const list=CHARLAS.length?CHARLAS:(D?[1,2,3].map(n=>({q:'Charla '+n,t:'Título de la charla',ideas:[],p:''})):[]);
   return `<div class="kick">Paso 4 · 10 minutos</div><h1 class="ph">Ideas clave</h1>
   <p class="lead">Las tres charlas del evento, resumidas, con una pregunta para llevar cada una a tu caso.</p>
-  ${list.map((c,i)=>`<div class="card ex">${c.img?`<img class="cimg" src="${c.img}" alt="${esc(c.q)} durante su charla" loading="lazy">`:''}<div class="exn">${esc(c.q)}</div><h3>${esc(c.t)}</h3>
+  ${list.map((c,i)=>`<div class="card ex">${c.img?`<img class="cimg" src="${c.img}" alt="${esc(c.q)} durante su charla" loading="lazy">`:''}<div class="exn">${esc(c.q)}</div><h3>${esc(c.t)}</h3>${PONENTES[c.q.split(' · ')[0]]?`<p class="how" style="margin:2px 0 10px">${esc(PONENTES[c.q.split(' · ')[0]].bio)}</p>`:''}
     ${c.ideas.length?`<ul>${c.ideas.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:pend('tres ideas clave de la charla y una pregunta para el alumno.')}
     ${c.p?`<div style="margin-top:12px"><label class="l" for="f-charla${i}">${esc(c.p)}</label>${ta('charla'+i,'Tu respuesta',2)}</div>`:''}</div>`).join('')}
-  <div class="block"><h2>Un consejo de cada ponente</h2><div class="said">${CONSEJOS.map(x=>`<div class="q2"><p>${esc(x.f)}</p><div class="who">${esc(x.q)}</div></div>`).join('')}</div></div>
+  <div class="block"><h2>Un consejo de cada ponente</h2><div class="said">${CONSEJOS.map(x=>`<div class="q2"><p>${esc(x.f)}</p><div class="who">${quien(x.q)}</div></div>`).join('')}</div></div>
   <div class="block gap">
   <div class="card ex">${exHead(10,'Tus referentes','Tres perfiles que lo hacen bien. No para copiarlos enteros: para tomar una sola cosa de cada uno.',true)}
     ${[1,2,3].map(i=>`<div class="two" style="margin-bottom:6px"><div>${inp('ref'+i,'Referente '+i)}</div><div>${inp('refQ'+i,'Le tomaría…')}</div></div>`).join('')}</div>
@@ -565,7 +572,7 @@ async function dlHojaPdf(){
   D.recursos.forEach(x=>{need(14);P(`${x.t} (${x.f})`,{b:1,gap:.5});P(x.uso,{c:G,gap:3.5})});
   P('Descárgalos en el paso «Tu hoja de ruta» del cuaderno.',{c:G,s:9.5,gap:4});
   // Consejos
-  H('6 · Lo que dijeron los ponentes');D.consejos.forEach(x=>{need(14);P(x.f,{gap:.8});P(x.q,{c:TT,b:1,s:9,gap:4})});
+  H('6 · Lo que dijeron los ponentes');D.consejos.forEach(x=>{need(14);P(x.f,{gap:.8});P(x.q+(rolDe(x.q)?' · '+rolDe(x.q):''),{c:TT,b:1,s:9,gap:4})});
   // Cierre
   need(38);y+=4;doc.setFillColor(...K);doc.roundedRect(M,y,W,30,3,3,'F');font(1,13,[255,255,255]);doc.text('Esto es la punta del iceberg',M+7,y+10);
   font(0,10,[211,220,218]);doc.text('Cuéntanos tu caso y vemos cómo llevarlo más lejos.',M+7,y+16.5);

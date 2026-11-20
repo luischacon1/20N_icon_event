@@ -47,6 +47,16 @@ export const CONFIG = {
    MITO O REALIDAD · las frases del debate (máximo 10; si en el evento se debaten otras, cámbialas aquí)
    dijeron: [{q:'Nombre del ponente', v:'mito'|'realidad'|'depende', f:'Frase o idea que dijo'}]
    ============================================================ */
+/* Quién es cada ponente. Se muestra allí donde se cita a alguien, para quien no estuvo en el evento. */
+export const PONENTES = {
+  'Ana Pavlyuk':{rol:'Estratega de contenido y crecimiento en redes', bio:'Hace crecer cuentas sin publicidad: millones de visualizaciones orgánicas para artistas, sellos y marcas.'},
+  'César Manzanera':{rol:'Fundador de Witis', bio:'Dirige Witis, agencia de comunicación especializada en música, tras más de diez años en agencias.'},
+  'Álvaro Rebollo':{rol:'Fundador de Los Amigos Digitales', bio:'Más de 15 años al frente del marketing digital y el streaming en BMG y Sony Music. Hoy dirige su propia agencia digital para música.'},
+  'María Muñoz':{rol:'Digital Marketing Manager en The Orchard', bio:'Ha trabajado en más de 150 lanzamientos de artistas y sellos.'},
+  'Ro Sánchez':{rol:'Brand & Product Manager en BASE85', bio:'Empezó como periodista musical y hoy desarrolla la carrera de artistas desde el management.'},
+  'Jorge Platero':{rol:'Comunicación y contenido digital en Movistar Arena', bio:'Forma parte del equipo de El Podcast del Movistar Arena, por donde pasan los artistas que actúan en el recinto.'}
+};
+
 /* Las frases que se debatieron en el evento. «dijeron» resume en nuestras palabras la postura de cada ponente. */
 export const MITOS = [
  {g:'', items:[
@@ -156,7 +166,7 @@ export const CASOS = {
    {q:'Ponente', t:'Título de la charla', ideas:['Idea 1','Idea 2','Idea 3'], p:'Pregunta para el alumno'}
    ============================================================ */
 export const CHARLAS = [
-  {img:'assets/fotos/ana.jpg', q:'Ana Pavlyuk · Estratega de contenido y crecimiento', t:'El talento no es suficiente',
+  {img:'assets/fotos/ana.jpg', q:'Ana Pavlyuk · Estratega de contenido y crecimiento en redes', t:'El talento no es suficiente',
    ideas:['La música también es un negocio. El talento te hace bueno, pero no garantiza que te conozcan.',
      'No tienes 80.000 balas: cuida cada vídeo como cuidas cada canción. Mejor dos buenos a la semana que ocho flojos.',
      'Tu perfil no es un catálogo. Nadie entra en redes a que le vendan algo: que sea un sitio donde quedarse.',
@@ -165,7 +175,7 @@ export const CHARLAS = [
      'Una canción no caduca a los 15 días: puedes seguir empujándola meses después.',
      'Esto vale también para managers, A&R y productores.'],
    p:'¿Cuál de estos errores estás cometiendo ahora y qué vas a cambiar esta semana?'},
-  {img:'assets/fotos/alvaro.jpg', q:'Álvaro Rebollo · Los Amigos Digitales', t:'Qué mirar de verdad en los datos',
+  {img:'assets/fotos/alvaro.jpg', q:'Álvaro Rebollo · Fundador de Los Amigos Digitales', t:'Qué mirar de verdad en los datos',
    ideas:['Las redes no son tuyas: cambian las reglas, o desaparecen, de un día para otro.',
      'En redes, mira comentarios y compartidos antes que seguidores y me gusta.',
      'En YouTube, la retención: ¿se quedan hasta el final?',
@@ -174,7 +184,7 @@ export const CHARLAS = [
      'Pagar por entrar en playlists va contra las normas de Spotify y te puede penalizar.',
      'Está donde esté tu audiencia, no en todas las redes.'],
    p:'¿Qué dato mirabas antes que no te ayuda a decidir, y cuál vas a mirar ahora?'},
-  {img:'assets/fotos/maria.jpg', q:'María Muñoz · The Orchard', t:'De seguidores a comunidad',
+  {img:'assets/fotos/maria.jpg', q:'María Muñoz · Digital Marketing Manager en The Orchard', t:'De seguidores a comunidad',
    ideas:['Tener oyentes no es tener fans: de miles de seguidores, muy pocos compran una entrada.',
      'Tu proyecto no es un centro comercial; es un club al que apetece pertenecer.',
      'La pregunta clave: ¿pasa algo entre tus fans cuando tú no publicas?',

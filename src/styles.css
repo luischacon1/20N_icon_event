@@ -409,3 +409,12 @@ h4.mini{margin:0 0 10px;font-family:var(--f-text);font-size:12px;letter-spacing:
 
 .carta.puente{min-height:60dvh;justify-content:center;padding-top:10px}
 .carta.puente .kick{margin-bottom:18px}
+
+/* Presentación de ponentes */
+.pons{display:grid;gap:8px;margin:14px 0 6px}
+.pons .k{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.pon{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.pon b{display:block}.pon .rol{display:block;font-size:13px;color:var(--teal-text);font-weight:700}
+.pon p{margin:4px 0 0;font-size:15px;color:var(--muted)}
+@media (min-width:700px){.pons{grid-template-columns:repeat(3,1fr)}.pons .k{grid-column:1/-1}}
+.who b{font-weight:700}.who .rol{display:block;font-size:12.5px;color:var(--muted);font-weight:500}
