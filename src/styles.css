@@ -425,3 +425,7 @@ h4.mini{margin:0 0 10px;font-family:var(--f-text);font-size:12px;letter-spacing:
 .guia p.on{opacity:1;transform:none}
 .guia b{color:var(--teal-text)}
 .guia.gbig{margin:6px 0 4px;border:0;padding:0}.guia.gbig p{font-size:clamp(19px,4.6vw,24px);margin-bottom:8px;max-width:28em}
+
+.plink{font-weight:700;white-space:nowrap}
+.soft .plink{display:inline;background:none;padding:0;color:var(--teal-text);text-decoration:underline}
+.cta p .plink{display:inline;background:none;padding:0;color:var(--on-teal);text-decoration:underline;border-radius:0}

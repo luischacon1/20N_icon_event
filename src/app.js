@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795217746';
+import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795218223';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -31,7 +31,7 @@ const ponentes=(titulo,ns)=>`<div class="pons"><div class="k">${titulo}</div>${n
 
 /* ---------- Acompañamiento: frases que aparecen antes de cada ejercicio ---------- */
 const GUIA={
-  1:['Ya tienes tu diagnóstico.','Ahora, lo más básico y lo más difícil: decir quién eres en una frase.','Ana Pavlyuk lo planteó así: ¿por qué alguien debería quedarse a escucharte?'],
+  1:['Ya tienes tu diagnóstico.','Ahora, lo más básico y lo más difícil: decir quién eres en una frase.','Anna Pavlyuk lo planteó así: ¿por qué alguien debería quedarse a escucharte?'],
   2:['Bien. Ya sabes cómo presentarte.','Ahora decide qué enseñas y qué no. Nadie tiene que hacer nada que no quiera.'],
   3:['Lo último de este paso.','Sé realista con tu tiempo: mejor dos piezas buenas a la semana que ocho flojas.'],
   4:['Ya has votado.','Ahora quédate con una sola: la frase que más te ha hecho dudar.'],
@@ -145,7 +145,7 @@ function rDiagRes(){
     <div class="bars">${AKEYS.map(a=>`<div class="bar ${a===r.weak?'low':''}"><b>${AREAS[a].l}</b><div class="tr"><div class="fi" style="width:${r.pc[a]}%"></div></div><span class="num">${r.pc[a]}%</span></div>`).join('')}</div>
     ${prev?`<div class="callout"><p><b>El ${fmtD(prev.d)} sacaste ${prev.t}.</b> ${r.total>prev.t?`Has subido ${r.total-prev.t} puntos.`:r.total<prev.t?'Has bajado un poco: mira qué área ha cambiado.':'Estás igual que entonces.'}</p></div>`:''}
     <div class="callout"><p><b>Tu área para el próximo mes: ${AREAS[r.weak].l}.</b> Es la que menos puntúa. Tu plan de cuatro semanas se centrará en ella.</p></div>
-    <aside class="soft" style="margin-top:14px"><div><b>${AREAS[r.weak].l} se entrena</b><span>Este cuaderno es la punta del iceberg. En el ${esc(CONFIG.courseName)} aprendes a ${AREA_ICON[r.weak]} con profesionales en activo.</span></div><a href="${esc(iconUrl(CONFIG.ctaUrl,'diagnostico-'+r.weak))}" target="_blank" rel="noopener">Ver el curso →</a></aside>
+    <aside class="soft" style="margin-top:14px"><div><b>${AREAS[r.weak].l} se entrena</b><span>Este cuaderno es la punta del iceberg. En ICON aprendes a ${AREA_ICON[r.weak]} con profesionales en activo. ${profesLink('diagnostico-'+r.weak)}</span></div><a href="${esc(CONFIG.equipo.url)}" target="_blank" rel="noopener">Hablar con el equipo →</a></aside>
     <div style="margin-top:16px"><label class="l" for="f-diagSorpresa">¿Qué te ha sorprendido de tu resultado?</label>${ta('diagSorpresa','Escríbelo aquí',2)}</div>
     <div class="row" style="margin-top:12px"><button class="btn alt" id="redo">Volver a hacer el diagnóstico</button></div>
   </div></div>`;
@@ -157,7 +157,7 @@ function rMitos(){
   const all=mitoItems().flatMap(g=>g.items);
   return `<div class="kick">Paso 2 · 10 minutos</div><h1 class="ph">Mito o realidad</h1>
   <p class="lead">Las frases que se debatieron en el evento. Decide tú primero: al elegir verás qué dijo cada ponente y una prueba para hacer en tu cuenta.</p>
-  ${ponentes('Quién las debatió',['Ana Pavlyuk','César Manzanera','Álvaro Rebollo'])}
+  ${ponentes('Quién las debatió',['Anna Pavlyuk','César Manzanera','Álvaro Rebollo'])}
   <p class="count" id="mitoCount"></p>
   ${all.map((m,i)=>`<div class="card myth" id="c-${m.id}"><div class="num">${i+1} de ${all.length}</div><button class="t tbtn" data-open="${m.id}" aria-expanded="${!!S.mito[m.id]}">${m.t}</button>
     <div class="seg" role="group" aria-label="Tu opinión">${['mito','realidad','depende'].map(v=>`<button data-mito="${m.id}" data-v="${v}" aria-pressed="${S.mito[m.id]===v}">${vLabel[v]}</button>`).join('')}</div>
@@ -428,8 +428,8 @@ function rHoja(){
   <div class="block"><div class="card tocard"><div><h3 style="font-size:20px;margin-bottom:4px">Llévalo al día a día</h3><p style="margin:0">Calendario de contenidos, panel de métricas y lecturas para seguir aprendiendo.</p></div><button class="btn" data-go="herramientas">Ir a herramientas →</button></div></div>`;
 }
 const INS_AREA={
-  identidad:'Ana Pavlyuk lo resumió en tres preguntas: qué cuentas, a quién quieres llegar y por qué alguien debería quedarse.',
-  contenido:'Como dijo Ana Pavlyuk, no tienes 80.000 balas: dos piezas buenas a la semana valen más que ocho flojas.',
+  identidad:'Anna Pavlyuk lo resumió en tres preguntas: qué cuentas, a quién quieres llegar y por qué alguien debería quedarse.',
+  contenido:'Como dijo Anna Pavlyuk, no tienes 80.000 balas: dos piezas buenas a la semana valen más que ocho flojas.',
   datos:'Lo que recomendó Álvaro Rebollo: mira comentarios, compartidos, guardados y retención antes que seguidores y visualizaciones.',
   comunidad:'La pregunta de María Muñoz: ¿pasa algo entre tus fans cuando tú no publicas?',
   conversion:'Como explicó María Muñoz, tus seguidores son de la plataforma hasta que tienes su contacto.'
@@ -663,7 +663,7 @@ function rHerramientas(){
   <div class="ctabs" role="tablist">${T.map(([k,l])=>`<button class="ctab" role="tab" data-tool="${k}" aria-selected="${S.toolTab===k}">${l}</button>`).join('')}</div>
   <div id="toolPanel">${rTool(S.toolTab)}</div>
   <section class="cta"><img src="${CONFIG.logos.dark}" alt="ICON Music Business School"><h2>Esto es la punta del iceberg</h2>
-    <p>Lo que has trabajado aquí cabe en una tarde. Cuéntanos tu caso y vemos cómo llevarlo más lejos con más de 80 profesionales en activo de la industria.</p>
+    <p>Lo que has trabajado aquí cabe en una tarde. Cuéntanos tu caso y vemos cómo llevarlo más lejos con más de 80 profesionales en activo de la industria. <a class="plink" href="${esc(iconUrl(CONFIG.profesoresUrl,'final'))}" target="_blank" rel="noopener">Conoce a los profesores</a></p>
     <a class="ctabtn" href="${esc(CONFIG.equipo.url)}" target="_blank" rel="noopener">${esc(CONFIG.equipo.boton)} →</a>
     <p class="ctasub">O escríbenos a ${esc(CONFIG.equipo.email)}</p></section>`;
 }
@@ -761,7 +761,7 @@ const INTRO=()=>[
   `Luego te toca a ti: sacar tu contenido a la calle y etiquetar a <a href="${esc(RETO.cuentaUrl)}" target="_blank" rel="noopener">${esc(RETO.cuenta)}</a>.`,
   'Quien más alcance consiga se lleva una <b>sesión 1:1</b>: analizamos su caso con el equipo de ICON y otros profesionales de la industria.',
   `Tienes hasta el ${esc(RETO.finTexto)}. Y unos ${TOTAL_MIN} minutos por delante.`,
-  'Ah, y esto es solo la punta del iceberg de lo que hacemos en ICON.'
+  `Ah, y esto es solo la punta del iceberg de lo que hacemos en ICON, con <a href="${esc(iconUrl(CONFIG.profesoresUrl,'intro'))}" target="_blank" rel="noopener">más de 80 profesores en activo</a>.`
 ];
 let introI=S.perfil?1:0,introT=null;
 function introPlay(seen,onSeen){
@@ -847,15 +847,15 @@ function rSteps(cur){
 }
 let cur='inicio';
 const SOFT={
-  casos:['¿Lo tuyo es crear música?','En ICON también te formas en producción y composición con nivel profesional.','p'],
-  charlas:['Tres charlas de un programa entero','En ICON das clase todo el curso con más de 80 profesionales en activo de la industria.','m'],
-  plan:['Un plan funciona mejor con alguien al lado','En ICON lo trabajas con mentores que lo hacen cada día con artistas reales.','m'],
-  hoja:['Ya tienes tu hoja de ruta','Si quieres ir más lejos y más rápido, cuéntanos tu caso.','e']
+  casos:['¿Quieres resolver tu caso con alguien al lado?','Cuéntanoslo y vemos cómo podemos ayudarte desde la escuela.'],
+  charlas:['Tres charlas de un programa entero','En ICON das clase todo el curso con más de 80 profesionales en activo de la industria.',1],
+  plan:['Un plan funciona mejor con alguien al lado','En ICON lo trabajas con profesionales que lo hacen cada día con artistas reales.',1],
+  hoja:['Ya tienes tu hoja de ruta','Si quieres ir más lejos y más rápido, cuéntanos tu caso.']
 };
+const profesLink=paso=>`<a class="plink" href="${esc(iconUrl(CONFIG.profesoresUrl,paso))}" target="_blank" rel="noopener">Conoce a los profesores</a>`;
 function softCta(id){
   const c=SOFT[id];if(!c)return '';
-  const url=c[2]==='e'?CONFIG.equipo.url:iconUrl(c[2]==='p'?CONFIG.ctaUrl2:CONFIG.ctaUrl,id);
-  return `<aside class="soft"><div><b>${c[0]}</b><span>${c[1]}</span></div><a href="${esc(url)}" target="_blank" rel="noopener">${c[2]==='e'?'Hablar con el equipo':'Ver el curso'} →</a></aside>`;
+  return `<aside class="soft"><div><b>${c[0]}</b><span>${c[1]}${c[2]?' '+profesLink(id):''}</span></div><a href="${esc(CONFIG.equipo.url)}" target="_blank" rel="noopener">Hablar con el equipo →</a></aside>`;
 }
 function go(id,push){
   if(!R[id])id='inicio';clearTimeout(introT);cur=id;S.visto[id]=true;save();

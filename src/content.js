@@ -25,10 +25,12 @@ export const CONFIG = {
 
   /* CTA final: hablar con el equipo */
   equipo: {
-    url: 'https://wa.me/34623925582?text=' + encodeURIComponent('Hola, vengo del reto de marca personal de ICON y quiero contaros mi caso.'),
+    url: 'https://wa.link/utfk21',   // WhatsApp con un comercial; lleva el mensaje «Desde el evento quiero formarme con vosotros»
     boton: 'Habla con nuestro equipo',
     email: 'hello@iconmbs.com'
   },
+  /* Página de profesores: se enlaza siempre que se habla del claustro */
+  profesoresUrl: 'https://iconmbs.com/profesores/',
 
   /* Se añade a todos los enlaces a iconmbs.com; utm_content lleva el paso desde el que se hizo clic */
   utm: {utm_source:'cuaderno', utm_medium:'recurso-evento', utm_campaign:'marca-personal-20nov26'},
@@ -49,7 +51,7 @@ export const CONFIG = {
    ============================================================ */
 /* Quién es cada ponente. Se muestra allí donde se cita a alguien, para quien no estuvo en el evento. */
 export const PONENTES = {
-  'Ana Pavlyuk':{rol:'Estratega de contenido y crecimiento en redes', bio:'Hace crecer cuentas sin publicidad: millones de visualizaciones orgánicas para artistas, sellos y marcas.'},
+  'Anna Pavlyuk':{rol:'Estratega de contenido y crecimiento en redes', bio:'Hace crecer cuentas sin publicidad: millones de visualizaciones orgánicas para artistas, sellos y marcas.'},
   'César Manzanera':{rol:'Fundador de Witis', bio:'Dirige Witis, agencia de comunicación especializada en música, tras más de diez años en agencias.'},
   'Álvaro Rebollo':{rol:'Fundador de Los Amigos Digitales', bio:'Más de 15 años al frente del marketing digital y el streaming en BMG y Sony Music. Hoy dirige su propia agencia digital para música.'},
   'María Muñoz':{rol:'Digital Marketing Manager en The Orchard', bio:'Ha trabajado en más de 150 lanzamientos de artistas y sellos.'},
@@ -64,7 +66,7 @@ export const MITOS = [
    w:'Las estadísticas de cada red te dicen cuándo está conectada tu audiencia, y de ahí sale la idea de una hora perfecta.',
    x:'Publica el mismo tipo de pieza a tres horas distintas durante tres semanas y compara. Mira si manda la hora o la pieza.',
    dijeron:[{q:'César Manzanera',v:'mito',f:'Si todo el mundo publicara a la hora «buena», las redes se colapsarían. Es prueba y error: el mismo vídeo funciona un domingo y pincha al siguiente.'},
-     {q:'Ana Pavlyuk',v:'mito',f:'Las redes van como un péndulo: cuando todos publican a las ocho, gana quien no lo hace. Un contenido bueno puede subirse de madrugada y despegar por la mañana.'}]},
+     {q:'Anna Pavlyuk',v:'mito',f:'Las redes van como un péndulo: cuando todos publican a las ocho, gana quien no lo hace. Un contenido bueno puede subirse de madrugada y despegar por la mañana.'}]},
   {id:'e2',t:'Si un vídeo no funciona en la primera hora, está muerto.',
    w:'Un buen arranque ayuda a que la plataforma lo enseñe más, así que parece que todo se decide al principio.',
    x:'Vuelve a mirar a los 7 y a los 30 días una pieza que dabas por muerta.',
@@ -73,7 +75,7 @@ export const MITOS = [
   {id:'e3',t:'Cada red necesita un contenido distinto.',
    w:'Cada plataforma nació con un formato y un público, y se sigue repitiendo que lo que vale en una no vale en otra.',
    x:'Sube la misma pieza a dos redes y compara retención y compartidos, no visualizaciones.',
-   dijeron:[{q:'Ana Pavlyuk',v:'mito',f:'Un vídeo bueno le ha funcionado en las dos, con cifras parecidas. El algoritmo no es un ente aparte: es cómo consumimos.'},
+   dijeron:[{q:'Anna Pavlyuk',v:'mito',f:'Un vídeo bueno le ha funcionado en las dos, con cifras parecidas. El algoritmo no es un ente aparte: es cómo consumimos.'},
      {q:'Álvaro Rebollo',v:'depende',f:'Las redes se parecen cada vez más (reels, shorts, TikTok), aunque el «Para ti» de TikTok sigue siendo distinto.'}]},
   {id:'e4',t:'Archivar las publicaciones que no funcionaron mejora tu cuenta.',
    w:'Un perfil con piezas de pocas cifras da peor impresión, y se asume que también pesa en el alcance.',
@@ -82,7 +84,7 @@ export const MITOS = [
   {id:'e5',t:'Las fotos y los carruseles ya no sirven: solo funcionan los reels.',
    w:'El vídeo es lo que más crece, y parece que todo lo demás ha dejado de contar.',
    x:'Mira en tus estadísticas qué porcentaje de no seguidores vio tu último reel y tu último carrusel.',
-   dijeron:[{q:'Ana Pavlyuk',v:'depende',f:'El reel es lo que te lleva a gente que no te sigue; el carrusel se queda casi todo entre tus seguidores. Uno hace alcance, el otro comunidad.'},
+   dijeron:[{q:'Anna Pavlyuk',v:'depende',f:'El reel es lo que te lleva a gente que no te sigue; el carrusel se queda casi todo entre tus seguidores. Uno hace alcance, el otro comunidad.'},
      {q:'César Manzanera',v:'depende',f:'Fotos para dentro, para tu comunidad. Vídeos para llegar fuera.'},
      {q:'Álvaro Rebollo',v:'depende',f:'Conviene tener de todo: cada formato cumple una función.'}]},
   {id:'e6',t:'Las plataformas penalizan el contenido hecho con inteligencia artificial.',
@@ -90,23 +92,23 @@ export const MITOS = [
    x:'Si usas IA, publica una pieza con ella y otra sin ella, y compara comentarios y compartidos.',
    dijeron:[{q:'Álvaro Rebollo',v:'realidad',f:'Se ha penalizado y se marca, pero cree que cambiará si al público deja de importarle.'},
      {q:'César Manzanera',v:'depende',f:'En música y derechos queda mucho por resolver. En contenido, si está bien hecho, no han visto penalización.'},
-     {q:'Ana Pavlyuk',v:'realidad',f:'Cuando se nota, funciona peor, sobre todo en Instagram. Lo que se puede producir en masa se percibe menos auténtico: hoy lo orgánico vale más.'}]},
+     {q:'Anna Pavlyuk',v:'realidad',f:'Cuando se nota, funciona peor, sobre todo en Instagram. Lo que se puede producir en masa se percibe menos auténtico: hoy lo orgánico vale más.'}]},
   {id:'e7',t:'TikTok es imprescindible para lanzar una carrera musical.',
    w:'Muchos éxitos recientes han nacido ahí, y parece que no hay otro camino.',
    x:'Elige un canal principal en el que puedas ser constante y otro de apoyo, y mide cada uno por separado.',
    dijeron:[{q:'Álvaro Rebollo',v:'depende',f:'Tiene sentido estar donde esté tu audiencia, y eso depende del proyecto.'},
-     {q:'Ana Pavlyuk',v:'mito',f:'Hay artistas que no hacen nada en TikTok. No es para todo el mundo.'},
+     {q:'Anna Pavlyuk',v:'mito',f:'Hay artistas que no hacen nada en TikTok. No es para todo el mundo.'},
      {q:'César Manzanera',v:'depende',f:'Si ya tienes el contenido, no pierdas esa oportunidad de alcance por pereza.'}]},
   {id:'e8',t:'Los números en redes valen más que la calidad de la música.',
    w:'Las cifras son fáciles de comparar, y muchos profesionales las miran antes de escuchar.',
    x:'Prepara un dosier de una página con tus cifras reales, tu comunidad y tu plan, y pon la música lo primero.',
    dijeron:[{q:'César Manzanera',v:'depende',f:'Muchos promotores miran el número antes de escuchar. Aun así, lo que sostiene un proyecto es que dure: tres, cuatro, cinco años.'},
-     {q:'Ana Pavlyuk',v:'mito',f:'El talento sigue primando: da igual quién te ponga delante, si a la gente no le gusta no se queda.'},
+     {q:'Anna Pavlyuk',v:'mito',f:'El talento sigue primando: da igual quién te ponga delante, si a la gente no le gusta no se queda.'},
      {q:'Álvaro Rebollo',v:'depende',f:'No son comparables: las cifras son cifras, y qué es buena música es muy relativo.'}]},
   {id:'e9',t:'Si dejas de publicar unas semanas, la plataforma te penaliza.',
    w:'Cuando vuelves tras un parón las primeras piezas suelen ir flojas, y se achaca a un castigo.',
    x:'Si necesitas parar, para. Al volver, compara tu primera pieza con tu media anterior.',
-   dijeron:[{q:'Ana Pavlyuk',v:'mito',f:'La plataforma quiere vídeos que retengan a la gente. Si vuelves con uno bueno, lo volverá a mostrar.'}]},
+   dijeron:[{q:'Anna Pavlyuk',v:'mito',f:'La plataforma quiere vídeos que retengan a la gente. Si vuelves con uno bueno, lo volverá a mostrar.'}]},
   {id:'e10',t:'Si pagas publicidad, pierdes alcance orgánico.',
    w:'Corre la idea de que, en cuanto pagas, la plataforma te obliga a seguir pagando.',
    x:'Promociona solo una pieza que ya haya funcionado sin pagar y compara el coste por seguidor nuevo.',
@@ -115,12 +117,12 @@ export const MITOS = [
   {id:'e11',t:'Un viral te puede hacer más daño que bien.',
    w:'Parece imposible que algo tan bueno perjudique. Puede pasar si la gente conoce la canción y no a ti.',
    x:'Escribe qué harías en las dos semanas siguientes a un viral: cómo te presentas y a dónde llevas a la gente.',
-   dijeron:[{q:'Ana Pavlyuk',v:'depende',f:'Un viral hace que te vean; la marca, que te recuerden. En la industria se habla del «artista TikTok»: cae bien, pero le cuesta vender entradas.'},
+   dijeron:[{q:'Anna Pavlyuk',v:'depende',f:'Un viral hace que te vean; la marca, que te recuerden. En la industria se habla del «artista TikTok»: cae bien, pero le cuesta vender entradas.'},
      {q:'Álvaro Rebollo',v:'depende',f:'Hubo sellos que pagaron grandes adelantos por artistas virales que luego no funcionaron. El salto del vídeo corto al concierto es difícil.'}]},
   {id:'e12',t:'Un manager o un productor no necesita marca personal.',
    w:'El foco debe estar en el artista, y quien trabaja detrás suele preferir no exponerse.',
    x:'Escribe en una frase a quién ayudas y cómo. Si no te sale en 15 segundos, tu perfil tampoco lo dice.',
-   dijeron:[{q:'Ana Pavlyuk',v:'mito',f:'Quien construya su marca dentro de la industria parte con ventaja: es más fácil que un artista te escuche. No hace falta salir en cámara; puedes entrevistar a otros.'},
+   dijeron:[{q:'Anna Pavlyuk',v:'mito',f:'Quien construya su marca dentro de la industria parte con ventaja: es más fácil que un artista te escuche. No hace falta salir en cámara; puedes entrevistar a otros.'},
      {q:'Ro Sánchez',v:'depende',f:'No hace falta ser influencer. Tu red profesional es tu plataforma: salas, eventos y un LinkedIn al día.'},
      {q:'María Muñoz',v:'realidad',f:'Prefiere a un manager en segundo plano: que te conozcan dentro de la industria importa más que publicar.'}]},
   {id:'e13',t:'Pagar por entrar en playlists ayuda a arrancar.',
@@ -166,7 +168,7 @@ export const CASOS = {
    {q:'Ponente', t:'Título de la charla', ideas:['Idea 1','Idea 2','Idea 3'], p:'Pregunta para el alumno'}
    ============================================================ */
 export const CHARLAS = [
-  {img:'assets/fotos/ana.jpg', q:'Ana Pavlyuk · Estratega de contenido y crecimiento en redes', t:'El talento no es suficiente',
+  {img:'assets/fotos/ana.jpg', q:'Anna Pavlyuk · Estratega de contenido y crecimiento en redes', t:'El talento no es suficiente',
    ideas:['La música también es un negocio. El talento te hace bueno, pero no garantiza que te conozcan.',
      'No tienes 80.000 balas: cuida cada vídeo como cuidas cada canción. Mejor dos buenos a la semana que ocho flojos.',
      'Tu perfil no es un catálogo. Nadie entra en redes a que le vendan algo: que sea un sitio donde quedarse.',
@@ -197,7 +199,7 @@ export const CHARLAS = [
 
 /* El consejo con el que cerró cada ponente */
 export const CONSEJOS = [
-  {q:'Ana Pavlyuk',f:'Deja de vivir las redes como una queja. Hoy tienes miles de oportunidades al año de que alguien te escuche, y gratis.'},
+  {q:'Anna Pavlyuk',f:'Deja de vivir las redes como una queja. Hoy tienes miles de oportunidades al año de que alguien te escuche, y gratis.'},
   {q:'César Manzanera',f:'No llores, rodéate de gente que sea sincera con tu proyecto y échale morro: el «no» ya lo tienes.'},
   {q:'Álvaro Rebollo',f:'Sé tú. No estés en todas las redes porque sí, y recuerda que van y vienen.'},
   {q:'María Muñoz',f:'Primero, la música. Si la estrategia funciona y la canción no gusta, el problema no es la estrategia.'},

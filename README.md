@@ -59,7 +59,7 @@ Son resúmenes en palabras de ICON, no citas literales. **Cada ponente debe dar 
 
 `CONFIG.reto` define la cuenta a etiquetar y la fecha de cierre (`fin`, `finTexto`). El contador de la cabecera y los textos salen de ahí.
 
-`CONFIG.equipo` define el botón final «Habla con nuestro equipo» (`url`, `boton`, `email`). **Confirmar el número de WhatsApp antes de publicar.**
+`CONFIG.equipo` define el botón final «Habla con nuestro equipo» (`url`, `boton`, `email`). Apunta a `https://wa.link/utfk21` (WhatsApp con un comercial, con mensaje predefinido). Todos los avisos de «Hablar con el equipo» usan ese enlace. `CONFIG.profesoresUrl` es la página de profesores, enlazada allí donde se menciona el claustro.
 
 ## Medición
 
