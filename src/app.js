@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795181438';
+import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795216163';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -119,7 +119,7 @@ function mitoItems(){return MITOS.map(g=>({g:g.g,items:g.items.filter(m=>!CONFIG
 function rMitos(){
   const all=mitoItems().flatMap(g=>g.items);
   return `<div class="kick">Paso 2 · 10 minutos</div><h1 class="ph">Mito o realidad</h1>
-  <p class="lead">Diez frases que se repiten en la industria. Decide tú: al elegir verás por qué se dice tanto y una prueba para hacer en tu cuenta. No hay respuesta correcta.</p>
+  <p class="lead">Las frases que se debatieron en el evento. Decide tú primero: al elegir verás qué dijo cada ponente y una prueba para hacer en tu cuenta.</p>
   <p class="count" id="mitoCount"></p>
   ${all.map((m,i)=>`<div class="card myth" id="c-${m.id}"><div class="num">${i+1} de ${all.length}</div><button class="t tbtn" data-open="${m.id}" aria-expanded="${!!S.mito[m.id]}">${m.t}</button>
     <div class="seg" role="group" aria-label="Tu opinión">${['mito','realidad','depende'].map(v=>`<button data-mito="${m.id}" data-v="${v}" aria-pressed="${S.mito[m.id]===v}">${vLabel[v]}</button>`).join('')}</div>
@@ -130,7 +130,7 @@ function rMitos(){
 function rMitoReveal(m){
   const said=m.dijeron.length?`<div class="said">${m.dijeron.map(d=>`<div class="q2"><p>${esc(d.f)}</p><div class="who">${esc(d.q)}<span class="tag">${vLabel[d.v]||''}</span></div></div>`).join('')}</div>`:pend('lo que dijo cada ponente sobre esta frase.');
   return `<div><h4>Por qué se dice tanto</h4><p>${m.w}</p></div>
-    ${(m.dijeron.length||D)?`<div><h4>Lo que se dijo en la mesa</h4>${said}</div>`:''}
+    ${(m.dijeron.length||D)?`<div><h4>Lo que dijeron los ponentes</h4>${said}</div>`:''}
     <div><h4>Ponlo a prueba en tu cuenta</h4><p>${m.x}</p></div>
     <label class="try"><input type="checkbox" data-prueba="${m.id}" ${S.prueba[m.id]?'checked':''}> Lo pruebo este mes (irá a mi hoja de ruta)</label>`;
 }
@@ -150,11 +150,11 @@ function bioText(){return [val('nombre'),val('bioQue')&&('· '+val('bioQue')),va
 function rCasos(){
   if(!S.casoTab)S.casoTab='lucia';
   return `<div class="kick">Paso 3 · 15 minutos</div><h1 class="ph">Los tres casos</h1>
-  <p class="lead">Tres situaciones típicas de la industria. Mira a cuál te pareces, ponte en su lugar y escribe tu propio caso.</p>
+  <p class="lead">Tres casos que María Muñoz, Ro Sánchez y Jorge Platero resolvieron en directo. Mira a cuál te pareces, ponte en su lugar y escribe tu propio caso.</p>
   <div class="card ex">${exHead(5,'¿A quién te pareces?','Cuatro preguntas para ver qué caso se acerca más a tu punto de partida.')}
     ${MAPA.map((q,i)=>`<div class="q"><p><b>${q.q}</b></p><div class="mx">${q.o.map((o,j)=>`<button class="opt ${S.mapa[i]===j?'on':''}" data-mapa="${i}" data-v="${j}"><span class="o">${'ABC'[j]}</span><span>${o}</span></button>`).join('')}</div></div>`).join('')}
     <div id="mapaRes"></div></div>
-  <div class="block"><h2>Ponte en su lugar</h2><p class="sub">Elige un caso y haz el ejercicio. Si te da tiempo, haz los tres.</p>
+  <div class="block"><h2>Ponte en su lugar</h2><p class="sub">Elige un caso, lee lo que propusieron y haz el ejercicio. Si te da tiempo, haz los tres.</p>
     <div class="ctabs" role="tablist">${CKEYS.map(k=>`<button class="ctab" role="tab" data-ctab="${k}" aria-selected="${S.casoTab===k}">${CASOS[k].n}</button>`).join('')}</div>
     <div id="casoPanel">${rCaso(S.casoTab)}</div></div>
   <div class="block"><div class="card ex">${exHead(9,'Ahora, tu caso','Escríbelo como si fuera un caso más. Ponerlo en tercera persona ayuda a verlo con distancia.',true)}
@@ -202,7 +202,7 @@ function rCaso(k){
       <div style="margin-top:14px"><label class="l" for="f-martaLimite">¿Dónde está tu límite y qué te estás perdiendo por él?</label>${ta('martaLimite','Escribe tu respuesta',2)}</div></div>`;
   }
   return `<div class="card persona"><h3>${c.n}</h3><div class="m">${c.m}</div><p>${c.d}</p><p class="reto">${c.reto}</p></div>
-  ${(c.propuestas.length||D)?`<div class="card"><h4 class="mini">Lo que propusieron en la mesa</h4>${props}
+  ${(c.propuestas.length||D)?`<div class="card"><h4 class="mini">Lo que propusieron los ponentes</h4>${props}
     <div style="margin-top:14px"><label class="l" for="f-conv_${k}">¿Qué propuesta te ha convencido más y por qué?</label>${ta('conv_'+k,'La de… porque…',2)}</div></div>`:''}
   ${exer}`;
 }
@@ -245,10 +245,11 @@ function updMarta(){
 function rCharlas(){
   const list=CHARLAS.length?CHARLAS:(D?[1,2,3].map(n=>({q:'Charla '+n,t:'Título de la charla',ideas:[],p:''})):[]);
   return `<div class="kick">Paso 4 · 10 minutos</div><h1 class="ph">Ideas clave</h1>
-  <p class="lead">Los tres temas centrales del evento, con una pregunta para llevar cada uno a tu caso.</p>
+  <p class="lead">Las tres charlas del evento, resumidas, con una pregunta para llevar cada una a tu caso.</p>
   ${list.map((c,i)=>`<div class="card ex"><div class="exn">${esc(c.q)}</div><h3>${esc(c.t)}</h3>
     ${c.ideas.length?`<ul>${c.ideas.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:pend('tres ideas clave de la charla y una pregunta para el alumno.')}
     ${c.p?`<div style="margin-top:12px"><label class="l" for="f-charla${i}">${esc(c.p)}</label>${ta('charla'+i,'Tu respuesta',2)}</div>`:''}</div>`).join('')}
+  <div class="block"><h2>Un consejo de cada ponente</h2><div class="said">${CONSEJOS.map(x=>`<div class="q2"><p>${esc(x.f)}</p><div class="who">${esc(x.q)}</div></div>`).join('')}</div></div>
   <div class="block gap">
   <div class="card ex">${exHead(10,'Tus referentes','Tres perfiles que lo hacen bien. No para copiarlos enteros: para tomar una sola cosa de cada uno.',true)}
     ${[1,2,3].map(i=>`<div class="two" style="margin-bottom:6px"><div>${inp('ref'+i,'Referente '+i)}</div><div>${inp('refQ'+i,'Le tomaría…')}</div></div>`).join('')}</div>
@@ -387,18 +388,18 @@ function rHoja(){
   <div class="block"><div class="card tocard"><div><h3 style="font-size:20px;margin-bottom:4px">Llévalo al día a día</h3><p style="margin:0">Calendario de contenidos, panel de métricas y lecturas para seguir aprendiendo.</p></div><button class="btn" data-go="herramientas">Ir a herramientas →</button></div></div>`;
 }
 const INS_AREA={
-  identidad:'Si no se entiende quién eres en diez segundos, el resto de tu contenido trabaja a medias.',
-  contenido:'Un ritmo que aguantes tres meses vale más que una semana perfecta.',
-  datos:'Sin mirar los datos decides a ciegas. Diez minutos a la semana bastan para saber qué repetir.',
-  comunidad:'Cien personas que responden valen más que diez mil que solo miran.',
-  conversion:'El alcance no sirve de mucho si no llevas a la gente a un siguiente paso claro.'
+  identidad:'Ana Pavlyuk lo resumió en tres preguntas: qué cuentas, a quién quieres llegar y por qué alguien debería quedarse.',
+  contenido:'Como dijo Ana Pavlyuk, no tienes 80.000 balas: dos piezas buenas a la semana valen más que ocho flojas.',
+  datos:'Lo que recomendó Álvaro Rebollo: mira comentarios, compartidos, guardados y retención antes que seguidores y visualizaciones.',
+  comunidad:'La pregunta de María Muñoz: ¿pasa algo entre tus fans cuando tú no publicas?',
+  conversion:'Como explicó María Muñoz, tus seguidores son de la plataforma hasta que tienes su contacto.'
 };
 const RETO_AREA={
-  identidad:'Fija en tu perfil una publicación que te presente.',
-  contenido:'Graba en una sola sesión el contenido de toda una semana.',
-  datos:'Rellena el informe de audiencia los cuatro lunes, sin saltarte ninguno.',
-  comunidad:'Responde a todos los comentarios y mensajes en menos de 24 horas.',
-  conversion:'Deja un único enlace en tu bio y nómbralo en cada pieza.'
+  identidad:'Fija en tu perfil una publicación que te presente tal como estás hoy, sin aparentar más.',
+  contenido:'Graba en una sola sesión el contenido de toda la semana.',
+  datos:'Apunta cada lunes comentarios, compartidos y guardados, no solo seguidores.',
+  comunidad:'Responde a todos los comentarios y pregunta algo a tu audiencia que cambie una decisión tuya.',
+  conversion:'Abre un canal de difusión o una lista de correo y ofrece algo a cambio de apuntarse.'
 };
 /* Todo lo que sale en la hoja de ruta (pantalla y PDF) se calcula aquí a partir de las respuestas */
 function hojaDoc(){
@@ -418,13 +419,14 @@ function hojaDoc(){
   const no=[val('no1'),val('no2'),val('no3')].filter(Boolean);if(no.length)ins.push(['Tu límite',`No compartes: ${no.join(', ')}. Tenerlo decidido te ahorra dudas cada vez que publicas.`]);
   if(val('meLlevo'))ins.push(['Lo que te llevas',val('meLlevo')]);
   const retos=[
-    {t:'Preséntate',d:[`Publica tu presentación en 15 segundos${bioText()?` con tu frase («${bioText()}»)`:''} y etiqueta a ${tag}.`,'Apunta tus cifras de hoy en el informe de audiencia: son tu punto de partida.']},
-    {t:'Coge ritmo',d:[`Publica ${n} ${n===1?'pieza':'piezas'}${temas.length?` sobre tus temas (${temas.join(', ')})`:''}. Etiqueta a ${tag} en todas.`,r.done?RETO_AREA[r.weak]:RETO_AREA.identidad]},
-    {t:'Prueba algo',d:[pruebas[0]?`Haz este experimento: ${pruebas[0].x}`:'Publica el mismo contenido con tres arranques distintos y compara cuál retiene más.','Mira en tu informe qué pieza ha funcionado mejor y repite el formato.']},
-    {t:'Pide un paso',d:[prof?'Publica un caso de trabajo (qué pasaba, qué hiciste, qué resultado tuvo) y pide una conversación a quien le interese.':'Lleva a tu audiencia a una sola acción: guardar una canción, apuntarse a tu lista o venir a verte.',`Cierra tu informe y ten a mano tu alcance total etiquetando a ${tag}: es la cifra del reto.`]}
+    {t:'Preséntate',d:[`Publica tu presentación en 15 segundos${bioText()?` con tu frase («${bioText()}»)`:''} y etiqueta a ${tag}. Muéstrate como estás hoy.`,'Apunta tus cifras de hoy en el informe de audiencia: son tu punto de partida.']},
+    {t:'Coge ritmo',d:[`Publica ${n} ${n===1?'pieza':'piezas'}${temas.length?` sobre tus temas (${temas.join(', ')})`:''}. Etiqueta a ${tag} en todas.`,'Crea una cita fija: el mismo día, el mismo tipo de pieza.',r.done?RETO_AREA[r.weak]:RETO_AREA.identidad]},
+    {t:'Prueba algo',d:[pruebas[0]?`Haz este experimento: ${pruebas[0].x}`:'Publica el mismo contenido con tres arranques distintos y compara cuál retiene más.','Mira en tu informe qué pieza ha tenido más comentarios, compartidos y guardados, y repite el formato.']},
+    {t:'Saca a tu gente del algoritmo',d:[prof?'Publica un caso de trabajo (qué pasaba, qué hiciste, qué resultado tuvo) y escribe directamente a una persona con la que quieras trabajar.':'Abre un canal de difusión o una lista de correo y ofrece algo a cambio: un adelanto, una versión, un fondo de pantalla.',`Cierra tu informe y ten a mano tu alcance total etiquetando a ${tag}: es la cifra del reto.`]}
   ];
+
   return {r,strong,mc,ins,retos,weeks:planWeeks(),objs:[1,2,3].map(i=>val('obj'+i)&&(val('obj'+i)+(val('objM'+i)?` (lo mido con: ${val('objM'+i)})`:''))).filter(Boolean),
-    recursos:['informe','cal','plan','dosier'].map(k=>DL[k])};
+    recursos:['informe','cal','plan','dosier'].map(k=>DL[k]),consejos:CONSEJOS};
 }
 function hojaText(){
   const r=diagScores(),w=planWeeks();
@@ -469,7 +471,7 @@ async function cardOpinion(){
   const [c,x]=cnv();const m=mitoCard();
   x.fillStyle='#141615';x.fillRect(0,0,1080,1920);await logo(x,CONFIG.logos.light,130);
   x.fillStyle='#00A099';x.font=`700 30px ${FF}`;x.fillText('MITO O REALIDAD',90,400);
-  const q=m?m.t:'Hay que publicar todos los días para que el algoritmo no te olvide.';
+  const q=m?m.t:'Hay una hora mágica para publicar.';
   x.fillStyle='#ffffff';let size=74;x.font=`400 ${size}px ${TF}`;let ln=wrap(x,'"'+q+'"',900);
   while(ln.length>7&&size>50){size-=4;x.font=`400 ${size}px ${TF}`;ln=wrap(x,'"'+q+'"',900)}
   ln.forEach((l,i)=>x.fillText(l,90,500+i*size*1.18));
@@ -561,6 +563,8 @@ async function dlHojaPdf(){
   H('5 · Tus recursos y cómo usarlos');
   D.recursos.forEach(x=>{need(14);P(`${x.t} (${x.f})`,{b:1,gap:.5});P(x.uso,{c:G,gap:3.5})});
   P('Descárgalos en el paso «Tu hoja de ruta» del cuaderno.',{c:G,s:9.5,gap:4});
+  // Consejos
+  H('6 · Lo que dijeron los ponentes');D.consejos.forEach(x=>{need(14);P(x.f,{gap:.8});P(x.q,{c:TT,b:1,s:9,gap:4})});
   // Cierre
   need(38);y+=4;doc.setFillColor(...K);doc.roundedRect(M,y,W,30,3,3,'F');font(1,13,[255,255,255]);doc.text('Esto es la punta del iceberg',M+7,y+10);
   font(0,10,[211,220,218]);doc.text('Cuéntanos tu caso y vemos cómo llevarlo más lejos.',M+7,y+16.5);
@@ -741,7 +745,7 @@ function rSteps(cur){
 let cur='inicio';
 const SOFT={
   casos:['¿Lo tuyo es crear música?','En ICON también te formas en producción y composición con nivel profesional.','p'],
-  charlas:['Tres temas de un programa entero','En ICON das clase todo el curso con más de 80 profesionales en activo de la industria.','m'],
+  charlas:['Tres charlas de un programa entero','En ICON das clase todo el curso con más de 80 profesionales en activo de la industria.','m'],
   plan:['Un plan funciona mejor con alguien al lado','En ICON lo trabajas con mentores que lo hacen cada día con artistas reales.','m'],
   hoja:['Ya tienes tu hoja de ruta','Si quieres ir más lejos y más rápido, cuéntanos tu caso.','e']
 };

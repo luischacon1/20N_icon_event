@@ -46,28 +46,77 @@ export const CONFIG = {
    MITO O REALIDAD · las frases del debate (máximo 10; si en el evento se debaten otras, cámbialas aquí)
    dijeron: [{q:'Nombre del ponente', v:'mito'|'realidad'|'depende', f:'Frase o idea que dijo'}]
    ============================================================ */
+/* Las frases que se debatieron en el evento. «dijeron» resume en nuestras palabras la postura de cada ponente. */
 export const MITOS = [
  {g:'', items:[
-  {id:'m1',w:'Las plataformas premian la actividad, así que parece lógico publicar siempre. Pero cuenta más que cada pieza se vea, se guarde y se comparta que el número de piezas.',t:'Hay que publicar todos los días para que el algoritmo no te olvide.',
-   x:'Dos semanas con 3 piezas semanales y dos a diario. Compara seguidores ganados por pieza, no el total.', dijeron:[]},
-  {id:'m2',w:'Todo el mundo repite que hay que enganchar al principio. Es verdad que el arranque decide si alguien se queda, pero si el resto no cumple lo que promete, se van después.',t:'Los primeros tres segundos de un vídeo deciden todo.',
-   x:'Publica el mismo contenido con tres arranques distintos y compara la retención.', dijeron:[]},
-  {id:'m4',w:'Los vídeos llegan a gente que no te sigue, así que parece que seguir da igual. Pero quien compra una entrada o repite una canción suele ser alguien que ya te sigue.',t:'Los seguidores ya no importan: lo que cuenta es el alcance.',
-   x:'Mira qué parte de tus visualizaciones viene de seguidores y cuántos de los nuevos se quedan.', dijeron:[]},
-  {id:'m6',w:'La cercanía se asocia a enseñar tu día a día. Pero conectar es mostrar personalidad, no privacidad: tú decides qué parte de ti es pública.',t:'Un artista tiene que enseñar su vida personal para conectar.',
-   x:'Publica un mes solo dentro de lo que decidiste compartir y mira si cambia la respuesta.', dijeron:[]},
-  {id:'m8',w:'Parecen contenido fácil que no encaja con la música. Lo que importa es si las adaptas a tu identidad y si te traen gente que luego escucha.',t:'Las tendencias y los bailes virales abaratan la imagen de un artista.',
-   x:'Haz una tendencia con tu giro y compara visitas al perfil y oyentes frente a tu contenido habitual.', dijeron:[]},
-  {id:'m11',w:'Los números son fáciles de comparar y reducen el riesgo. Pero también pesan las canciones, el directo, el compromiso de la audiencia y el equipo.',t:'Los sellos ya solo firman a artistas con números en redes.',
-   x:'Prepara un dosier de una página con tus cifras reales, tu comunidad y tu plan de lanzamiento.', dijeron:[]},
-  {id:'m12',w:'Parece imposible que algo tan bueno perjudique. Puede pasar si la gente conoce la canción y no a ti: el siguiente lanzamiento decepciona.',t:'Un viral te puede hacer más daño que bien.',
-   x:'Escribe qué harías en las dos semanas siguientes a un viral: cómo te presentas y a dónde llevas a la gente.', dijeron:[]},
-  {id:'m13',w:'Muchos éxitos recientes han nacido ahí. Es un canal potente, pero hay carreras construidas desde directos, YouTube, Instagram o la escena local.',t:'Sin TikTok hoy no se puede lanzar una carrera musical.',
-   x:'Elige un canal principal en el que puedas ser constante y otro de apoyo, y mide cada uno por separado.', dijeron:[]},
-  {id:'m16',w:'El foco debe estar en el artista. Pero los artistas eligen a personas, y saber quién eres y cómo trabajas genera confianza antes de la primera reunión.',t:'Un manager o un productor no necesita marca personal: su marca son sus artistas.',
-   x:'Escribe en una frase a quién ayudas y cómo. Si no te sale en 15 segundos, tu perfil tampoco lo dice.', dijeron:[]},
-  {id:'m19',w:'Una cifra alta da sensación de éxito. Pero ensucia tus datos, no crea fans y las plataformas lo detectan, así que dejas de saber qué funciona.',t:'Comprar seguidores o reproducciones al principio ayuda a arrancar.',
-   x:'Calcula cuánto te costaría y piensa qué contenido o qué directo podrías pagar con ese dinero.', dijeron:[]}]}
+  {id:'e1',t:'Hay una hora mágica para publicar.',
+   w:'Las estadísticas de cada red te dicen cuándo está conectada tu audiencia, y de ahí sale la idea de una hora perfecta.',
+   x:'Publica el mismo tipo de pieza a tres horas distintas durante tres semanas y compara. Mira si manda la hora o la pieza.',
+   dijeron:[{q:'César Manzanera',v:'mito',f:'Si todo el mundo publicara a la hora «buena», las redes se colapsarían. Es prueba y error: el mismo vídeo funciona un domingo y pincha al siguiente.'},
+     {q:'Ana Pavlyuk',v:'mito',f:'Las redes van como un péndulo: cuando todos publican a las ocho, gana quien no lo hace. Un contenido bueno puede subirse de madrugada y despegar por la mañana.'}]},
+  {id:'e2',t:'Si un vídeo no funciona en la primera hora, está muerto.',
+   w:'Un buen arranque ayuda a que la plataforma lo enseñe más, así que parece que todo se decide al principio.',
+   x:'Vuelve a mirar a los 7 y a los 30 días una pieza que dabas por muerta.',
+   dijeron:[{q:'Álvaro Rebollo',v:'mito',f:'Arrancar fuerte ayuda, pero para quien no lo ha visto el vídeo es nuevo: puede empezar a conectar mucho después.'},
+     {q:'César Manzanera',v:'mito',f:'Instagram era más cronológico; TikTok enseña vídeos sin importar cuándo se publicaron.'}]},
+  {id:'e3',t:'Cada red necesita un contenido distinto.',
+   w:'Cada plataforma nació con un formato y un público, y se sigue repitiendo que lo que vale en una no vale en otra.',
+   x:'Sube la misma pieza a dos redes y compara retención y compartidos, no visualizaciones.',
+   dijeron:[{q:'Ana Pavlyuk',v:'mito',f:'Un vídeo bueno le ha funcionado en las dos, con cifras parecidas. El algoritmo no es un ente aparte: es cómo consumimos.'},
+     {q:'Álvaro Rebollo',v:'depende',f:'Las redes se parecen cada vez más (reels, shorts, TikTok), aunque el «Para ti» de TikTok sigue siendo distinto.'}]},
+  {id:'e4',t:'Archivar las publicaciones que no funcionaron mejora tu cuenta.',
+   w:'Un perfil con piezas de pocas cifras da peor impresión, y se asume que también pesa en el alcance.',
+   x:'Antes de archivar nada, apunta qué tenían en común las piezas que no funcionaron.',
+   dijeron:[{q:'César Manzanera',v:'mito',f:'Sirve para la imagen (una nueva etapa, o que un promotor vea mejores cifras), pero no cree que mejore el rendimiento del perfil.'}]},
+  {id:'e5',t:'Las fotos y los carruseles ya no sirven: solo funcionan los reels.',
+   w:'El vídeo es lo que más crece, y parece que todo lo demás ha dejado de contar.',
+   x:'Mira en tus estadísticas qué porcentaje de no seguidores vio tu último reel y tu último carrusel.',
+   dijeron:[{q:'Ana Pavlyuk',v:'depende',f:'El reel es lo que te lleva a gente que no te sigue; el carrusel se queda casi todo entre tus seguidores. Uno hace alcance, el otro comunidad.'},
+     {q:'César Manzanera',v:'depende',f:'Fotos para dentro, para tu comunidad. Vídeos para llegar fuera.'},
+     {q:'Álvaro Rebollo',v:'depende',f:'Conviene tener de todo: cada formato cumple una función.'}]},
+  {id:'e6',t:'Las plataformas penalizan el contenido hecho con inteligencia artificial.',
+   w:'Las plataformas marcan el contenido hecho con IA, y eso se interpreta como un castigo.',
+   x:'Si usas IA, publica una pieza con ella y otra sin ella, y compara comentarios y compartidos.',
+   dijeron:[{q:'Álvaro Rebollo',v:'realidad',f:'Se ha penalizado y se marca, pero cree que cambiará si al público deja de importarle.'},
+     {q:'César Manzanera',v:'depende',f:'En música y derechos queda mucho por resolver. En contenido, si está bien hecho, no han visto penalización.'},
+     {q:'Ana Pavlyuk',v:'realidad',f:'Cuando se nota, funciona peor, sobre todo en Instagram. Lo que se puede producir en masa se percibe menos auténtico: hoy lo orgánico vale más.'}]},
+  {id:'e7',t:'TikTok es imprescindible para lanzar una carrera musical.',
+   w:'Muchos éxitos recientes han nacido ahí, y parece que no hay otro camino.',
+   x:'Elige un canal principal en el que puedas ser constante y otro de apoyo, y mide cada uno por separado.',
+   dijeron:[{q:'Álvaro Rebollo',v:'depende',f:'Tiene sentido estar donde esté tu audiencia, y eso depende del proyecto.'},
+     {q:'Ana Pavlyuk',v:'mito',f:'Hay artistas que no hacen nada en TikTok. No es para todo el mundo.'},
+     {q:'César Manzanera',v:'depende',f:'Si ya tienes el contenido, no pierdas esa oportunidad de alcance por pereza.'}]},
+  {id:'e8',t:'Los números en redes valen más que la calidad de la música.',
+   w:'Las cifras son fáciles de comparar, y muchos profesionales las miran antes de escuchar.',
+   x:'Prepara un dosier de una página con tus cifras reales, tu comunidad y tu plan, y pon la música lo primero.',
+   dijeron:[{q:'César Manzanera',v:'depende',f:'Muchos promotores miran el número antes de escuchar. Aun así, lo que sostiene un proyecto es que dure: tres, cuatro, cinco años.'},
+     {q:'Ana Pavlyuk',v:'mito',f:'El talento sigue primando: da igual quién te ponga delante, si a la gente no le gusta no se queda.'},
+     {q:'Álvaro Rebollo',v:'depende',f:'No son comparables: las cifras son cifras, y qué es buena música es muy relativo.'}]},
+  {id:'e9',t:'Si dejas de publicar unas semanas, la plataforma te penaliza.',
+   w:'Cuando vuelves tras un parón las primeras piezas suelen ir flojas, y se achaca a un castigo.',
+   x:'Si necesitas parar, para. Al volver, compara tu primera pieza con tu media anterior.',
+   dijeron:[{q:'Ana Pavlyuk',v:'mito',f:'La plataforma quiere vídeos que retengan a la gente. Si vuelves con uno bueno, lo volverá a mostrar.'}]},
+  {id:'e10',t:'Si pagas publicidad, pierdes alcance orgánico.',
+   w:'Corre la idea de que, en cuanto pagas, la plataforma te obliga a seguir pagando.',
+   x:'Promociona solo una pieza que ya haya funcionado sin pagar y compara el coste por seguidor nuevo.',
+   dijeron:[{q:'Álvaro Rebollo',v:'mito',f:'Las plataformas dicen que una cosa apoya a la otra. La publicidad acelera lo que ya funciona; no arregla lo que no funciona.'},
+     {q:'César Manzanera',v:'depende',f:'El contenido orgánico es el que te posiciona. Pagar tiene sentido en el lanzamiento de un single, que es donde el público lo ve lógico.'}]},
+  {id:'e11',t:'Un viral te puede hacer más daño que bien.',
+   w:'Parece imposible que algo tan bueno perjudique. Puede pasar si la gente conoce la canción y no a ti.',
+   x:'Escribe qué harías en las dos semanas siguientes a un viral: cómo te presentas y a dónde llevas a la gente.',
+   dijeron:[{q:'Ana Pavlyuk',v:'depende',f:'Un viral hace que te vean; la marca, que te recuerden. En la industria se habla del «artista TikTok»: cae bien, pero le cuesta vender entradas.'},
+     {q:'Álvaro Rebollo',v:'depende',f:'Hubo sellos que pagaron grandes adelantos por artistas virales que luego no funcionaron. El salto del vídeo corto al concierto es difícil.'}]},
+  {id:'e12',t:'Un manager o un productor no necesita marca personal.',
+   w:'El foco debe estar en el artista, y quien trabaja detrás suele preferir no exponerse.',
+   x:'Escribe en una frase a quién ayudas y cómo. Si no te sale en 15 segundos, tu perfil tampoco lo dice.',
+   dijeron:[{q:'Ana Pavlyuk',v:'mito',f:'Quien construya su marca dentro de la industria parte con ventaja: es más fácil que un artista te escuche. No hace falta salir en cámara; puedes entrevistar a otros.'},
+     {q:'Ro Sánchez',v:'depende',f:'No hace falta ser influencer. Tu red profesional es tu plataforma: salas, eventos y un LinkedIn al día.'},
+     {q:'María Muñoz',v:'realidad',f:'Prefiere a un manager en segundo plano: que te conozcan dentro de la industria importa más que publicar.'}]},
+  {id:'e13',t:'Pagar por entrar en playlists ayuda a arrancar.',
+   w:'Una cifra alta de oyentes da sensación de éxito y parece un atajo.',
+   x:'Compara tus oyentes mensuales con tus seguidores y tus guardados en Spotify for Artists.',
+   dijeron:[{q:'Álvaro Rebollo',v:'mito',f:'Va contra las normas de Spotify, puede haber bots detrás y te puede penalizar. Si ves escuchas raras, avisa desde Spotify for Artists.'},
+     {q:'María Muñoz',v:'mito',f:'Son escuchas vacías: se van cuando sales de la playlist. No puedes basar tu estrategia en eso.'}]}]}
 ];
 
 /* ============================================================
@@ -79,17 +128,26 @@ export const CASOS = {
     d:'600 seguidores en Instagram (casi todos amigos). Dos canciones con 3.000 escuchas entre las dos y una tercera lista para sacar. Presupuesto: 1.000 €. Plazo: tres meses.',
     reto:'¿Qué harías con ese presupuesto y ese plazo para que la tercera canción llegue a más gente que las dos primeras?',
     tabla:{punto:'Empieza de cero',aud:'Amigos y conocidos',freno:'No la conoce nadie',rec:'1.000 € y tres meses'},
-    propuestas:[]},
+    propuestas:[
+      {q:'María Muñoz',f:'Con dos o tres canciones no retienes a quien llega a tu perfil: antes de gastar, ten cinco o seis. Si pones dinero en anuncios (unos 200 €), que sea para volver a llegar a quien ya te ha escuchado. Y graba un videoclip barato con tus amigos para que lo compartan.'},
+      {q:'Ro Sánchez',f:'Pondría los 1.000 € en la música: canciones bien producidas. El contenido no necesita gran producción, sino frecuencia y contar el proceso. Y trabajaría el proyecto fuera de redes: playlists independientes de tu género, concursos de bandas y prescriptores que descubren artistas nuevos.'},
+      {q:'Jorge Platero',f:'Lo dedicaría a crear contenido de calidad y a rodearme de equipo, sin esperar milagros. Presentarse a concursos da visibilidad ante promotores. Y preguntaría a su comunidad: hasta artistas que llenan recintos dejan que sus fans elijan canciones.'}]},
   dani:{n:'Dani', m:'26 años · productor y artista urbano',
     d:'Un tema viral en TikTok hace seis meses (150.000 seguidores, 2 millones de reproducciones). Los siguientes lanzamientos no pasan de 20.000 escuchas. La gente conoce la canción, no a él. Tiene ofertas de un sello y de una marca de ropa.',
     reto:'¿Qué decisiones tomarías en los próximos meses para que la gente le siga a él y no solo a una canción?',
     tabla:{punto:'Tiene números, no marca',aud:'Grande pero de paso',freno:'El interés no se mantiene',rec:'Dos ofertas encima de la mesa'},
-    propuestas:[]},
+    propuestas:[
+      {q:'María Muñoz',f:'Usaría esos números para ir a lo pequeño: colaborar con artistas de nicho que tengan un público comprometido, en vez de perseguir a uno grande. Sello sí, pero proyecto a proyecto, sin atarse varios años.'},
+      {q:'Ro Sánchez',f:'20.000 escuchas en alguien que acaba de empezar es un buen dato: es la temperatura real de su audiencia. Trabajaría esos temas con microcreadores. Y solo firmaría con un sello o una marca que encajen con quien es.'},
+      {q:'Jorge Platero',f:'Que celebre el éxito y use ese dinero para construirse como artista. Tener oyentes no es vender entradas, y el directo no engaña. Mucho cuidado con lo que firma.'}]},
   marta:{n:'Marta', m:'30 años · manager y tour manager',
     d:'Cinco años trabajando en la sombra. Quiere montar su propia oficina y captar artistas, pero en redes no existe: un LinkedIn desactualizado y un Instagram privado. No quiere convertirse en influencer.',
     reto:'¿Cómo construirías su presencia para que le lleguen sus primeros artistas sin que tenga que exponerse más de lo que quiere?',
     tabla:{punto:'Experiencia sin visibilidad',aud:'Red profesional, no público',freno:'No quiere exponerse',rec:'Cinco años de trabajo que contar'},
-    propuestas:[]}
+    propuestas:[
+      {q:'Ro Sánchez',f:'No necesita ser influencer. Lleva cinco años en salas y giras: su red profesional es su plataforma. Que actualice LinkedIn, vaya a eventos y escuche a muchos artistas nuevos.'},
+      {q:'Jorge Platero',f:'La industria es más pequeña de lo que parece y todos se conocen. Lo importante es dejarse ver en conciertos y encuentros del sector.'},
+      {q:'María Muñoz',f:'Mejor en segundo plano que de cara al público. Las oportunidades salen de que te conozcan dentro; y con algo de cara: escribir directamente al artista con el que quieres trabajar.'}]}
 };
 
 /* ============================================================
@@ -97,9 +155,43 @@ export const CASOS = {
    {q:'Ponente', t:'Título de la charla', ideas:['Idea 1','Idea 2','Idea 3'], p:'Pregunta para el alumno'}
    ============================================================ */
 export const CHARLAS = [
-  {q:'Charla 1', t:'¿Basta con tener talento? Cómo funcionan las RRSS en la industria musical', ideas:[], p:'¿Qué parte de tu marca depende hoy del talento y cuál de lo que haces cada semana?'},
-  {q:'Charla 2', t:'Qué mirar de verdad en los datos de streaming y redes para tomar decisiones sobre tu marca', ideas:[], p:'¿Qué dato mirabas antes que no te ayuda a decidir, y cuál vas a mirar ahora?'},
-  {q:'Charla 3', t:'De seguidores a comunidad: convertir una audiencia pasiva en fans activos', ideas:[], p:'¿Qué podrías hacer esta semana para que alguien de tu audiencia pase de mirar a participar?'}
+  {q:'Ana Pavlyuk · Estratega de contenido y crecimiento', t:'El talento no es suficiente',
+   ideas:['La música también es un negocio. El talento te hace bueno, pero no garantiza que te conozcan.',
+     'No tienes 80.000 balas: cuida cada vídeo como cuidas cada canción. Mejor dos buenos a la semana que ocho flojos.',
+     'Tu perfil no es un catálogo. Nadie entra en redes a que le vendan algo: que sea un sitio donde quedarse.',
+     'No comuniques como una superestrella si aún no te conoce nadie. La gente conecta con quien siente que ha descubierto.',
+     'Un viral hace que te vean; la marca, que te recuerden.',
+     'Una canción no caduca a los 15 días: puedes seguir empujándola meses después.',
+     'Esto vale también para managers, A&R y productores.'],
+   p:'¿Cuál de estos errores estás cometiendo ahora y qué vas a cambiar esta semana?'},
+  {q:'Álvaro Rebollo · Los Amigos Digitales', t:'Qué mirar de verdad en los datos',
+   ideas:['Las redes no son tuyas: cambian las reglas, o desaparecen, de un día para otro.',
+     'En redes, mira comentarios y compartidos antes que seguidores y me gusta.',
+     'En YouTube, la retención: ¿se quedan hasta el final?',
+     'En Spotify, compara oyentes con seguidores y guardados. Muchos oyentes y muy pocos seguidores es escucha pasiva.',
+     'No es lo mismo que te suenen en una playlist que que te busquen y te guarden.',
+     'Pagar por entrar en playlists va contra las normas de Spotify y te puede penalizar.',
+     'Está donde esté tu audiencia, no en todas las redes.'],
+   p:'¿Qué dato mirabas antes que no te ayuda a decidir, y cuál vas a mirar ahora?'},
+  {q:'María Muñoz · The Orchard', t:'De seguidores a comunidad',
+   ideas:['Tener oyentes no es tener fans: de miles de seguidores, muy pocos compran una entrada.',
+     'Tu proyecto no es un centro comercial; es un club al que apetece pertenecer.',
+     'La pregunta clave: ¿pasa algo entre tus fans cuando tú no publicas?',
+     'Cuatro vínculos: qué defendemos, contra qué vamos, cómo nos reconocemos y qué hacemos juntos.',
+     'Crea una cita fija: el mismo día, el mismo tipo de pieza.',
+     'Involucra a tus fans en decisiones y dales material con el que crear.',
+     'Sácalos del algoritmo: un canal o una lista de correo, siempre dando algo a cambio.'],
+   p:'¿Qué vas a hacer esta semana para que alguien de tu audiencia pase de mirar a participar?'}
+];
+
+/* El consejo con el que cerró cada ponente */
+export const CONSEJOS = [
+  {q:'Ana Pavlyuk',f:'Deja de vivir las redes como una queja. Hoy tienes miles de oportunidades al año de que alguien te escuche, y gratis.'},
+  {q:'César Manzanera',f:'No llores, rodéate de gente que sea sincera con tu proyecto y échale morro: el «no» ya lo tienes.'},
+  {q:'Álvaro Rebollo',f:'Sé tú. No estés en todas las redes porque sí, y recuerda que van y vienen.'},
+  {q:'María Muñoz',f:'Primero, la música. Si la estrategia funciona y la canción no gusta, el problema no es la estrategia.'},
+  {q:'Jorge Platero',f:'Pásalo bien y sé fiel a ti. Es una industria dura, pero merece la pena.'},
+  {q:'Ro Sánchez',f:'Persevera. No busques el éxito rápido: el camino se hace piedra a piedra.'}
 ];
 
 /* ============================================================

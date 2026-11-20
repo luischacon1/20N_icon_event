@@ -1,5 +1,5 @@
 /* Puerta de acceso. Comprueba la contraseña contra CONFIG.passwordHash y solo entonces carga el cuaderno. */
-import {CONFIG} from './content.js?v=1795181438';
+import {CONFIG} from './content.js?v=1795216163';
 
 const KEY='icon-cuaderno-acceso';
 const gate=document.getElementById('gate'),app=document.getElementById('app');
@@ -12,7 +12,7 @@ const norm=t=>t.trim().toLowerCase().replace(/\s+/g,'');
 
 async function open(){
   gate.hidden=true;app.hidden=false;
-  await import('./app.js?v=1795181438');
+  await import('./app.js?v=1795216163');
 }
 
 let ok=false;

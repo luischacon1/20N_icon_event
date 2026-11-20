@@ -45,14 +45,15 @@ Pega el resultado en `CONFIG.passwordHash` (`src/content.js`).
 
 La comprobación es en el navegador: sirve para dar exclusividad, no para proteger información sensible (quien conozca la URL de `src/content.js` puede leerlo). Si hiciera falta protección real, añade autenticación en el servidor para esta ruta.
 
-## Pendiente tras el evento (`src/content.js`)
+## Contenido del evento (`src/content.js`)
 
-- `MITOS[].items[].dijeron`: qué dijo cada ponente sobre cada frase.
-- `CASOS.*.propuestas`: propuestas de la mesa redonda para Lucía, Dani y Marta.
-- `CHARLAS`: ponente, título e `ideas` de cada charla.
-- `LECTURAS_ICON`: contenido propio de ICON (opcional).
+Ya está cargado a partir de la transcripción del 20 de noviembre:
 
-Con `CONFIG.draft: true` los huecos vacíos se ven en amarillo; con `false` se ocultan.
+- `MITOS[].items[].dijeron`: postura de cada ponente sobre cada frase.
+- `CASOS.*.propuestas`: lo que propusieron para Lucía, Dani y Marta.
+- `CHARLAS`: ideas de las tres charlas. `CONSEJOS`: el consejo final de cada ponente.
+
+Son resúmenes en palabras de ICON, no citas literales. **Cada ponente debe dar el visto bueno a lo que se le atribuye antes de enviarlo.**
 
 ## Reto
 
