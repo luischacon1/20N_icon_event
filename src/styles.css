@@ -432,3 +432,6 @@ h4.mini{margin:0 0 10px;font-family:var(--f-text);font-size:12px;letter-spacing:
 .cta p .plink{display:inline;background:none;padding:0;color:var(--on-teal);text-decoration:underline;border-radius:0}
 
 .mas{margin-top:14px}.mas summary{cursor:pointer;font-weight:700;color:var(--teal-text);font-size:15px}
+
+.cards figcaption .btn{display:block;width:100%;margin-top:8px}
+.cards figcaption a{font-size:13px;color:var(--muted)}

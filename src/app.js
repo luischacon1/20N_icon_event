@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795218605';
+import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795218811';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -408,7 +408,7 @@ function rHoja(){
   <div class="block"><h2>Tus imágenes para stories</h2><p class="sub">Tres imágenes hechas con tus respuestas. Súbelas etiquetando a ${esc(RETO.cuenta)}: es tu primera acción del reto.</p>
     <div id="cardHost"><p class="count">Creando tus imágenes…</p></div>
     <div class="row" style="margin-top:6px"><button class="btn alt" id="mkCard">Actualizar las imágenes</button>${Object.keys(S.mito).length>1?'<button class="btn alt" id="nextMito">Otra frase en la de opinión</button>':''}</div>
-    <p class="count" style="margin-top:8px">En el móvil, mantén pulsada una imagen para guardarla. En el ordenador, clic derecho y "Guardar imagen".</p></div>
+    <p class="count" style="margin-top:8px">En el móvil, «Subir a Instagram» abre el menú de compartir con la imagen lista: elige Instagram y después Historia.</p></div>
 
   <div class="block"><div class="card ex savebox"><div class="exn">Importante</div><h3>Guarda una copia de tu cuaderno</h3>
     <p>Todo lo que escribes se guarda en este navegador. Si cambias de móvil, borras el historial o lo abres en modo incógnito, se pierde.</p>
@@ -530,10 +530,25 @@ async function cardCompromiso(){
   x.fillStyle='#141615';x.font=`700 40px ${FF}`;x.fillText(`Pregúntame el ${d.toLocaleDateString('es-ES',{day:'numeric',month:'long'})}`,90,Math.max(y+60,1560));
   foot(x,'#00A099');return c.toDataURL('image/png');
 }
+let STORIES=[];
+/* Lleva la imagen a Instagram: en el móvil abre el menú de compartir con la imagen; si no se puede, la descarga y abre Instagram */
+function subirStory(i){
+  const s=STORIES[i],msg=$('#storyMsg');if(!s)return;
+  const tag=RETO.cuenta;try{navigator.clipboard.writeText(tag).catch(()=>{})}catch(e){}
+  const say=t=>{if(msg)msg.textContent=t};
+  if(s.file&&navigator.canShare&&navigator.canShare({files:[s.file]})){
+    navigator.share({files:[s.file]}).then(()=>say(`Hemos copiado ${tag}: pégalo como mención en tu historia.`)).catch(()=>{});
+    say(`Elige Instagram > Historia. Hemos copiado ${tag} para que lo pegues como mención.`);return}
+  dl(s.name,s.file||s.u,'image/png');
+  const movil=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  say(movil?`Imagen guardada. Se abre Instagram: elígela en tu galería y pega ${tag} como mención.`:`Imagen descargada. Súbela desde el móvil a tus historias y menciona a ${tag}.`);
+  setTimeout(()=>{if(movil)location.href='instagram://story-camera';else window.open('https://www.instagram.com/','_blank','noopener')},700);
+}
 async function showCard(){
   const h=$('#cardHost');if(!h)return;await fontsReady();
   const cards=[['Mi nivel','Tu resultado y tu siguiente paso',await cardNivel()],['Mi opinión','Una frase del debate y tu postura',await cardOpinion()],['Mi compromiso','Tus objetivos a 90 días',await cardCompromiso()]];
-  h.innerHTML=`<div class="cards">${cards.map(([t,d,u])=>`<figure><img src="${u}" alt="Imagen para stories: ${t}"><figcaption>${t}<span>${d}</span><a href="${u}" download="ICON-${t.toLowerCase().replace(/ /g,'-')}.png">Descargar</a></figcaption></figure>`).join('')}</div>`;
+  STORIES=await Promise.all(cards.map(async([t,d,u])=>{const name=`ICON-${t.toLowerCase().replace(/ /g,'-')}.png`;let file=null;try{file=new File([await (await fetch(u)).blob()],name,{type:'image/png'})}catch(e){}return {t,d,u,name,file}}));
+  h.innerHTML=`<div class="cards">${STORIES.map((s,i)=>`<figure><img src="${s.u}" alt="Imagen para stories: ${s.t}"><figcaption>${s.t}<span>${s.d}</span><button class="btn sm" data-story="${i}">Subir a Instagram</button><a href="${s.u}" download="${s.name}">Solo descargar</a></figcaption></figure>`).join('')}</div><p class="count" id="storyMsg" role="status"></p>`;
 }
 
 /* ---------- Descargables ---------- */
@@ -916,6 +931,7 @@ document.addEventListener('click',async e=>{
   if(d.mdel!==undefined){S.met[S.metTab].splice(+d.mdel,1);save();buildMet();return}
   if(b.id==='maddr'){S.met[S.metTab].push(JSON.parse(JSON.stringify(MET_DEF[S.metTab].blank)));save();buildMet();return}
   if(b.id==='mclr'){S.met[S.metTab]=[JSON.parse(JSON.stringify(MET_DEF[S.metTab].blank))];save();buildMet();return}
+  if(d.story!==undefined){subirStory(+d.story);return}
   if(b.id==='cgen'){genCal();return}
   if(b.id==='dlCal'||b.id==='dlHoja'||b.id==='dlHoja2'){const t=b.textContent;b.disabled=true;b.textContent='Preparando…';(b.id==='dlCal'?dlCalXlsx():dlHojaPdf()).catch(()=>{b.textContent='No se pudo crear';}).then(()=>{b.disabled=false;if(b.textContent==='Preparando…')b.textContent=t});return}
   if(b.id==='ccopy'){try{await navigator.clipboard.writeText(S.calText);b.textContent='Copiado';setTimeout(()=>b.textContent='Copiar calendario',1800)}catch(err){const h=$('#cph');let t=h.querySelector('textarea');if(!t){t=document.createElement('textarea');t.className='copyfb';t.readOnly=true;h.after(t)}t.value=S.calText;t.focus();t.select()}return}
