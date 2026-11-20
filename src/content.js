@@ -25,7 +25,7 @@ export const CONFIG = {
 
   /* CTA final: hablar con el equipo */
   equipo: {
-    url: 'https://wa.link/utfk21',   // WhatsApp con un comercial; lleva el mensaje «Desde el evento quiero formarme con vosotros»
+    url: 'https://wa.link/sncxr2',   // WhatsApp con un comercial; lleva el mensaje «Desde el evento quiero formarme con vosotros»
     boton: 'Habla con nuestro equipo',
     email: 'hello@iconmbs.com'
   },
