@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795216867';
+import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795217098';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -346,7 +346,7 @@ function rHoja(){
   return `<div class="kick">Paso 6 · 5 minutos</div><h1 class="ph">Tu hoja de ruta</h1>
   <p class="lead">Tu plan para el próximo mes, hecho con tus respuestas: qué hacer cada semana, tus retos y lo que has aprendido.</p>
   ${r.done?'':'<p class="warn">Te falta el diagnóstico del paso 1. Sin él, tu hoja de ruta sale incompleta. <button class="linkbtn" data-go="diagnostico">Hacerlo ahora</button></p>'}
-  <div class="row" style="margin:14px 0 18px"><button class="btn big" id="dlHoja">Descargar mi hoja de ruta en PDF</button><button class="btn alt" id="copyAll">Copiar como texto</button></div>
+  <div class="row" style="margin:14px 0 18px"><button class="btn xl" id="dlHoja">Descargar mi hoja de ruta en PDF</button><button class="btn alt" id="copyAll">Copiar como texto</button></div>
   <div id="copyHost"></div>
   <div class="hgrid">
   <div class="sheet" id="sheet">
@@ -542,7 +542,7 @@ async function dlHojaPdf(){
   doc.setFillColor(...T);doc.rect(0,0,210,74,'F');doc.addImage(lgD.url,'PNG',M,14,12*lgD.w/lgD.h,12);
   font(1,9,[3,33,31]);doc.text('MI HOJA DE RUTA · RETO ICON · UN MES',M,42);
   font(1,26,[255,255,255]);doc.text(clean(val('nombre')||'Tu plan de marca personal').slice(0,36),M,54);
-  font(0,11,[255,255,255]);doc.text(clean([pf()==='profesional'?'Profesional de la industria':'Artista',new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})].join(' · ')),M,63);
+  font(0,11,[255,255,255]);doc.text(clean([pf()==='profesional'?'Profesional de la industria':'Artista o productor',new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})].join(' · ')),M,63);
   y=86;
   if(bioText()){font(1,8.5,TT);doc.text('MI FRASE',M,y);y+=6;P(bioText(),{s:14,b:1,gap:4})}
   // Punto de partida
@@ -707,24 +707,46 @@ function afterTool(){if(S.toolTab==='metricas')buildMet()}
 
 /* ---------- Navegación ---------- */
 const R={inicio:rInicio,diagnostico:rDiag,mitos:rMitos,casos:rCasos,charlas:rCharlas,plan:rPlan,hoja:rHoja,herramientas:rHerramientas};
-/* Inicio guiado: una idea por pantalla. Los textos están aquí. */
-const INTRO=[
-  {k:()=>`Reto ICON · 1 mes · ${retoQueda()}`,h:'Gana un diagnóstico de carrera y una asesoría 1:1.',p:()=>'Se lo lleva quien más alcance consiga entre todos los participantes.'},
-  {h:'Un mes. Cuanto más te comprometas, mejores resultados.',p:()=>`Publicas, etiquetas a <a href="${esc(RETO.cuentaUrl)}" target="_blank" rel="noopener">${esc(RETO.cuenta)}</a> y mides tu alcance hasta el ${esc(RETO.finTexto)}.`},
-  {h:'Te damos todo para hacerlo.',x:()=>`<ul class="ilist"><li>Diagnóstico de tu marca</li><li>Plan a cuatro semanas</li><li>Calendario de contenidos</li><li>Plantillas en Excel y PDF</li></ul>`},
-  {k:()=>`${TOTAL_MIN} minutos`,h:'Es el tiempo que necesitas para salir con tu plan.',p:()=>'Vinieras o no al evento. Puedes parar y seguir cuando quieras: se guarda solo.'}
+/* Inicio: una carta que aparece frase a frase. Los textos están aquí; <b> marca lo que se resalta. */
+const INTRO=()=>[
+  'Gracias por registrarte en el evento.',
+  'Tanto si viniste como si al final no pudiste.',
+  'No queríamos que se quedara en una tarde sin más.',
+  '<i>(Aunque, entre nosotros, fue la leche.)</i>',
+  'Así que hemos montado esto: <b>todo lo que se dijo</b>, las conclusiones y los aprendizajes, listos para ponerlos en práctica.',
+  'Primero, un <b>diagnóstico</b> de tu marca.',
+  'Después, lo que dijeron los ponentes, llevado a tu caso.',
+  'Y al final, <b>tu hoja de ruta</b> para un mes. Con plantillas y todo.',
+  `Luego te toca a ti: sacar tu contenido a la calle y etiquetar a <a href="${esc(RETO.cuentaUrl)}" target="_blank" rel="noopener">${esc(RETO.cuenta)}</a>.`,
+  'Quien más alcance consiga se lleva una <b>sesión 1:1</b>: analizamos su caso con el equipo de ICON y otros profesionales de la industria.',
+  `Tienes hasta el ${esc(RETO.finTexto)}. Y unos ${TOTAL_MIN} minutos por delante.`,
+  'Ah, y esto es solo la punta del iceberg de lo que hacemos en ICON.'
 ];
-let introI=S.perfil?INTRO.length:0;
+let introI=S.perfil?1:0,introT=null;
+function introPlay(){
+  clearTimeout(introT);const box=$('#intro');if(!box||!box.classList.contains('carta'))return;
+  const L=[...box.querySelectorAll('.il')],end=box.querySelector('.iend');let k=0;
+  const still=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const done=()=>{clearTimeout(introT);L.forEach(x=>{x.classList.add('on');x.classList.remove('now')});end.classList.add('on');if(!S.introVisto){S.introVisto=1;save()}};
+  const step=()=>{clearTimeout(introT);if(k>=L.length){L.forEach(x=>x.classList.remove('now'));end.classList.add('on');S.introVisto=1;save();end.scrollIntoView({block:'nearest',behavior:'smooth'});return}
+    L.forEach(x=>x.classList.remove('now'));const el=L[k++];el.classList.add('on','now');el.scrollIntoView({block:'nearest',behavior:'smooth'});
+    introT=setTimeout(step,850+el.textContent.length*26)};
+  if(S.introVisto||still){done();return}
+  box.onclick=e=>{if(e.target.closest('a,button'))return;step()};
+  box.querySelector('.iskip').onclick=done;
+  introT=setTimeout(step,500);
+}
 function rInicio(){
-  const n=INTRO.length,i=Math.min(introI,n),s=INTRO[i];
-  const dots=`<div class="idots">${[...Array(n+1)].map((_,j)=>`<button data-intro="${j}" aria-label="Pantalla ${j+1}" ${j===i?'aria-current="true"':''}></button>`).join('')}</div>`;
-  if(s)return `<section class="intro" id="intro">${i===0?`<img class="cimg ihero" src="${CONFIG.fotos.portada}" alt="Jornada ICON × Nebrija, 20 de noviembre de 2026">`:''}${s.k?`<div class="kick">${s.k()}</div>`:''}<h1>${s.h}</h1>${s.p?`<p>${s.p()}</p>`:''}${s.x?s.x():''}
-    <div class="row"><button class="btn" data-intro="${i+1}">Continuar →</button></div>${dots}
-    <button class="linkbtn iskip" data-intro="${n}">Saltar</button></section>`;
-  return `<section class="intro" id="intro"><div class="kick">Empezamos por tu diagnóstico</div><h1>¿Eres artista o trabajas en la industria?</h1>
-    <div class="seg">${[['artista','Soy artista'],['profesional','Trabajo en la industria']].map(([v,l])=>`<button data-perfil="${v}" aria-pressed="${S.perfil===v}">${l}</button>`).join('')}</div>
+  clearTimeout(introT);
+  if(introI===0){setTimeout(introPlay,0);
+    return `<section class="intro carta" id="intro"><img class="cimg ihero" src="${CONFIG.fotos.portada}" alt="Jornada ICON × Nebrija, 20 de noviembre de 2026">
+    ${INTRO().map(t=>`<p class="il">${t}</p>`).join('')}
+    <div class="iend"><button class="btn xl" data-intro="1">Empezar →</button></div>
+    ${S.introVisto?'':'<button class="linkbtn iskip">Saltar</button>'}</section>`}
+  return `<section class="intro" id="intro"><div class="kick">Empezamos por tu diagnóstico</div><h1>¿Desde dónde lo vas a hacer?</h1>
+    <div class="seg">${[['artista','Soy artista o productor'],['profesional','Soy otro profesional de la industria']].map(([v,l])=>`<button data-perfil="${v}" aria-pressed="${S.perfil===v}">${l}</button>`).join('')}</div>
     <div style="margin-top:22px;width:100%">${inp('nombre','Tu nombre o el de tu proyecto')}</div>
-    <div class="row" style="margin-top:26px"><button class="btn" data-go="diagnostico">Empezar el diagnóstico →</button></div>${dots}
+    <div class="row" style="margin-top:26px"><button class="btn" data-go="diagnostico">Empezar el diagnóstico →</button><button class="linkbtn" data-intro="0">Volver a leer la intro</button></div>
     <details class="irec"><summary>¿Ya empezaste en otro dispositivo?</summary>
       <textarea id="codeIn" placeholder="Pega tu código ICON1:…"></textarea>
       <div class="row" style="margin-top:10px"><button class="btn alt sm" id="restore">Recuperar</button></div><p class="count" id="restoreMsg"></p></details></section>`;
@@ -801,7 +823,7 @@ document.addEventListener('click',async e=>{
   if(d.paso){const i=[1,2,3].find(n=>!val('paso'+n));if(!i)return;S['paso'+i]=d.paso;save();const f=$('#f-paso'+i);if(f)f.value=d.paso;b.disabled=true;return}
   if(b.id==='nextMito'){const ids=Object.keys(S.mito);const m=mitoCard();S.cardMito=ids[(ids.indexOf(m.id)+1)%ids.length];save();showCard();return}
   if(b.id==='copyCode'){const code='ICON1:'+btoa(unescape(encodeURIComponent(JSON.stringify(S))));try{await navigator.clipboard.writeText(code);b.textContent='Código copiado';setTimeout(()=>b.textContent='Copiar mi código de guardado',2000)}catch(err){const h=$('#codeHost');h.innerHTML='<p class="count" style="margin-top:10px">Selecciona el código y cópialo:</p><textarea readonly></textarea>';const t=h.querySelector('textarea');t.value=code;t.focus();t.select()}return}
-  if(b.id==='restore'){const raw=($('#codeIn').value||'').trim();const msg=$('#restoreMsg');try{if(!raw.startsWith('ICON1:'))throw 0;const o=JSON.parse(decodeURIComponent(escape(atob(raw.slice(6)))));if(!o||typeof o!=='object')throw 0;S=o;['diag','mito','prueba','mapa','lucia','marta','plan','visto','met'].forEach(k=>{if(typeof S[k]!=='object'||!S[k]||Array.isArray(S[k]))S[k]={}});if(!Array.isArray(S.dani))S.dani=[];if(!Array.isArray(S.hist))S.hist=[];Object.keys(MET_DEF).forEach(k=>{if(!Array.isArray(S.met[k]))S.met[k]=JSON.parse(JSON.stringify(MET_DEF[k].ex))});save();introI=INTRO.length;go('inicio');const m2=$('#restoreMsg');if(m2)m2.textContent='Cuaderno recuperado.'}catch(err){msg.textContent='Ese código no es válido. Cópialo completo, empezando por ICON1:'}return}
+  if(b.id==='restore'){const raw=($('#codeIn').value||'').trim();const msg=$('#restoreMsg');try{if(!raw.startsWith('ICON1:'))throw 0;const o=JSON.parse(decodeURIComponent(escape(atob(raw.slice(6)))));if(!o||typeof o!=='object')throw 0;S=o;['diag','mito','prueba','mapa','lucia','marta','plan','visto','met'].forEach(k=>{if(typeof S[k]!=='object'||!S[k]||Array.isArray(S[k]))S[k]={}});if(!Array.isArray(S.dani))S.dani=[];if(!Array.isArray(S.hist))S.hist=[];Object.keys(MET_DEF).forEach(k=>{if(!Array.isArray(S.met[k]))S.met[k]=JSON.parse(JSON.stringify(MET_DEF[k].ex))});save();introI=1;go('inicio');const m2=$('#restoreMsg');if(m2)m2.textContent='Cuaderno recuperado.'}catch(err){msg.textContent='Ese código no es válido. Cópialo completo, empezando por ICON1:'}return}
   if(b.id==='mcopy'){const Dm=MET_DEF[S.metTab];const t=[Dm.cols.map(c=>c[1]).join('\t'),...S.met[S.metTab].map(r=>Dm.cols.map(c=>r[c[0]]??'').join('\t'))].join('\n');try{await navigator.clipboard.writeText(t);b.textContent='Copiada';setTimeout(()=>b.textContent='Copiar tabla',1800)}catch(err){const h=$('#mcopyHost');h.innerHTML='<textarea class="copyfb" readonly></textarea>';const ta=h.querySelector('textarea');ta.value=t;ta.focus();ta.select()}return}
   if(d.perfil){S.perfil=d.perfil;save();b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));rSteps(cur);return}
   if(d.diag!==undefined){S.diag[d.diag]=+d.v;save();b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));const was=$('#diagRes .big');recordHist();rDiagRes();rSteps(cur);if(!was&&diagScores().done)$('#diagRes').scrollIntoView({behavior:'smooth',block:'start'});return}
