@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Tu plan de marca personal · ICON Music Business School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+
+<!-- Acceso con contraseña -->
+<div class="wrap gate" id="gate" hidden>
+  <div class="gatebox">
+    <img class="lg-a" src="assets/logo-teal.png" alt="ICON Music Business School">
+    <img class="lg-b" src="assets/logo-light.png" alt="">
+    <h1>Acceso al material</h1>
+    <p>Introduce la contraseña que recibiste por correo.</p>
+    <form id="gateForm">
+      <input id="gatePass" type="password" placeholder="Contraseña" autocomplete="off" autocapitalize="characters" aria-label="Contraseña" required>
+      <button class="btn" type="submit">Entrar</button>
+      <p class="err" id="gateErr" role="alert"></p>
+    </form>
+  </div>
+</div>
+
+<!-- Cuaderno -->
+<div class="wrap" id="app" hidden>
+  <header class="top">
+    <div class="logo" id="logo"></div>
+    <div class="stamp" id="stamp"></div>
+  </header>
+  <div class="tabsbar"><nav class="steps" id="steps" aria-label="Pasos del cuaderno"></nav></div>
+  <main id="main"></main>
+  <p class="foot" id="foot"></p>
+</div>
+
+<script type="module" src="src/gate.js"></script>
+</body>
+</html>
