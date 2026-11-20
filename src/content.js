@@ -29,6 +29,14 @@ export const CONFIG = {
     boton: 'Habla con nuestro equipo',
     email: 'hello@iconmbs.com'
   },
+  /* Programa formativo (PDF). Para activarlo: copia el archivo a assets/descargas/programa-formativo.pdf y pon activo:true.
+     autoDescarga: se descarga solo, una vez, al entrar en el último paso. */
+  programa: {
+    activo: false,
+    archivo: 'assets/descargas/programa-formativo.pdf',
+    nombre: 'ICON-programa-formativo.pdf',
+    autoDescarga: true
+  },
   /* Página de profesores: se enlaza siempre que se habla del claustro */
   profesoresUrl: 'https://iconmbs.com/profesores/',
 

@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795218902';
+import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795219036';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -673,8 +673,9 @@ function rHerramientas(){
   <div class="ctabs" role="tablist">${T.map(([k,l])=>`<button class="ctab" role="tab" data-tool="${k}" aria-selected="${S.toolTab===k}">${l}</button>`).join('')}</div>
   <div id="toolPanel">${rTool(S.toolTab)}</div>
   <section class="cta"><img src="${CONFIG.logos.dark}" alt="ICON Music Business School"><h2>Esto es la punta del iceberg</h2>
-    <p>Lo que has trabajado aquí cabe en una tarde. Cuéntanos tu caso y vemos cómo llevarlo más lejos con más de 80 profesionales en activo de la industria. <a class="plink" href="${esc(iconUrl(CONFIG.profesoresUrl,'final'))}" target="_blank" rel="noopener">Conoce a los profesores</a></p>
-    <a class="ctabtn" href="${esc(CONFIG.equipo.url)}" target="_blank" rel="noopener">${esc(CONFIG.equipo.boton)} →</a>
+    <p>Si quieres formarte más allá, ${CONFIG.programa.activo?'revisa nuestro programa formativo a fondo y ':''}habla con alguien del equipo para ver cómo seguir ayudándote. Darás clase con más de 80 profesionales en activo de la industria. <a class="plink" href="${esc(iconUrl(CONFIG.profesoresUrl,'final'))}" target="_blank" rel="noopener">Conoce a los profesores</a></p>
+    <div class="ctarow">${CONFIG.programa.activo?`<a class="ctabtn" id="dlPrograma" href="${CONFIG.programa.archivo}" download="${CONFIG.programa.nombre}">Descargar el programa formativo ↓</a>`:''}<a class="ctabtn ${CONFIG.programa.activo?'alt':''}" href="${esc(CONFIG.equipo.url)}" target="_blank" rel="noopener">${esc(CONFIG.equipo.boton)} →</a></div>
+    ${CONFIG.programa.activo?'<p class="ctasub" id="progMsg"></p>':''}
     <p class="ctasub">O escríbenos a ${esc(CONFIG.equipo.email)}</p></section>`;
 }
 function rTool(k){
@@ -863,6 +864,15 @@ const SOFT={
   hoja:['Ya tienes tu hoja de ruta','Si quieres ir más lejos y más rápido, cuéntanos tu caso.']
 };
 const profesLink=paso=>`<a class="plink" href="${esc(iconUrl(CONFIG.profesoresUrl,paso))}" target="_blank" rel="noopener">Conoce a los profesores</a>`;
+/* Programa formativo: se descarga solo la primera vez que alguien llega al último paso */
+function toast(t){let el=$('#toast');if(!el){el=document.createElement('div');el.id='toast';el.setAttribute('role','status');document.body.appendChild(el)}el.textContent=t;el.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('on'),6000)}
+function autoPrograma(){
+  const P=CONFIG.programa;if(!P.activo||!P.autoDescarga||S.progBajado)return;
+  S.progBajado=1;save();
+  try{const x=document.createElement('a');x.href=P.archivo;x.download=P.nombre;document.body.appendChild(x);x.click();x.remove()}catch(e){return}
+  toast('Te hemos descargado el programa formativo de ICON.');
+  const m=$('#progMsg');if(m)m.textContent='El programa formativo se ha descargado. Si no lo ves, pulsa el botón.';
+}
 function softCta(id){
   const c=SOFT[id];if(!c)return '';
   return `<aside class="soft"><div><b>${c[0]}</b><span>${c[1]}${c[2]?' '+profesLink(id):''}</span></div><a href="${esc(CONFIG.equipo.url)}" target="_blank" rel="noopener">Hablar con el equipo →</a></aside>`;
@@ -877,7 +887,7 @@ function go(id,push){
   if(id==='mitos')updMitoCount();
   if(id==='casos'){rMapaRes();afterCaso()}
   if(id==='hoja')showCard();
-  if(id==='herramientas')afterTool();
+  if(id==='herramientas'){afterTool();autoPrograma()}
   if(push!==false&&location.hash!=='#'+id){try{history.replaceState(null,'','#'+id)}catch(e){location.hash=id}}
   window.scrollTo(0,0);acompana();
 }

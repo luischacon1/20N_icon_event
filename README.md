@@ -55,6 +55,10 @@ Ya está cargado a partir de la transcripción del 20 de noviembre:
 
 Son resúmenes en palabras de ICON, no citas literales. **Cada ponente debe dar el visto bueno a lo que se le atribuye antes de enviarlo.**
 
+## Programa formativo
+
+`CONFIG.programa` está preparado pero **desactivado**: falta el PDF. Para activarlo, copia el archivo a `assets/descargas/programa-formativo.pdf` y pon `activo: true`. Con `autoDescarga: true` se descarga solo, una vez, al entrar en el último paso, y sale un aviso en pantalla.
+
 ## Reto
 
 `CONFIG.reto` define la cuenta a etiquetar y la fecha de cierre (`fin`, `finTexto`). El contador de la cabecera y los textos salen de ahí.
