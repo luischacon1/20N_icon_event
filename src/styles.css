@@ -349,3 +349,11 @@ h4.mini{margin:0 0 10px;font-family:var(--f-text);font-size:12px;letter-spacing:
 .irec textarea{width:100%;min-height:70px;font:inherit;font-size:13px;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--surface);color:var(--ink);margin-top:10px}
 @keyframes introIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.intro{animation:none}}
+
+/* Descargables */
+.dls{display:grid;gap:10px}
+.dlc{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.dlf{display:grid;place-items:center;width:46px;height:46px;border-radius:10px;background:var(--tint);color:var(--teal-text);font-size:12px;font-weight:700;letter-spacing:.04em}
+.dlc b{display:block}.dlc span:not(.dlf){font-size:15px;color:var(--muted)}
+.cards figcaption a{display:inline-block;margin-top:4px;font-size:14px}
+@media (max-width:520px){.dlc{grid-template-columns:auto 1fr}.dlc .btn{grid-column:1/-1}}

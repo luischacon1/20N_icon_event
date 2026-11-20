@@ -190,7 +190,7 @@ export const AREAS = {
     profesional:['Pon tu frase (a quién ayudas y cómo) en tu titular de LinkedIn y en tu bio.','Revisa tu perfil: ¿se entiende a qué te dedicas en diez segundos?','Escribe qué partes de tu vida son públicas y cuáles no, y cúmplelo toda la semana.','Haz la prueba de los 10 segundos con tres personas y ajusta tu perfil.']}},
   contenido:{l:'Contenido', plan:{
     artista:['Elige tus 3 temas fijos y un ritmo que puedas mantener tres meses.','Apunta 12 ideas: cuatro por cada tema.','Graba en un solo día el contenido de toda la semana.','Enseña cómo haces una canción, no solo el resultado.'],
-    profesional:['Elige tus 3 temas de trabajo y un ritmo que puedas mantener (una publicación a la semana vale).','Apunta 12 ideas: cuatro casos, cuatro aprendizajes y cuatro opiniones.','Escribe un caso de trabajo: qué pasaba, qué hiciste y qué resultado tuvo.','Publica tu opinión sobre uno de los mitos del evento.']}},
+    profesional:['Elige tus 3 temas de trabajo y un ritmo que puedas mantener (una publicación a la semana vale).','Apunta 12 ideas: cuatro casos, cuatro aprendizajes y cuatro opiniones.','Escribe un caso de trabajo: qué pasaba, qué hiciste y qué resultado tuvo.','Publica tu opinión sobre uno de los mitos del paso 2.']}},
   datos:{l:'Datos', plan:{
     artista:['Apunta cada semana tres cifras: visitas al perfil, guardados y compartidos.','Busca tus 3 mejores piezas del mes y qué tienen en común.','Prueba un solo cambio a la vez (arranque, duración o formato) y compara.','Mira en Spotify for Artists de qué ciudades y de qué fuentes llega tu audiencia.'],
     profesional:['Apunta cada semana cuántas conversaciones de trabajo has tenido y de dónde vinieron.','Mira qué publicaciones te trajeron visitas al perfil o mensajes.','Pregunta a tus tres últimos clientes o artistas cómo te encontraron.','Decide en qué canal pones más tiempo según lo que has visto.']}},
@@ -276,6 +276,6 @@ export const METAS = {
 };
 export const STEPS = [
   ['inicio','Inicio'],['diagnostico','Dónde estás'],['mitos','Mito o realidad'],['casos','Los casos'],
-  ['charlas','Las charlas'],['plan','Tu plan'],['hoja','Tu hoja de ruta'],['herramientas','Herramientas']
+  ['charlas','Ideas clave'],['plan','Tu plan'],['hoja','Tu hoja de ruta'],['herramientas','Recursos']
 ];
 export const HORAS = ['','1','2','3','5','8','10'];

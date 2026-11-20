@@ -112,12 +112,12 @@ function mitoItems(){return MITOS.map(g=>({g:g.g,items:g.items.filter(m=>!CONFIG
 function rMitos(){
   const all=mitoItems().flatMap(g=>g.items);
   return `<div class="kick">Paso 2 · 10 minutos</div><h1 class="ph">Mito o realidad</h1>
-  <p class="lead">Las frases que debatieron los ponentes. Antes de ver qué dijeron, decide tú: al elegir se despliega la explicación, lo que dijeron en la mesa y una prueba para hacer en tu cuenta. No hay respuesta correcta.</p>
+  <p class="lead">Diez frases que se repiten en la industria. Decide tú: al elegir verás por qué se dice tanto y una prueba para hacer en tu cuenta. No hay respuesta correcta.</p>
   <p class="count" id="mitoCount"></p>
   ${all.map((m,i)=>`<div class="card myth" id="c-${m.id}"><div class="num">${i+1} de ${all.length}</div><button class="t tbtn" data-open="${m.id}" aria-expanded="${!!S.mito[m.id]}">${m.t}</button>
     <div class="seg" role="group" aria-label="Tu opinión">${['mito','realidad','depende'].map(v=>`<button data-mito="${m.id}" data-v="${v}" aria-pressed="${S.mito[m.id]===v}">${vLabel[v]}</button>`).join('')}</div>
     <div class="reveal" id="r-${m.id}" ${S.mito[m.id]?'':'hidden'}>${rMitoReveal(m)}</div></div>`).join('')}
-  <div class="block"><div class="card ex">${exHead(4,'¿Cuál te ha hecho cambiar de idea?','Elige la frase en la que más te ha movido lo que dijeron los ponentes y escribe por qué.')}
+  <div class="block"><div class="card ex">${exHead(4,'¿Cuál te ha hecho cambiar de idea?','Elige la frase que más te ha hecho dudar y escribe por qué.')}
     ${ta('mitoCambio','La frase que más me ha hecho pensar es… porque…',3)}</div></div>`;
 }
 function rMitoReveal(m){
@@ -143,21 +143,21 @@ function bioText(){return [val('nombre'),val('bioQue')&&('· '+val('bioQue')),va
 function rCasos(){
   if(!S.casoTab)S.casoTab='lucia';
   return `<div class="kick">Paso 3 · 15 minutos</div><h1 class="ph">Los tres casos</h1>
-  <p class="lead">En la mesa redonda los ponentes resolvieron los mismos tres casos, cada uno a su manera. Primero mira a cuál te pareces. Después ponte en su lugar y, al final, escribe tu propio caso.</p>
+  <p class="lead">Tres situaciones típicas de la industria. Mira a cuál te pareces, ponte en su lugar y escribe tu propio caso.</p>
   <div class="card ex">${exHead(5,'¿A quién te pareces?','Cuatro preguntas para ver qué caso se acerca más a tu punto de partida.')}
     ${MAPA.map((q,i)=>`<div class="q"><p><b>${q.q}</b></p><div class="mx">${q.o.map((o,j)=>`<button class="opt ${S.mapa[i]===j?'on':''}" data-mapa="${i}" data-v="${j}"><span class="o">${'ABC'[j]}</span><span>${o}</span></button>`).join('')}</div></div>`).join('')}
     <div id="mapaRes"></div></div>
-  <div class="block"><h2>Ponte en su lugar</h2><p class="sub">Elige un caso. Lee lo que propusieron los ponentes y después haz el ejercicio. Si te da tiempo, haz los tres.</p>
+  <div class="block"><h2>Ponte en su lugar</h2><p class="sub">Elige un caso y haz el ejercicio. Si te da tiempo, haz los tres.</p>
     <div class="ctabs" role="tablist">${CKEYS.map(k=>`<button class="ctab" role="tab" data-ctab="${k}" aria-selected="${S.casoTab===k}">${CASOS[k].n}</button>`).join('')}</div>
     <div id="casoPanel">${rCaso(S.casoTab)}</div></div>
-  <div class="block"><div class="card ex">${exHead(9,'Ahora, tu caso','Escríbelo como si fuera uno más de la mesa redonda. Ponerlo en tercera persona ayuda a verlo con distancia.',true)}
+  <div class="block"><div class="card ex">${exHead(9,'Ahora, tu caso','Escríbelo como si fuera un caso más. Ponerlo en tercera persona ayuda a verlo con distancia.',true)}
     ${bioText()?`<div class="have"><div class="k">Lo que ya sabemos</div><p>${esc(bioText())}${diagScores().done?` · Nivel: ${diagScores().lv[1]}`:''}</p></div>`:''}
     <div class="gap">
       <div><label class="l" for="f-tcDatos">Dónde está hoy (datos reales)</label>${ta('tcDatos',pf()==='profesional'?'Años de experiencia, con quién ha trabajado, cómo le llegan los proyectos…':'Seguidores, escuchas, lanzamientos, con quién trabaja…',2)}</div>
       <div><label class="l" for="f-tcDinero">Dinero disponible</label>${inp('tcDinero','Ej.: 300 €')}</div>
       <div><label class="l">Horas a la semana</label>${segK('pilHoras',HRS,'nums')}</div>
       <div><label class="l" for="f-tcReto">Su reto</label>${ta('tcReto','¿Qué tiene que conseguir y en cuánto tiempo?',2)}</div>
-      <div><label class="l" for="f-tcConsejo">Si un ponente le diera un consejo, ¿cuál sería?</label>${ta('tcConsejo','Escríbelo con lo que has oído en el evento',2)}</div>
+      <div><label class="l" for="f-tcConsejo">Si un profesional le diera un consejo, ¿cuál sería?</label>${ta('tcConsejo','Escríbelo como se lo dirías tú',2)}</div>
     </div></div></div>`;
 }
 function rMapaRes(){
@@ -176,11 +176,11 @@ function rCaso(k){
   const props=c.propuestas.length?`<div class="said">${c.propuestas.map(p=>`<div class="q2"><p>${esc(p.f)}</p><div class="who">${esc(p.q)}</div></div>`).join('')}</div>`:pend(`la propuesta de cada ponente para ${c.n}.`);
   let exer='';
   if(k==='lucia'){
-    exer=`<div class="card ex" id="luciaCard">${exHead(6,'Reparte tú los 1.000 €','No hay reparto correcto. Muévelos como lo harías tú y responde a las preguntas que te haría un ponente.')}
+    exer=`<div class="card ex" id="luciaCard">${exHead(6,'Reparte tú los 1.000 €','No hay reparto correcto. Muévelos como lo harías tú y responde a las preguntas que te haría un profesional.')}
       <div class="left" id="lLeftBox">Te quedan <span id="lLeft" class="num">1.000 €</span></div>
       <div class="lockmsg" id="lLock" hidden><b>Has repartido los 1.000 €.</b> Ya no puedes subir ninguna partida: para dar más a una, baja otra primero. La parte gris de cada barra es la que ya no está disponible.</div>
       ${LUCIA_CATS.map(x=>`<div class="sl"><label for="ls-${x.id}">${x.l}</label><output id="lo-${x.id}" class="num">${S.lucia[x.id]||0} €</output><input type="range" id="ls-${x.id}" data-lucia="${x.id}" min="0" max="1000" step="50" value="${S.lucia[x.id]||0}"><small>${x.d}</small></div>`).join('')}
-      <div class="callout"><h4 class="mini">Preguntas que te haría un ponente</h4><ul class="asks" id="lAsks"></ul></div>
+      <div class="callout"><h4 class="mini">Preguntas que te haría un profesional</h4><ul class="asks" id="lAsks"></ul></div>
       <div style="margin-top:14px"><label class="l" for="f-luciaPorque">¿Por qué lo has repartido así?</label>${ta('luciaPorque','Escribe tu razonamiento',2)}</div></div>`;
   }
   if(k==='dani'){
@@ -237,18 +237,18 @@ function updMarta(){
 /* ---------- Charlas ---------- */
 function rCharlas(){
   const list=CHARLAS.length?CHARLAS:(D?[1,2,3].map(n=>({q:'Charla '+n,t:'Título de la charla',ideas:[],p:''})):[]);
-  return `<div class="kick">Paso 4 · 10 minutos</div><h1 class="ph">Las charlas</h1>
-  <p class="lead">Las ideas clave de cada charla, con una pregunta para que la lleves a tu caso.</p>
+  return `<div class="kick">Paso 4 · 10 minutos</div><h1 class="ph">Ideas clave</h1>
+  <p class="lead">Los tres temas centrales del evento, con una pregunta para llevar cada uno a tu caso.</p>
   ${list.map((c,i)=>`<div class="card ex"><div class="exn">${esc(c.q)}</div><h3>${esc(c.t)}</h3>
     ${c.ideas.length?`<ul>${c.ideas.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:pend('tres ideas clave de la charla y una pregunta para el alumno.')}
     ${c.p?`<div style="margin-top:12px"><label class="l" for="f-charla${i}">${esc(c.p)}</label>${ta('charla'+i,'Tu respuesta',2)}</div>`:''}</div>`).join('')}
   <div class="block gap">
-  <div class="card ex">${exHead(10,'Tus referentes','Tres perfiles que lo hacen bien (puede ser algún ponente). No para copiarlos enteros: para tomar una sola cosa de cada uno.',true)}
+  <div class="card ex">${exHead(10,'Tus referentes','Tres perfiles que lo hacen bien. No para copiarlos enteros: para tomar una sola cosa de cada uno.',true)}
     ${[1,2,3].map(i=>`<div class="two" style="margin-bottom:6px"><div>${inp('ref'+i,'Referente '+i)}</div><div>${inp('refQ'+i,'Le tomaría…')}</div></div>`).join('')}</div>
-  <div class="card ex">${exHead(11,'Tus tres temas','Después de escuchar a los ponentes: ¿de qué podrías hablar siempre, sin quedarte sin ideas? Si se te ocurren cuatro ideas de cada tema, sirven.',true)}
+  <div class="card ex">${exHead(11,'Tus tres temas','¿De qué podrías hablar siempre, sin quedarte sin ideas? Si se te ocurren cuatro ideas de cada tema, sirven.',true)}
     <div class="gap">${inp('pil1',pf()==='profesional'?'Tema 1 · ej.: cómo se prepara una gira':'Tema 1 · ej.: cómo hago mis canciones')}${inp('pil2','Tema 2')}${inp('pil3','Tema 3')}</div></div>
-  <div class="card ex">${exHead(12,'Lo que te llevas','Una sola frase. Si mañana solo pudieras recordar una cosa del evento, ¿cuál sería?',true)}
-    ${inp('meLlevo','Lo que me llevo del evento es…')}</div></div>`;
+  <div class="card ex">${exHead(12,'Lo que te llevas','Una sola frase. Si mañana solo pudieras recordar una cosa de todo esto, ¿cuál sería?',true)}
+    ${inp('meLlevo','Lo que me llevo es…')}</div></div>`;
 }
 
 /* ---------- Tu plan ---------- */
@@ -344,7 +344,7 @@ function rHoja(){
     <h2>Dónde estoy</h2>
     ${r.done?`<p><b>${r.lv[1]}</b> · <span class="num">${r.total} sobre 100</span>. Área a trabajar: <b>${AREAS[r.weak].l}</b>.</p>`:'<p class="empty">Haz el diagnóstico del paso 1 para ver tu nivel.</p>'}
     ${mc?`<p>Mi punto de partida se parece al de <b>${CASOS[mc].n}</b>.</p>`:''}
-    ${val('meLlevo')?kv('Lo que me llevo del evento',val('meLlevo')):''}
+    ${val('meLlevo')?kv('Lo que me llevo',val('meLlevo')):''}
     <h2>Mis objetivos a 90 días</h2>${list([1,2,3].map(i=>val('obj'+i)&&(val('obj'+i)+(val('objM'+i)?` (lo mido con: ${val('objM'+i)})`:''))))}
     <h2>Mis próximas cuatro semanas</h2>
     <div class="wk">${weeks.map((w,i)=>`<div class="w4"><div class="h">Semana ${i+1}</div>${w.map((t,j)=>`<label><input type="checkbox" data-plan="${i}-${j}" ${S.plan[i+'-'+j]?'checked':''}><span>${esc(t)}</span></label>`).join('')}</div>`).join('')}</div>
@@ -368,7 +368,7 @@ function rHoja(){
     
     <div class="row"><a class="btn alt" href="${calLink()}" target="_blank" rel="noopener">Ponerme un recordatorio en Google Calendar</a></div></div></div>
 
-  <div class="block"><div class="card tocard"><div><h3 style="font-size:20px;margin-bottom:4px">Llévalo al día a día</h3><p style="margin:0">En Herramientas tienes un calendario de contenidos de cuatro semanas, un panel de métricas y lecturas para seguir aprendiendo.</p></div><button class="btn" data-go="herramientas">Ir a herramientas →</button></div></div>`;
+  <div class="block"><div class="card tocard"><div><h3 style="font-size:20px;margin-bottom:4px">Llévalo al día a día</h3><p style="margin:0">Plantillas descargables, calendario de contenidos y panel de métricas.</p></div><button class="btn" data-go="herramientas">Ir a recursos →</button></div></div>`;
 }
 function hojaText(){
   const r=diagScores(),w=planWeeks();
@@ -440,8 +440,28 @@ async function cardCompromiso(){
 async function showCard(){
   const h=$('#cardHost');if(!h)return;await fontsReady();
   const cards=[['Mi nivel','Tu resultado y tu siguiente paso',await cardNivel()],['Mi opinión','Una frase del debate y tu postura',await cardOpinion()],['Mi compromiso','Tus objetivos a 90 días',await cardCompromiso()]];
-  h.innerHTML=`<div class="cards">${cards.map(([t,d,u])=>`<figure><img src="${u}" alt="Imagen para stories: ${t}"><figcaption>${t}<span>${d}</span></figcaption></figure>`).join('')}</div>`;
+  h.innerHTML=`<div class="cards">${cards.map(([t,d,u])=>`<figure><img src="${u}" alt="Imagen para stories: ${t}"><figcaption>${t}<span>${d}</span><a href="${u}" download="ICON-${t.toLowerCase().replace(/ /g,'-')}.png">Descargar</a></figcaption></figure>`).join('')}</div>`;
 }
+
+/* ---------- Descargables ---------- */
+function dl(name,text,type){const b=new Blob([text],{type});const u=URL.createObjectURL(b);const x=document.createElement('a');x.href=u;x.download=name;document.body.appendChild(x);x.click();x.remove();setTimeout(()=>URL.revokeObjectURL(u),3000)}
+const csv=rows=>'\ufeff'+rows.map(r=>r.map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
+function calRows(){
+  const prof=S.calProf||pf(),obj=S.calObj||(prof==='profesional'?'profesional':'cancion'),n=+S.calNum||Math.min(5,Math.max(1,+S.pilFreq||3));
+  let start=new Date((S.calDate||'')+'T12:00:00');if(isNaN(start)){start=new Date();start.setDate(start.getDate()+7)}
+  start.setDate(start.getDate()-(start.getDay()+6)%7);
+  const rows=[['Fecha','Semana','Formato','Idea','Gancho','Llamada a la acción','Hecho']];
+  CAL_WEEKS[prof].forEach((w,wi)=>w.i.slice(0,n).forEach((it,k)=>{const d=new Date(start);d.setDate(start.getDate()+wi*7+CAL_DAYS[n][k]);
+    rows.push([d.toLocaleDateString('es-ES'),w.n,it.f,it.t,it.h||'',it.cta?CAL_CTA[obj]:'','']) }));
+  return rows;
+}
+const DESCARGAS=[
+  {t:'Checklist de lanzamiento',d:'Todo lo que hay que tener listo desde cuatro semanas antes hasta la semana después.',f:'PDF',href:'assets/descargas/checklist-lanzamiento.pdf',name:'ICON-checklist-lanzamiento.pdf'},
+  {t:'Plantilla de dosier en una página',d:'Lo que un sello, un programador o un artista necesita saber de ti, en una hoja.',f:'PDF',href:'assets/descargas/plantilla-dosier.pdf',name:'ICON-plantilla-dosier.pdf'},
+  {t:'Calendario de contenidos · 4 semanas',d:'Ideas, ganchos y fechas según tu perfil. Se abre en Excel, Sheets o Notion.',f:'CSV',id:'dlCal'},
+  {t:'Plantilla de métricas',d:'Qué apuntar de cada publicación y de cada canción para saber qué funciona.',f:'CSV',id:'dlMet'},
+  {t:'Tu hoja de ruta',d:'Tu plan con lo que has escrito en el cuaderno.',f:'TXT',id:'dlHoja'}
+];
 
 /* ---------- Herramientas: calendario, métricas y recursos ---------- */
 const MET_DEF={
@@ -462,20 +482,21 @@ const numIn=x=>Number(String(x).replace(/[^\d.,-]/g,'').replace(/\./g,'').replac
 const fmtR=(x,pct)=>x==null||!isFinite(x)?'–':pct?(x*100).toLocaleString('es-ES',{maximumFractionDigits:1})+' %':x.toLocaleString('es-ES',{maximumFractionDigits:2});
 
 function rHerramientas(){
-  if(!S.toolTab)S.toolTab='calendario';
-  const T=[['calendario','Calendario de contenidos'],['metricas','Panel de métricas'],['recursos','Recursos para aprender']];
-  return `<div class="kick">Paso 7 · Para usar cuando quieras</div><h1 class="ph">Herramientas</h1>
-  <p class="lead">Para aplicar tu plan en el día a día: un calendario de contenidos de cuatro semanas, un panel para comparar tus publicaciones y canciones y una selección de lecturas y herramientas para seguir aprendiendo.</p>
+  if(!S.toolTab||!S.vistoDesc){S.toolTab='descargas';S.vistoDesc=1}
+  const T=[['descargas','Descargables'],['calendario','Calendario de contenidos'],['metricas','Panel de métricas'],['recursos','Recursos para aprender']];
+  return `<div class="kick">Paso 7 · Para usar cuando quieras</div><h1 class="ph">Recursos</h1>
+  <p class="lead">Plantillas para descargar y herramientas para aplicar tu plan en el día a día.</p>
   <div class="ctabs" role="tablist">${T.map(([k,l])=>`<button class="ctab" role="tab" data-tool="${k}" aria-selected="${S.toolTab===k}">${l}</button>`).join('')}</div>
   <div id="toolPanel">${rTool(S.toolTab)}</div>
   <section class="cta"><img src="${CONFIG.logos.dark}" alt="ICON Music Business School"><h2>Esto es la punta del iceberg</h2>
-    <p>Lo que has trabajado aquí es una tarde de evento. En ICON te formas durante todo un curso con más de 80 profesionales en activo de la industria.</p>
+    <p>Lo que has trabajado aquí cabe en una tarde. En ICON te formas durante todo un curso con más de 80 profesionales en activo de la industria.</p>
     <div class="cta2">
       <div><b>${esc(CONFIG.courseName)}</b><span>Marca, datos, comunidad y lanzamientos.</span><a href="${esc(iconUrl(CONFIG.ctaUrl,'final'))}" target="_blank" rel="noopener">Conoce el curso</a></div>
       <div><b>${esc(CONFIG.courseName2)}</b><span>Crea, produce y compón con nivel profesional.</span><a href="${esc(iconUrl(CONFIG.ctaUrl2,'final'))}" target="_blank" rel="noopener">Conoce el curso</a></div>
     </div></section>`;
 }
 function rTool(k){
+  if(k==='descargas')return `<div class="dls">${DESCARGAS.map(x=>`<div class="dlc"><span class="dlf">${x.f}</span><div><b>${x.t}</b><span>${x.d}</span></div>${x.href?`<a class="btn sm" href="${x.href}" download="${x.name}">Descargar</a>`:`<button class="btn sm" id="${x.id}">Descargar</button>`}</div>`).join('')}</div>`;
   if(k==='calendario'){
     const d=new Date();const dow=(d.getDay()+6)%7;d.setDate(d.getDate()+(dow===0?0:7-dow));
     const iso=d.toISOString().slice(0,10);
@@ -559,7 +580,7 @@ const R={inicio:rInicio,diagnostico:rDiag,mitos:rMitos,casos:rCasos,charlas:rCha
 const INTRO=[
   {h:'No queríamos que el evento se quedara en una tarde.'},
   {h:'Queríamos que marcara un antes y un después en tu carrera.',p:'Seas artista o profesional de la industria.'},
-  {h:'Por eso hemos preparado esto.',p:'Recursos para poner en práctica lo que viste en el evento.'},
+  {h:'Por eso hemos preparado esto.',p:'Un diagnóstico, un plan a tu medida y plantillas descargables. Vinieras o no al evento.'},
   {h:'Primero, un diagnóstico de tu caso.',p:'Con él ajustamos tu plan y tus recursos.'},
   {k:'Reto ICON',h:'Quien mejores resultados consiga gana una asesoría 1:1.',p:()=>`Con profesionales de ICON y de la industria, para llevar su caso al siguiente nivel. Cuenta el alcance de lo que publiques etiquetando a <a href="${esc(RETO.cuentaUrl)}" target="_blank" rel="noopener">${esc(RETO.cuenta)}</a> hasta el ${esc(RETO.finTexto)}.`}
 ];
@@ -594,7 +615,7 @@ function rSteps(cur){
 let cur='inicio';
 const SOFT={
   casos:['¿Lo tuyo es crear música?','En ICON también te formas en producción y composición con nivel profesional.','p'],
-  charlas:['Tres charlas son la punta del iceberg','En ICON das clase todo el curso con más de 80 profesionales en activo de la industria.','m'],
+  charlas:['Tres temas de un programa entero','En ICON das clase todo el curso con más de 80 profesionales en activo de la industria.','m'],
   plan:['Un plan funciona mejor con alguien al lado','En ICON lo trabajas con mentores que lo hacen cada día con artistas reales.','m'],
   hoja:['Ya tienes tu hoja de ruta','Si quieres ir más lejos y más rápido, fórmate con quienes trabajan en la industria.','m']
 };
@@ -667,6 +688,9 @@ document.addEventListener('click',async e=>{
   if(b.id==='maddr'){S.met[S.metTab].push(JSON.parse(JSON.stringify(MET_DEF[S.metTab].blank)));save();buildMet();return}
   if(b.id==='mclr'){S.met[S.metTab]=[JSON.parse(JSON.stringify(MET_DEF[S.metTab].blank))];save();buildMet();return}
   if(b.id==='cgen'){genCal();return}
+  if(b.id==='dlCal'){dl('ICON-calendario-contenidos.csv',csv(calRows()),'text/csv');return}
+  if(b.id==='dlMet'){const r=[];Object.entries({contenido:'CONTENIDO EN REDES',musica:'CANCIONES'}).forEach(([k,l])=>{r.push([l],MET_DEF[k].cols.map(c=>c[1]),...S.met[k].map(x=>MET_DEF[k].cols.map(c=>x[c[0]])),[])});dl('ICON-plantilla-metricas.csv',csv(r),'text/csv');return}
+  if(b.id==='dlHoja'){dl('ICON-mi-hoja-de-ruta.txt',hojaText(),'text/plain');return}
   if(b.id==='ccopy'){try{await navigator.clipboard.writeText(S.calText);b.textContent='Copiado';setTimeout(()=>b.textContent='Copiar calendario',1800)}catch(err){const h=$('#cph');let t=h.querySelector('textarea');if(!t){t=document.createElement('textarea');t.className='copyfb';t.readOnly=true;h.after(t)}t.value=S.calText;t.focus();t.select()}return}
   if(b.id==='copyAll'){const t=hojaText();try{await navigator.clipboard.writeText(t);b.textContent='Copiada';setTimeout(()=>b.textContent='Copiar mi hoja de ruta',1800)}catch(err){const h=$('#copyHost');h.innerHTML='<p class="count" style="margin-top:10px">Selecciona el texto y cópialo:</p><textarea class="copyfb" readonly></textarea>';const ta=h.querySelector('textarea');ta.value=t;ta.focus();ta.select()}return}
   if(b.id==='mkCard'){b.disabled=true;await showCard();b.disabled=false;return}
