@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795217215';
+import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795217393';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -724,18 +724,57 @@ const INTRO=()=>[
   'Ah, y esto es solo la punta del iceberg de lo que hacemos en ICON.'
 ];
 let introI=S.perfil?1:0,introT=null;
-function introPlay(){
+function introPlay(seen,onSeen){
+  seen=seen===undefined?!!S.introVisto:seen;onSeen=onSeen||(()=>{S.introVisto=1;save()});
   clearTimeout(introT);const box=$('#intro');if(!box||!box.classList.contains('carta'))return;
   const L=[...box.querySelectorAll('.il')],end=box.querySelector('.iend');let k=0;
   const still=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const done=()=>{clearTimeout(introT);L.forEach(x=>{x.classList.add('on');x.classList.remove('now')});end.classList.add('on');if(!S.introVisto){S.introVisto=1;save()}};
-  const step=()=>{clearTimeout(introT);if(k>=L.length){L.forEach(x=>x.classList.remove('now'));end.classList.add('on');S.introVisto=1;save();end.scrollIntoView({block:'nearest',behavior:'smooth'});return}
+  const done=()=>{clearTimeout(introT);L.forEach(x=>{x.classList.add('on');x.classList.remove('now')});end.classList.add('on');onSeen()};
+  const step=()=>{clearTimeout(introT);if(k>=L.length){L.forEach(x=>x.classList.remove('now'));end.classList.add('on');onSeen();end.scrollIntoView({block:'nearest',behavior:'smooth'});return}
     L.forEach(x=>x.classList.remove('now'));const el=L[k++];el.classList.add('on','now');el.scrollIntoView({block:'nearest',behavior:'smooth'});
     introT=setTimeout(step,850+el.textContent.length*26)};
-  if(S.introVisto||still){done();return}
+  if(seen||still){done();return}
   box.onclick=e=>{if(e.target.closest('a,button'))return;step()};
-  box.querySelector('.iskip').onclick=done;
+  const sk=box.querySelector('.iskip');if(sk)sk.onclick=done;
   introT=setTimeout(step,500);
+}
+/* Puentes: al pasar de un paso al siguiente, por qué has hecho eso y a dónde vamos */
+const PUENTE={
+  diagnostico(){const r=diagScores();return [
+    r.done?`Ya sabes dónde estás: <b>${r.lv[1]}</b>.`:'Has empezado por mirarte con honestidad. Es el paso que casi todo el mundo se salta.',
+    r.done?`Tu prioridad es <b>${AREAS[r.weak].l}</b>. La tendremos en cuenta en tu hoja de ruta.`:null,
+    'Antes de darte ningún consejo, queremos saber qué piensas tú.',
+    'Ahora vienen las frases que se debatieron en el evento.',
+    'Vota primero. Después verás qué dijo cada ponente.']},
+  mitos(){const all=mitoItems().flatMap(g=>g.items),n=all.filter(m=>S.mito[m.id]).length,k=all.filter(m=>S.mito[m.id]==='depende').length;return [
+    n?`Has opinado sobre <b>${n} ${n===1?'frase':'frases'}</b>.`:'Has visto qué se discute de verdad en la industria.',
+    k?`En ${k} has dicho «depende». Bien: ahí es donde se aprende.`:null,
+    'Casi nada en redes es blanco o negro. Depende del caso.',
+    'Por eso ahora bajamos a <b>tres casos concretos</b>.',
+    'Uno se parece a ti más de lo que crees.']},
+  casos(){const mc=mapaResult();return [
+    mc?`Tu punto de partida se parece al de <b>${CASOS[mc].n}</b>.`:'Has visto tres puntos de partida muy distintos.',
+    'Has leído cómo lo resolverían tres profesionales. Y has pensado cómo lo harías tú.',
+    'Ahora, las ideas de fondo: <b>las tres charlas</b> del evento.',
+    'Quédate con una. Solo una.']},
+  charlas(){return [
+    'Hasta aquí, entender.',
+    'A partir de aquí, <b>hacer</b>.',
+    'Vamos a convertir todo lo anterior en tres objetivos y un primer paso.',
+    'Pequeño. Que puedas empezar mañana.']},
+  plan(){return [
+    'Ya está todo.',
+    'Tu diagnóstico, tus opiniones, tu caso y tu plan.',
+    'Lo hemos juntado en <b>una hoja de ruta para un mes</b>, con un reto por semana.',
+    `Descárgala. Y sal a la calle: cada pieza que etiquetes con ${esc(RETO.cuenta)} cuenta.`]}
+};
+function puente(from,to){
+  const i=STEPS.findIndex(s=>s[0]===to);S.puente=S.puente||{};S.puente[from]=1;save();
+  document.body.classList.add('isintro');document.body.classList.remove('iswide');clearTimeout(introT);
+  $('#main').innerHTML=`<section class="intro carta puente" id="intro"><div class="kick">Siguiente · ${esc(STEPS[i][1])}</div>
+    ${PUENTE[from]().filter(Boolean).map(t=>`<p class="il">${t}</p>`).join('')}
+    <div class="iend"><button class="btn xl" data-go="${to}">Vamos →</button></div></section>`;
+  window.scrollTo(0,0);introPlay(false,()=>{});
 }
 function rInicio(){
   clearTimeout(introT);
@@ -779,10 +818,10 @@ function softCta(id){
   return `<aside class="soft"><div><b>${c[0]}</b><span>${c[1]}</span></div><a href="${esc(url)}" target="_blank" rel="noopener">${c[2]==='e'?'Hablar con el equipo':'Ver el curso'} →</a></aside>`;
 }
 function go(id,push){
-  if(!R[id])id='inicio';cur=id;S.visto[id]=true;save();
+  if(!R[id])id='inicio';clearTimeout(introT);cur=id;S.visto[id]=true;save();
   const i=STEPS.findIndex(s=>s[0]===id),prev=STEPS[i-1],next=STEPS[i+1];
   document.body.classList.toggle('isintro',id==='inicio');document.body.classList.toggle('iswide',id==='hoja');
-  $('#main').innerHTML=id==='inicio'?R[id]():R[id]()+softCta(id)+`<div class="nav">${prev?`<button class="btn alt" data-go="${prev[0]}">← ${prev[1]}</button>`:'<span></span>'}${next?`<button class="btn" data-go="${next[0]}">${i===0?'Empezar':next[1]} →</button>`:''}</div>`;
+  $('#main').innerHTML=id==='inicio'?R[id]():R[id]()+softCta(id)+`<div class="nav">${prev?`<button class="btn alt" data-go="${prev[0]}">← ${prev[1]}</button>`:'<span></span>'}${next?`<button class="btn" data-go="${next[0]}" data-next="1">${i===0?'Empezar':next[1]} →</button>`:''}</div>`;
   rSteps(id);
   if(id==='diagnostico'){rDiagRes();updBio();updPil()}
   if(id==='mitos')updMitoCount();
@@ -819,7 +858,7 @@ document.addEventListener('change',e=>{
 document.addEventListener('click',async e=>{
   const b=e.target.closest('button');if(!b)return;const d=b.dataset;
   if(d.intro!==undefined){introI=+d.intro;go('inicio');return}
-  if(d.go){if(d.reto)introI=0;go(d.go);return}
+  if(d.go){if(d.reto)introI=0;if(d.next&&PUENTE[cur]&&!(S.puente||{})[cur]){puente(cur,d.go);return}go(d.go);return}
   if(d.setk){S[d.setk]=d.v;save();b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));if(/^pil/.test(d.setk)){updPil();rMapaRes()}return}
   if(d.paso){const i=[1,2,3].find(n=>!val('paso'+n));if(!i)return;S['paso'+i]=d.paso;save();const f=$('#f-paso'+i);if(f)f.value=d.paso;b.disabled=true;return}
   if(b.id==='nextMito'){const ids=Object.keys(S.mito);const m=mitoCard();S.cardMito=ids[(ids.indexOf(m.id)+1)%ids.length];save();showCard();return}

@@ -406,3 +406,6 @@ h4.mini{margin:0 0 10px;font-family:var(--f-text);font-size:12px;letter-spacing:
 .carta:has(.iend.on) .iskip{display:none}
 
 .dlc .uso.aviso{background:#fff6dd;border-radius:8px;padding:8px 10px;color:#5b4500!important}
+
+.carta.puente{min-height:60dvh;justify-content:center;padding-top:10px}
+.carta.puente .kick{margin-bottom:18px}
