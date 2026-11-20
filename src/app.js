@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795180710';
+import {CONFIG,MITOS,CASOS,CHARLAS,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795181168';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -24,6 +24,13 @@ const vLabel={mito:'Mito',realidad:'Realidad',depende:'Depende'};
 const pf=()=>S.perfil||(S.mapa[0]===2?'profesional':'artista');
 const qText=q=>q.t||(pf()==='profesional'?q.p:q.a);
 
+/* ---------- Tiempo ---------- */
+const MIN={diagnostico:10,mitos:10,casos:15,charlas:10,plan:10,hoja:5};
+const TOTAL_MIN=Object.values(MIN).reduce((x,y)=>x+y,0);
+function minQuedan(){return Object.entries(MIN).reduce((t,[id,m])=>t+(isDone(id)?0:m),0)}
+function rStamp(){const q=minQuedan();
+  $('#stamp').innerHTML=`<span class="timechip" title="Tiempo que te queda para completar el cuaderno"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v4l2.5 2M9 2h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>${q===0?'Completado':q===TOTAL_MIN?`${q} min`:`Te quedan ${q} min`}</span><button class="retochip" data-go="inicio" data-reto="1"><b>Reto 1:1</b> · ${retoQueda()}</button>`}
+
 /* ---------- Reto ---------- */
 const RETO=CONFIG.reto;
 function retoDias(){const ms=new Date(RETO.fin)-new Date();return ms<=0?0:Math.ceil(ms/864e5)}
@@ -43,7 +50,7 @@ const AREA_ICON={
 (function(){
   const L=CONFIG.logos;
   $('#logo').innerHTML=(L.teal&&!L.teal.startsWith('__'))?`<img class="lg-a" src="${L.teal}" alt="ICON Music Business School"><img class="lg-b" src="${L.light}" alt="">`:'<b>ICON</b>';
-  $('#stamp').innerHTML=`<button class="retochip" data-go="inicio" data-reto="1"><b>Reto 1:1</b> · ${retoQueda()}</button>`;
+  
   $('#foot').textContent=CONFIG.footer;
 })();
 
@@ -334,7 +341,7 @@ function calLink(){
 function rHoja(){
   const r=diagScores();const weeks=planWeeks();const mc=mapaResult();
   const back=new Date();back.setDate(back.getDate()+30);
-  return `<div class="kick">Paso 6</div><h1 class="ph">Tu hoja de ruta</h1>
+  return `<div class="kick">Paso 6 · 5 minutos</div><h1 class="ph">Tu hoja de ruta</h1>
   <p class="lead">Todo lo que has ido escribiendo, en una sola hoja. Cópiala en tus notas o hazle una captura.</p>
   <div class="sheet" id="sheet">
     <div class="k" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700">${esc(val('nombre')||'Mi hoja de ruta')} · ${esc(CONFIG.eventName)} · ${esc(CONFIG.eventDate)}</div>
@@ -446,7 +453,46 @@ async function showCard(){
 }
 
 /* ---------- Descargables ---------- */
-function dl(name,text,type){const b=new Blob([text],{type});const u=URL.createObjectURL(b);const x=document.createElement('a');x.href=u;x.download=name;document.body.appendChild(x);x.click();x.remove();setTimeout(()=>URL.revokeObjectURL(u),3000)}
+function dl(name,data,type){const b=data instanceof Blob?data:new Blob([data],{type});const u=URL.createObjectURL(b);const x=document.createElement('a');x.href=u;x.download=name;document.body.appendChild(x);x.click();x.remove();setTimeout(()=>URL.revokeObjectURL(u),3000)}
+const _lib={};
+function lib(src){return _lib[src]||(_lib[src]=new Promise((ok,ko)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=ko;document.head.appendChild(s)}))}
+function logoPng(){return new Promise((ok,ko)=>{const i=new Image();i.onload=()=>{const c=document.createElement('canvas');c.width=i.naturalWidth;c.height=i.naturalHeight;c.getContext('2d').drawImage(i,0,0);ok({url:c.toDataURL('image/png'),w:i.naturalWidth,h:i.naturalHeight})};i.onerror=ko;i.src=CONFIG.logos.teal})}
+const TEAL_HEX='00A099';
+async function dlCalXlsx(){
+  await lib('assets/vendor/exceljs.min.js');const lg=await logoPng(),rows=calRows();
+  const wb=new ExcelJS.Workbook(),ws=wb.addWorksheet('Calendario',{views:[{showGridLines:false,state:'frozen',ySplit:5}],pageSetup:{orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0}});
+  ws.columns=[{width:12},{width:26},{width:16},{width:52},{width:44},{width:34},{width:9}];
+  ws.addImage(wb.addImage({base64:lg.url,extension:'png'}),{tl:{col:0,row:0},ext:{width:Math.round(40*lg.w/lg.h),height:40}});
+  ws.getRow(1).height=36;
+  ws.getCell('A3').value='Calendario de contenidos · 4 semanas';ws.getCell('A3').font={name:'Arial',size:16,bold:true};
+  ws.getCell('A4').value=`${val('nombre')?val('nombre')+' · ':''}Etiqueta a ${RETO.cuenta} en cada pieza. Lo que va entre corchetes es para completarlo con lo tuyo.`;ws.getCell('A4').font={name:'Arial',size:10,color:{argb:'FF5F6664'}};
+  const line={style:'thin',color:{argb:'FFD5DFDC'}},box={top:line,left:line,bottom:line,right:line};
+  rows.forEach((r,i)=>{const row=ws.getRow(5+i);r.forEach((v,j)=>{const c=row.getCell(j+1);c.value=v;c.border=box;c.alignment={wrapText:true,vertical:'top'};
+    if(i===0){c.font={name:'Arial',size:10,bold:true,color:{argb:'FFFFFFFF'}};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF'+TEAL_HEX}};c.alignment={vertical:'middle',horizontal:'center',wrapText:true}}
+    else{c.font={name:'Arial',size:10,bold:j===1};if(j===6){c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFF9DB'}};c.dataValidation={type:'list',allowBlank:true,formulae:['"Sí,No"']}}}});
+    row.height=i===0?24:undefined});
+  ws.getCell(`A${6+rows.length}`).value='ICON Music Business School · iconmbs.com · @iconmbs';ws.getCell(`A${6+rows.length}`).font={name:'Arial',size:9,color:{argb:'FF5F6664'}};
+  dl('ICON-calendario-contenidos.xlsx',new Blob([await wb.xlsx.writeBuffer()],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+}
+async function dlHojaPdf(){
+  await lib('assets/vendor/jspdf.umd.min.js');const lg=await logoPng();
+  const doc=new jspdf.jsPDF({unit:'mm',format:'a4'}),M=18,W=210-2*M;let y=M;
+  const clean=t=>String(t).replace(/→/g,'>').replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/…/g,'...').replace(/[\u2013\u2014]/g,'-').replace(/[^\x00-\xFF]/g,'');
+  const foot=()=>{doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(95,102,100);doc.text('ICON Music Business School · iconmbs.com · '+RETO.cuenta,M,287)};
+  const need=h=>{if(y+h>278){foot();doc.addPage();y=M}};
+  doc.addImage(lg.url,'PNG',M,y,11*lg.w/lg.h,11);y+=20;
+  const L=hojaText().split('\n');
+  doc.setFont('helvetica','bold');doc.setFontSize(22);doc.setTextColor(20,22,21);doc.text('Mi hoja de ruta',M,y);y+=7;
+  doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(95,102,100);doc.text(clean([val('nombre'),'Marca personal y redes'].filter(Boolean).join(' · ')),M,y);y+=9;
+  L.slice(1).forEach(t=>{t=clean(t).trim();
+    if(!t){y+=2.5;return}
+    const isH=t.length<60&&t===t.toUpperCase()&&/[A-ZÁÉÍÓÚÑ]/.test(t);
+    if(isH){need(14);y+=4;doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(0,117,111);doc.text(t,M,y);doc.setDrawColor(0,160,153);doc.setLineWidth(.5);doc.line(M,y+1.8,M+W,y+1.8);y+=7.5;return}
+    const bul=t.startsWith('- ');if(bul)t=t.slice(2);
+    doc.setFont('helvetica',/^Semana \d/.test(t)?'bold':'normal');doc.setFontSize(10.5);doc.setTextColor(20,22,21);
+    doc.splitTextToSize(t,W-(bul?6:0)).forEach((ln,k)=>{need(6);if(bul&&k===0){doc.setFillColor(0,160,153);doc.circle(M+1.5,y-1.3,.8,'F')}doc.text(ln,M+(bul?6:0),y);y+=5.4});y+=.8});
+  foot();dl('ICON-mi-hoja-de-ruta.pdf',doc.output('blob'));
+}
 const csv=rows=>'\ufeff'+rows.map(r=>r.map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
 function calRows(){
   const prof=S.calProf||pf(),obj=S.calObj||(prof==='profesional'?'profesional':'cancion'),n=+S.calNum||Math.min(5,Math.max(1,+S.pilFreq||3));
@@ -463,8 +509,8 @@ const DL={
   informe:{t:'Informe semanal de audiencia',f:'XLSX',href:'assets/descargas/informe-semanal-audiencia.xlsx',name:'ICON-informe-semanal-audiencia.xlsx',
     d:()=>`Seguidores, oyentes y alcance semana a semana. Suma solo el alcance de lo que publiques etiquetando a ${RETO.cuenta}.`},
   dosier:{t:'Plantilla de dosier en una página',d:()=>'Lo que un sello, un programador o un artista necesita saber de ti, en una hoja.',f:'PDF',href:'assets/descargas/plantilla-dosier.pdf',name:'ICON-plantilla-dosier.pdf'},
-  cal:{t:'Calendario de contenidos · 4 semanas',d:()=>'Ideas, ganchos y fechas según tu perfil. Se abre en Excel, Sheets o Notion.',f:'CSV',id:'dlCal'},
-  hoja:{t:'Tu hoja de ruta',d:()=>'Tu plan con lo que has escrito en el cuaderno.',f:'TXT',id:'dlHoja'}
+  cal:{t:'Calendario de contenidos · 4 semanas',d:()=>'Ideas, ganchos y fechas según tu perfil.',f:'XLSX',id:'dlCal'},
+  hoja:{t:'Tu hoja de ruta',d:()=>'Tu plan con lo que has escrito en el cuaderno.',f:'PDF',id:'dlHoja'}
 };
 const dlCard=k=>{const x=DL[k];return `<div class="dlc"><span class="dlf">${x.f}</span><div><b>${x.t}</b><span>${x.d()}</span></div>${x.href?`<a class="btn sm" href="${x.href}" download="${x.name}">Descargar</a>`:`<button class="btn sm" id="${x.id}">Descargar</button>`}</div>`};
 
@@ -494,11 +540,9 @@ function rHerramientas(){
   <div class="ctabs" role="tablist">${T.map(([k,l])=>`<button class="ctab" role="tab" data-tool="${k}" aria-selected="${S.toolTab===k}">${l}</button>`).join('')}</div>
   <div id="toolPanel">${rTool(S.toolTab)}</div>
   <section class="cta"><img src="${CONFIG.logos.dark}" alt="ICON Music Business School"><h2>Esto es la punta del iceberg</h2>
-    <p>Lo que has trabajado aquí cabe en una tarde. En ICON te formas durante todo un curso con más de 80 profesionales en activo de la industria.</p>
-    <div class="cta2">
-      <div><b>${esc(CONFIG.courseName)}</b><span>Marca, datos, comunidad y lanzamientos.</span><a href="${esc(iconUrl(CONFIG.ctaUrl,'final'))}" target="_blank" rel="noopener">Conoce el curso</a></div>
-      <div><b>${esc(CONFIG.courseName2)}</b><span>Crea, produce y compón con nivel profesional.</span><a href="${esc(iconUrl(CONFIG.ctaUrl2,'final'))}" target="_blank" rel="noopener">Conoce el curso</a></div>
-    </div></section>`;
+    <p>Lo que has trabajado aquí cabe en una tarde. Cuéntanos tu caso y vemos cómo llevarlo más lejos con más de 80 profesionales en activo de la industria.</p>
+    <a class="ctabtn" href="${esc(CONFIG.equipo.url)}" target="_blank" rel="noopener">${esc(CONFIG.equipo.boton)} →</a>
+    <p class="ctasub">O escríbenos a ${esc(CONFIG.equipo.email)}</p></section>`;
 }
 function rTool(k){
   if(k==='descargas')return `<div class="dls">${['informe','plan','dosier','cal','hoja'].map(dlCard).join('')}</div>`;
@@ -583,20 +627,19 @@ function afterTool(){if(S.toolTab==='metricas')buildMet()}
 const R={inicio:rInicio,diagnostico:rDiag,mitos:rMitos,casos:rCasos,charlas:rCharlas,plan:rPlan,hoja:rHoja,herramientas:rHerramientas};
 /* Inicio guiado: una idea por pantalla. Los textos están aquí. */
 const INTRO=[
-  {h:'No queríamos que el evento se quedara en una tarde.'},
-  {h:'Queríamos que marcara un antes y un después en tu carrera.',p:'Seas artista o profesional de la industria.'},
-  {h:'Por eso hemos preparado esto.',p:'Un diagnóstico, un plan a tu medida y plantillas descargables. Vinieras o no al evento.'},
-  {h:'Primero, un diagnóstico de tu caso.',p:'Con él ajustamos tu plan y tus recursos.'},
-  {k:'Reto ICON',h:'Quien mejores resultados consiga gana una asesoría 1:1.',p:()=>`Con profesionales de ICON y de la industria, para llevar su caso al siguiente nivel. Cuenta el alcance de lo que publiques etiquetando a <a href="${esc(RETO.cuentaUrl)}" target="_blank" rel="noopener">${esc(RETO.cuenta)}</a> hasta el ${esc(RETO.finTexto)}.`,x:()=>`<a class="ilink" href="${DL.informe.href}" download="${DL.informe.name}">Descarga la plantilla para medir tu alcance ↓</a>`}
+  {k:()=>`Reto ICON · 1 mes · ${retoQueda()}`,h:'Gana un diagnóstico de carrera y una asesoría 1:1.',p:()=>'Se lo lleva quien más alcance consiga entre todos los participantes.'},
+  {h:'Un mes. Cuanto más te comprometas, mejores resultados.',p:()=>`Publicas, etiquetas a <a href="${esc(RETO.cuentaUrl)}" target="_blank" rel="noopener">${esc(RETO.cuenta)}</a> y mides tu alcance hasta el ${esc(RETO.finTexto)}.`},
+  {h:'Te damos todo para hacerlo.',x:()=>`<ul class="ilist"><li>Diagnóstico de tu marca</li><li>Plan a cuatro semanas</li><li>Calendario de contenidos</li><li>Plantillas en Excel y PDF</li></ul>`},
+  {k:()=>`${TOTAL_MIN} minutos`,h:'Es el tiempo que necesitas para salir con tu plan.',p:()=>'Vinieras o no al evento. Puedes parar y seguir cuando quieras: se guarda solo.'}
 ];
 let introI=S.perfil?INTRO.length:0;
 function rInicio(){
   const n=INTRO.length,i=Math.min(introI,n),s=INTRO[i];
   const dots=`<div class="idots">${[...Array(n+1)].map((_,j)=>`<button data-intro="${j}" aria-label="Pantalla ${j+1}" ${j===i?'aria-current="true"':''}></button>`).join('')}</div>`;
-  if(s)return `<section class="intro" id="intro">${s.k?`<div class="kick">${s.k} · ${retoQueda()}</div>`:''}<h1>${s.h}</h1>${s.p?`<p>${typeof s.p==='function'?s.p():s.p}</p>`:''}${s.x?s.x():''}
+  if(s)return `<section class="intro" id="intro">${s.k?`<div class="kick">${s.k()}</div>`:''}<h1>${s.h}</h1>${s.p?`<p>${s.p()}</p>`:''}${s.x?s.x():''}
     <div class="row"><button class="btn" data-intro="${i+1}">Continuar →</button></div>${dots}
     <button class="linkbtn iskip" data-intro="${n}">Saltar</button></section>`;
-  return `<section class="intro" id="intro"><h1>¿Eres artista o trabajas en la industria?</h1>
+  return `<section class="intro" id="intro"><div class="kick">Empezamos por tu diagnóstico</div><h1>¿Eres artista o trabajas en la industria?</h1>
     <div class="seg">${[['artista','Soy artista'],['profesional','Trabajo en la industria']].map(([v,l])=>`<button data-perfil="${v}" aria-pressed="${S.perfil===v}">${l}</button>`).join('')}</div>
     <div style="margin-top:22px;width:100%">${inp('nombre','Tu nombre o el de tu proyecto')}</div>
     <div class="row" style="margin-top:26px"><button class="btn" data-go="diagnostico">Empezar el diagnóstico →</button></div>${dots}
@@ -614,6 +657,7 @@ function isDone(id){
   return !!S.visto[id];
 }
 function rSteps(cur){
+  rStamp();
   $('#steps').innerHTML=STEPS.map(([id,l],i)=>`<button class="st ${id!==cur&&isDone(id)?'ok':''}" data-go="${id}" ${id===cur?'aria-current="step"':''}><span class="n"><span>${i||'·'}</span></span>${l}</button>`).join('');
   const a=$('#steps [aria-current]');if(a)a.scrollIntoView({block:'nearest',inline:'center'});
 }
@@ -622,12 +666,12 @@ const SOFT={
   casos:['¿Lo tuyo es crear música?','En ICON también te formas en producción y composición con nivel profesional.','p'],
   charlas:['Tres temas de un programa entero','En ICON das clase todo el curso con más de 80 profesionales en activo de la industria.','m'],
   plan:['Un plan funciona mejor con alguien al lado','En ICON lo trabajas con mentores que lo hacen cada día con artistas reales.','m'],
-  hoja:['Ya tienes tu hoja de ruta','Si quieres ir más lejos y más rápido, fórmate con quienes trabajan en la industria.','m']
+  hoja:['Ya tienes tu hoja de ruta','Si quieres ir más lejos y más rápido, cuéntanos tu caso.','e']
 };
 function softCta(id){
   const c=SOFT[id];if(!c)return '';
-  const url=iconUrl(c[2]==='p'?CONFIG.ctaUrl2:CONFIG.ctaUrl,id);
-  return `<aside class="soft"><div><b>${c[0]}</b><span>${c[1]}</span></div><a href="${esc(url)}" target="_blank" rel="noopener">Ver el curso →</a></aside>`;
+  const url=c[2]==='e'?CONFIG.equipo.url:iconUrl(c[2]==='p'?CONFIG.ctaUrl2:CONFIG.ctaUrl,id);
+  return `<aside class="soft"><div><b>${c[0]}</b><span>${c[1]}</span></div><a href="${esc(url)}" target="_blank" rel="noopener">${c[2]==='e'?'Hablar con el equipo':'Ver el curso'} →</a></aside>`;
 }
 function go(id,push){
   if(!R[id])id='inicio';cur=id;S.visto[id]=true;save();
@@ -670,7 +714,7 @@ document.addEventListener('change',e=>{
 document.addEventListener('click',async e=>{
   const b=e.target.closest('button');if(!b)return;const d=b.dataset;
   if(d.intro!==undefined){introI=+d.intro;go('inicio');return}
-  if(d.go){if(d.reto)introI=INTRO.length-1;go(d.go);return}
+  if(d.go){if(d.reto)introI=0;go(d.go);return}
   if(d.setk){S[d.setk]=d.v;save();b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));if(/^pil/.test(d.setk)){updPil();rMapaRes()}return}
   if(d.paso){const i=[1,2,3].find(n=>!val('paso'+n));if(!i)return;S['paso'+i]=d.paso;save();const f=$('#f-paso'+i);if(f)f.value=d.paso;b.disabled=true;return}
   if(b.id==='nextMito'){const ids=Object.keys(S.mito);const m=mitoCard();S.cardMito=ids[(ids.indexOf(m.id)+1)%ids.length];save();showCard();return}
@@ -693,8 +737,7 @@ document.addEventListener('click',async e=>{
   if(b.id==='maddr'){S.met[S.metTab].push(JSON.parse(JSON.stringify(MET_DEF[S.metTab].blank)));save();buildMet();return}
   if(b.id==='mclr'){S.met[S.metTab]=[JSON.parse(JSON.stringify(MET_DEF[S.metTab].blank))];save();buildMet();return}
   if(b.id==='cgen'){genCal();return}
-  if(b.id==='dlCal'){dl('ICON-calendario-contenidos.csv',csv(calRows()),'text/csv');return}
-  if(b.id==='dlHoja'){dl('ICON-mi-hoja-de-ruta.txt',hojaText(),'text/plain');return}
+  if(b.id==='dlCal'||b.id==='dlHoja'){const t=b.textContent;b.disabled=true;b.textContent='Preparando…';(b.id==='dlCal'?dlCalXlsx():dlHojaPdf()).catch(()=>{b.textContent='No se pudo crear';}).then(()=>{b.disabled=false;if(b.textContent==='Preparando…')b.textContent=t});return}
   if(b.id==='ccopy'){try{await navigator.clipboard.writeText(S.calText);b.textContent='Copiado';setTimeout(()=>b.textContent='Copiar calendario',1800)}catch(err){const h=$('#cph');let t=h.querySelector('textarea');if(!t){t=document.createElement('textarea');t.className='copyfb';t.readOnly=true;h.after(t)}t.value=S.calText;t.focus();t.select()}return}
   if(b.id==='copyAll'){const t=hojaText();try{await navigator.clipboard.writeText(t);b.textContent='Copiada';setTimeout(()=>b.textContent='Copiar mi hoja de ruta',1800)}catch(err){const h=$('#copyHost');h.innerHTML='<p class="count" style="margin-top:10px">Selecciona el texto y cópialo:</p><textarea class="copyfb" readonly></textarea>';const ta=h.querySelector('textarea');ta.value=t;ta.focus();ta.select()}return}
   if(b.id==='mkCard'){b.disabled=true;await showCard();b.disabled=false;return}

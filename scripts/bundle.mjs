@@ -1,9 +1,9 @@
 /* Uso: npm run bundle → dist/cuaderno.html, un único archivo que se abre con doble clic (sin servidor). */
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 const r=f=>readFileSync(new URL('../'+f,import.meta.url),'utf8');
-const MIME={pdf:'application/pdf',png:'image/png',xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'};
+const MIME={pdf:'application/pdf',png:'image/png',xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',js:'text/javascript'};
 const uri=f=>'data:'+MIME[f.split('.').pop()]+';base64,'+readFileSync(new URL('../'+f,import.meta.url)).toString('base64');
-const FILES=['assets/logo-teal.png','assets/logo-light.png','assets/logo-dark.png','assets/descargas/plantilla-dosier.pdf','assets/descargas/plan-lanzamiento-single.xlsx','assets/descargas/informe-semanal-audiencia.xlsx'];
+const FILES=['assets/logo-teal.png','assets/logo-light.png','assets/logo-dark.png','assets/descargas/plantilla-dosier.pdf','assets/descargas/plan-lanzamiento-single.xlsx','assets/descargas/informe-semanal-audiencia.xlsx','assets/vendor/exceljs.min.js','assets/vendor/jspdf.umd.min.js'];
 const logos=Object.fromEntries(FILES.map(f=>[f,uri(f)]));
 const inl=s=>Object.entries(logos).reduce((a,[k,v])=>a.split(k).join(v),s);
 const content=r('src/content.js').replace(/^export const /gm,'const ');

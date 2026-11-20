@@ -23,6 +23,7 @@ src/styles.css      Estilos. Colores de marca en :root
 assets/             Logos
 scripts/hash.mjs    Genera el hash de una contraseña nueva
 scripts/xlsx/       Script que genera las dos hojas de cálculo descargables (python3, openpyxl)
+assets/vendor/      ExcelJS y jsPDF: se cargan solo al descargar el calendario (XLSX) o la hoja de ruta (PDF)
 assets/descargas/   Descargables: informe de audiencia y plan de lanzamiento (XLSX), dosier (PDF)
 ```
 
@@ -56,6 +57,8 @@ Con `CONFIG.draft: true` los huecos vacíos se ven en amarillo; con `false` se o
 ## Reto
 
 `CONFIG.reto` define la cuenta a etiquetar y la fecha de cierre (`fin`, `finTexto`). El contador de la cabecera y los textos salen de ahí.
+
+`CONFIG.equipo` define el botón final «Habla con nuestro equipo» (`url`, `boton`, `email`). **Confirmar el número de WhatsApp antes de publicar.**
 
 ## Medición
 

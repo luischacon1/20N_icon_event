@@ -14,13 +14,19 @@ export const CONFIG = {
      Contraseña actual: ICONREDES. Para cambiarla: npm run hash -- "NuevaClave" y pega aquí el resultado. */
   passwordHash: '43e98cc6d57fd6aa865063196cf48cd7002ef260d40f810a5685bd9599c60547',
 
-  /* RETO · gana una asesoría 1:1 quien más alcance consiga etiquetando a la cuenta */
+  /* RETO · un mes; gana diagnóstico de carrera + asesoría 1:1 quien más alcance consiga etiquetando a la cuenta */
   reto: {
     cuenta: '@iconmbs',
     cuentaUrl: 'https://www.instagram.com/iconmbs/',
-    dias: 15,
-    fin: '2026-12-06T23:59:59+01:00',
-    finTexto: '6 de diciembre'
+    fin: '2026-12-20T23:59:59+01:00',
+    finTexto: '20 de diciembre'
+  },
+
+  /* CTA final: hablar con el equipo */
+  equipo: {
+    url: 'https://wa.me/34623925582?text=' + encodeURIComponent('Hola, vengo del reto de marca personal de ICON y quiero contaros mi caso.'),
+    boton: 'Habla con nuestro equipo',
+    email: 'hello@iconmbs.com'
   },
 
   /* Se añade a todos los enlaces a iconmbs.com; utm_content lleva el paso desde el que se hizo clic */
