@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795218223';
+import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795218384';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -763,7 +763,7 @@ const INTRO=()=>[
   `Tienes hasta el ${esc(RETO.finTexto)}. Y unos ${TOTAL_MIN} minutos por delante.`,
   `Ah, y esto es solo la punta del iceberg de lo que hacemos en ICON, con <a href="${esc(iconUrl(CONFIG.profesoresUrl,'intro'))}" target="_blank" rel="noopener">más de 80 profesores en activo</a>.`
 ];
-let introI=S.perfil?1:0,introT=null;
+let introI=S.perfil&&S.introVisto?1:0,introT=null;
 function introPlay(seen,onSeen){
   seen=seen===undefined?!!S.introVisto:seen;onSeen=onSeen||(()=>{S.introVisto=1;save()});
   clearTimeout(introT);const box=$('#intro');if(!box||!box.classList.contains('carta'))return;
@@ -774,7 +774,7 @@ function introPlay(seen,onSeen){
     L.forEach(x=>x.classList.remove('now'));const el=L[k++];el.classList.add('on','now');el.scrollIntoView({block:'nearest',behavior:'smooth'});
     introT=setTimeout(step,850+el.textContent.length*26)};
   if(seen||still){done();return}
-  box.onclick=e=>{if(e.target.closest('a,button'))return;step()};
+  if(box.classList.contains('puente'))box.onclick=e=>{if(e.target.closest('a,button'))return;step()};
   const sk=box.querySelector('.iskip');if(sk)sk.onclick=done;
   introT=setTimeout(step,500);
 }
@@ -822,7 +822,7 @@ function rInicio(){
     return `<section class="intro carta" id="intro"><img class="cimg ihero" src="${CONFIG.fotos.portada}" alt="Jornada ICON × Nebrija, 20 de noviembre de 2026">
     ${INTRO().map(t=>`<p class="il">${t}</p>`).join('')}
     <div class="iend"><button class="btn xl" data-intro="1">Empezar →</button></div>
-    ${S.introVisto?'':'<button class="linkbtn iskip">Saltar</button>'}</section>`}
+    </section>`}
   return `<section class="intro" id="intro"><div class="kick">Empezamos por tu diagnóstico</div><h1>¿Desde dónde lo vas a hacer?</h1>
     <div class="seg">${[['artista','Soy artista o productor'],['profesional','Soy otro profesional de la industria']].map(([v,l])=>`<button data-perfil="${v}" aria-pressed="${S.perfil===v}">${l}</button>`).join('')}</div>
     <div style="margin-top:22px;width:100%">${inp('nombre','Tu nombre o el de tu proyecto')}</div>
@@ -858,7 +858,7 @@ function softCta(id){
   return `<aside class="soft"><div><b>${c[0]}</b><span>${c[1]}${c[2]?' '+profesLink(id):''}</span></div><a href="${esc(CONFIG.equipo.url)}" target="_blank" rel="noopener">Hablar con el equipo →</a></aside>`;
 }
 function go(id,push){
-  if(!R[id])id='inicio';clearTimeout(introT);cur=id;S.visto[id]=true;save();
+  if(!R[id])id='inicio';if(!S.introVisto&&id!=='inicio'){id='inicio';introI=0}clearTimeout(introT);cur=id;S.visto[id]=true;save();
   const i=STEPS.findIndex(s=>s[0]===id),prev=STEPS[i-1],next=STEPS[i+1];
   document.body.classList.toggle('isintro',id==='inicio');document.body.classList.toggle('iswide',id==='hoja');
   $('#main').innerHTML=id==='inicio'?R[id]():R[id]()+softCta(id)+`<div class="nav">${prev?`<button class="btn alt" data-go="${prev[0]}">← ${prev[1]}</button>`:'<span></span>'}${next?`<button class="btn" data-go="${next[0]}" data-next="1">${i===0?'Empezar':next[1]} →</button>`:''}</div>`;
