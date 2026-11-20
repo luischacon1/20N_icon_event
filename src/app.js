@@ -555,36 +555,28 @@ function afterTool(){if(S.toolTab==='metricas')buildMet()}
 
 /* ---------- Navegación ---------- */
 const R={inicio:rInicio,diagnostico:rDiag,mitos:rMitos,casos:rCasos,charlas:rCharlas,plan:rPlan,hoja:rHoja,herramientas:rHerramientas};
+/* Inicio guiado: una idea por pantalla. Los textos están aquí. */
+const INTRO=[
+  {h:'No queríamos que el evento se quedara en una tarde.'},
+  {h:'Queríamos que marcara un antes y un después en tu carrera.',p:'Seas artista o profesional de la industria.'},
+  {h:'Por eso hemos preparado esto.',p:'Recursos para poner en práctica lo que viste en el evento.'},
+  {h:'Primero, un diagnóstico de tu caso.',p:'Con él ajustamos tu plan y tus recursos.'},
+  {k:'Reto ICON',h:'Quien mejores resultados consiga gana una asesoría 1:1.',p:()=>`Con profesionales de ICON y de la industria, para llevar su caso al siguiente nivel. Cuenta el alcance de lo que publiques etiquetando a <a href="${esc(RETO.cuentaUrl)}" target="_blank" rel="noopener">${esc(RETO.cuenta)}</a> hasta el ${esc(RETO.finTexto)}.`}
+];
+let introI=S.perfil?INTRO.length:0;
 function rInicio(){
-  const abierto=retoDias()>0;
-  return `<section class="hero"><div class="kick">${esc(CONFIG.eventName)} · ${esc(CONFIG.venue)}</div><h1>Tu plan de marca personal</h1>
-    <p>Lo que se habló en el evento, convertido en un plan para tu proyecto. En una hora sales con tu hoja de ruta para las próximas cuatro semanas.</p></section>
-
-  <ol class="map" style="margin-top:14px">
-    <li><div><b>Sabes dónde estás</b><span>Un diagnóstico de tu marca en cinco áreas.</span></div></li>
-    <li><div><b>Decides qué hacer</b><span>Ejercicios con los mitos, los casos y las charlas del evento.</span></div></li>
-    <li><div><b>Te llevas un plan</b><span>Hoja de ruta, calendario de contenidos y panel de métricas.</span></div></li>
-  </ol>
-
-  <section class="reto" id="reto">
-    <div class="retotop"><span class="kick">Reto ICON</span><span class="retodays num">${retoQueda()}</span></div>
-    <h2>Gana una asesoría 1:1</h2>
-    <p>Quien más partido saque a este plan se lleva una sesión individual con el equipo de ICON y profesionales del marketing musical para trabajar su caso.</p>
-    <ol class="retosteps">
-      <li><b>Haz tu plan</b><span>Completa el cuaderno.</span></li>
-      <li><b>Ponlo en marcha</b><span>Publica y etiqueta a <a href="${esc(RETO.cuentaUrl)}" target="_blank" rel="noopener">${esc(RETO.cuenta)}</a>.</span></li>
-      <li><b>Gana el mayor alcance</b><span>${abierto?`Cuenta lo que publiques hasta el ${esc(RETO.finTexto)}.`:`El plazo terminó el ${esc(RETO.finTexto)}.`}</span></li>
-    </ol>
-  </section>
-
-  <div class="card ex" style="margin-top:12px"><div class="exn">Para empezar</div><h3>¿Eres artista o trabajas en la industria?</h3><p class="how">Las preguntas y tu plan se adaptan a tu respuesta.</p>
+  const n=INTRO.length,i=Math.min(introI,n),s=INTRO[i];
+  const dots=`<div class="idots">${[...Array(n+1)].map((_,j)=>`<button data-intro="${j}" aria-label="Pantalla ${j+1}" ${j===i?'aria-current="true"':''}></button>`).join('')}</div>`;
+  if(s)return `<section class="intro" id="intro">${s.k?`<div class="kick">${s.k} · ${retoQueda()}</div>`:''}<h1>${s.h}</h1>${s.p?`<p>${typeof s.p==='function'?s.p():s.p}</p>`:''}
+    <div class="row"><button class="btn" data-intro="${i+1}">Continuar →</button></div>${dots}
+    <button class="linkbtn iskip" data-intro="${n}">Saltar</button></section>`;
+  return `<section class="intro" id="intro"><h1>¿Eres artista o trabajas en la industria?</h1>
     <div class="seg">${[['artista','Soy artista'],['profesional','Trabajo en la industria']].map(([v,l])=>`<button data-perfil="${v}" aria-pressed="${S.perfil===v}">${l}</button>`).join('')}</div>
-    <div style="margin-top:16px"><label class="l" for="f-nombre">Tu nombre o el de tu proyecto</label>${inp('nombre','Escríbelo aquí')}</div></div>
-  <details class="card savebox" style="margin-top:12px"><summary style="cursor:pointer;font-weight:700;color:var(--ink)">¿Ya empezaste en otro dispositivo?</summary>
-    <p class="how" style="margin-top:10px">Pega tu código de guardado (lo copias en tu hoja de ruta).</p>
-    <textarea id="codeIn" placeholder="ICON1:…"></textarea>
-    <div class="row" style="margin-top:10px"><button class="btn" id="restore">Recuperar mi cuaderno</button></div><p class="count" id="restoreMsg"></p></details>
-`;
+    <div style="margin-top:22px;width:100%">${inp('nombre','Tu nombre o el de tu proyecto')}</div>
+    <div class="row" style="margin-top:26px"><button class="btn" data-go="diagnostico">Empezar el diagnóstico →</button></div>${dots}
+    <details class="irec"><summary>¿Ya empezaste en otro dispositivo?</summary>
+      <textarea id="codeIn" placeholder="Pega tu código ICON1:…"></textarea>
+      <div class="row" style="margin-top:10px"><button class="btn alt sm" id="restore">Recuperar</button></div><p class="count" id="restoreMsg"></p></details></section>`;
 }
 function isDone(id){
   if(id==='diagnostico')return diagScores().done;
@@ -614,7 +606,8 @@ function softCta(id){
 function go(id,push){
   if(!R[id])id='inicio';cur=id;S.visto[id]=true;save();
   const i=STEPS.findIndex(s=>s[0]===id),prev=STEPS[i-1],next=STEPS[i+1];
-  $('#main').innerHTML=R[id]()+softCta(id)+`<div class="nav">${prev?`<button class="btn alt" data-go="${prev[0]}">← ${prev[1]}</button>`:'<span></span>'}${next?`<button class="btn" data-go="${next[0]}">${i===0?'Empezar':next[1]} →</button>`:''}</div>`;
+  document.body.classList.toggle('isintro',id==='inicio');
+  $('#main').innerHTML=id==='inicio'?R[id]():R[id]()+softCta(id)+`<div class="nav">${prev?`<button class="btn alt" data-go="${prev[0]}">← ${prev[1]}</button>`:'<span></span>'}${next?`<button class="btn" data-go="${next[0]}">${i===0?'Empezar':next[1]} →</button>`:''}</div>`;
   rSteps(id);
   if(id==='diagnostico'){rDiagRes();updBio();updPil()}
   if(id==='mitos')updMitoCount();
@@ -650,12 +643,13 @@ document.addEventListener('change',e=>{
 });
 document.addEventListener('click',async e=>{
   const b=e.target.closest('button');if(!b)return;const d=b.dataset;
-  if(d.go){go(d.go);if(d.reto){const r=$('#reto');if(r)r.scrollIntoView({block:'start'})}return}
+  if(d.intro!==undefined){introI=+d.intro;go('inicio');return}
+  if(d.go){if(d.reto)introI=INTRO.length-1;go(d.go);return}
   if(d.setk){S[d.setk]=d.v;save();b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));if(/^pil/.test(d.setk)){updPil();rMapaRes()}return}
   if(d.paso){const i=[1,2,3].find(n=>!val('paso'+n));if(!i)return;S['paso'+i]=d.paso;save();const f=$('#f-paso'+i);if(f)f.value=d.paso;b.disabled=true;return}
   if(b.id==='nextMito'){const ids=Object.keys(S.mito);const m=mitoCard();S.cardMito=ids[(ids.indexOf(m.id)+1)%ids.length];save();showCard();return}
   if(b.id==='copyCode'){const code='ICON1:'+btoa(unescape(encodeURIComponent(JSON.stringify(S))));try{await navigator.clipboard.writeText(code);b.textContent='Código copiado';setTimeout(()=>b.textContent='Copiar mi código de guardado',2000)}catch(err){const h=$('#codeHost');h.innerHTML='<p class="count" style="margin-top:10px">Selecciona el código y cópialo:</p><textarea readonly></textarea>';const t=h.querySelector('textarea');t.value=code;t.focus();t.select()}return}
-  if(b.id==='restore'){const raw=($('#codeIn').value||'').trim();const msg=$('#restoreMsg');try{if(!raw.startsWith('ICON1:'))throw 0;const o=JSON.parse(decodeURIComponent(escape(atob(raw.slice(6)))));if(!o||typeof o!=='object')throw 0;S=o;['diag','mito','prueba','mapa','lucia','marta','plan','visto','met'].forEach(k=>{if(typeof S[k]!=='object'||!S[k]||Array.isArray(S[k]))S[k]={}});if(!Array.isArray(S.dani))S.dani=[];if(!Array.isArray(S.hist))S.hist=[];Object.keys(MET_DEF).forEach(k=>{if(!Array.isArray(S.met[k]))S.met[k]=JSON.parse(JSON.stringify(MET_DEF[k].ex))});save();go('inicio');const m2=$('#restoreMsg');if(m2)m2.textContent='Cuaderno recuperado.'}catch(err){msg.textContent='Ese código no es válido. Cópialo completo, empezando por ICON1:'}return}
+  if(b.id==='restore'){const raw=($('#codeIn').value||'').trim();const msg=$('#restoreMsg');try{if(!raw.startsWith('ICON1:'))throw 0;const o=JSON.parse(decodeURIComponent(escape(atob(raw.slice(6)))));if(!o||typeof o!=='object')throw 0;S=o;['diag','mito','prueba','mapa','lucia','marta','plan','visto','met'].forEach(k=>{if(typeof S[k]!=='object'||!S[k]||Array.isArray(S[k]))S[k]={}});if(!Array.isArray(S.dani))S.dani=[];if(!Array.isArray(S.hist))S.hist=[];Object.keys(MET_DEF).forEach(k=>{if(!Array.isArray(S.met[k]))S.met[k]=JSON.parse(JSON.stringify(MET_DEF[k].ex))});save();introI=INTRO.length;go('inicio');const m2=$('#restoreMsg');if(m2)m2.textContent='Cuaderno recuperado.'}catch(err){msg.textContent='Ese código no es válido. Cópialo completo, empezando por ICON1:'}return}
   if(b.id==='mcopy'){const Dm=MET_DEF[S.metTab];const t=[Dm.cols.map(c=>c[1]).join('\t'),...S.met[S.metTab].map(r=>Dm.cols.map(c=>r[c[0]]??'').join('\t'))].join('\n');try{await navigator.clipboard.writeText(t);b.textContent='Copiada';setTimeout(()=>b.textContent='Copiar tabla',1800)}catch(err){const h=$('#mcopyHost');h.innerHTML='<textarea class="copyfb" readonly></textarea>';const ta=h.querySelector('textarea');ta.value=t;ta.focus();ta.select()}return}
   if(d.perfil){S.perfil=d.perfil;save();b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));rSteps(cur);return}
   if(d.diag!==undefined){S.diag[d.diag]=+d.v;save();b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));const was=$('#diagRes .big');recordHist();rDiagRes();rSteps(cur);if(!was&&diagScores().done)$('#diagRes').scrollIntoView({behavior:'smooth',block:'start'});return}

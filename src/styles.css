@@ -331,3 +331,21 @@ h4.mini{margin:0 0 10px;font-family:var(--f-text);font-size:12px;letter-spacing:
 .gatebox input{font:inherit;font-size:17px;width:100%;min-height:48px;border:2px solid var(--line);border-radius:12px;padding:10px 14px;background:var(--paper);color:var(--ink)}
 .gatebox input:focus{outline:none;border-color:var(--teal)}
 .gatebox .err{color:var(--bad);font-size:14px;min-height:20px;margin:0}
+
+/* Inicio guiado */
+.isintro .tabsbar,.isintro .foot{display:none}
+.intro{min-height:70dvh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:6px;max-width:640px;margin:0 auto;padding:24px 0;animation:introIn .45s ease both}
+.intro h1{font-size:clamp(32px,7.5vw,54px);margin-bottom:10px}
+.intro>p{font-size:19px;color:var(--muted);max-width:30em;margin-bottom:8px}
+.intro .row{margin-top:22px}
+.intro .seg{width:100%;margin-top:14px}
+.intro .seg button{min-height:56px;font-size:17px}
+.idots{display:flex;gap:8px;margin-top:34px}
+.idots button{width:8px;height:8px;padding:0;border:0;border-radius:50%;background:var(--line)}
+.idots button[aria-current]{background:var(--teal);width:22px;border-radius:4px}
+.iskip{margin-top:18px;font-weight:500;color:var(--muted);text-decoration:none;font-size:14px}
+.irec{margin-top:26px;font-size:14px;color:var(--muted);width:100%}
+.irec summary{cursor:pointer}
+.irec textarea{width:100%;min-height:70px;font:inherit;font-size:13px;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--surface);color:var(--ink);margin-top:10px}
+@keyframes introIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.intro{animation:none}}
