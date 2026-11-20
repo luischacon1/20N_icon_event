@@ -8,11 +8,11 @@ const logos=Object.fromEntries(FILES.map(f=>[f,uri(f)]));
 const inl=s=>Object.entries(logos).reduce((a,[k,v])=>a.split(k).join(v),s);
 const content=r('src/content.js').replace(/^export const /gm,'const ');
 const app=r('src/app.js').replace(/^import .*\n/m,'');
-const gate=r('src/gate.js').replace(/^import .*\n/m,'').replace("await import('./app.js');",'startApp();');
+const gate=r('src/gate.js').replace(/^import .*\n/m,'').replace(/await import\('\.\/app\.js[^']*'\);/,'startApp();');
 const js=inl(`${content}\nfunction startApp(){\n${app}\n}\n(async()=>{\n${gate}\n})();`);
 const html=inl(r('index.html'))
-  .replace('<link rel="stylesheet" href="src/styles.css">',()=>`<style>\n${r('src/styles.css')}</style>`)
-  .replace('<script type="module" src="src/gate.js"></script>',()=>`<script>\n${js}\n</script>`);
+  .replace(/<link rel="stylesheet" href="src\/styles\.css[^"]*">/,()=>`<style>\n${r('src/styles.css')}</style>`)
+  .replace(/<script type="module" src="src\/gate\.js[^"]*"><\/script>/,()=>`<script>\n${js}\n</script>`);
 mkdirSync(new URL('../dist/',import.meta.url),{recursive:true});
 writeFileSync(new URL('../dist/cuaderno.html',import.meta.url),html);
 console.log('dist/cuaderno.html',Math.round(html.length/1024)+' KB');
