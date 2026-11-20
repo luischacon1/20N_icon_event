@@ -10,6 +10,8 @@ npm run dev        # http://localhost:5173
 
 Contraseña actual: `ICONREDES` (no distingue mayúsculas).
 
+Para verlo sin servidor: `npm run bundle` genera `dist/cuaderno.html`, un único archivo que se abre con doble clic.
+
 ## Estructura
 
 ```
