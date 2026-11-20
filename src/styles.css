@@ -430,3 +430,5 @@ h4.mini{margin:0 0 10px;font-family:var(--f-text);font-size:12px;letter-spacing:
 .plink{font-weight:700;white-space:nowrap}
 .soft .plink{display:inline;background:none;padding:0;color:var(--teal-text);text-decoration:underline}
 .cta p .plink{display:inline;background:none;padding:0;color:var(--on-teal);text-decoration:underline;border-radius:0}
+
+.mas{margin-top:14px}.mas summary{cursor:pointer;font-weight:700;color:var(--teal-text);font-size:15px}

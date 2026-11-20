@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795218384';
+import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795218605';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -43,10 +43,9 @@ const GUIA={
   10:['Hasta aquí, las ideas del evento.','Ahora llévalas a tu terreno. Empezamos por quién lo hace bien.'],
   11:['Seguimos.','¿De qué puedes hablar siempre sin quedarte sin ideas?'],
   12:['Y para cerrar este paso, lo más importante.','Si mañana solo recordaras una cosa de todo esto…'],
-  13:['Empezamos tu plan.','Tres objetivos, con una forma de medir cada uno.'],
-  14:['Antes de seguir, una prueba rápida.','Quien llega a tu perfil decide en segundos si se queda.'],
-  15:['Ya sabes a dónde vas.','Ahora, lo primero que vas a hacer. Pequeño y con día.'],
-  16:['El último ejercicio.','Escríbete a ti dentro de tres meses. Te lo vas a agradecer.']
+  13:['Empezamos por el final: a dónde quieres llegar.','Un solo objetivo. Ya habrá tiempo para más.'],
+  14:['Ya sabes a dónde vas.','Ahora, lo primero que vas a hacer. Pequeño y con día.'],
+  15:['Lo último.','Escríbete a ti dentro de tres meses. Te lo vas a agradecer.']
 };
 const guiaHtml=(lines,cls)=>`<div class="guia ${cls||''}" aria-live="polite">${lines.filter(Boolean).map(t=>`<p>${t}</p>`).join('')}</div>`;
 let guiaObs=null;
@@ -62,7 +61,7 @@ function acompana(){
 const $$q=s=>[...document.querySelectorAll(s)];
 
 /* ---------- Tiempo ---------- */
-const MIN={diagnostico:10,mitos:10,casos:15,charlas:10,plan:10,hoja:5};
+const MIN={diagnostico:10,mitos:10,casos:15,charlas:10,plan:5,hoja:5};
 const TOTAL_MIN=Object.values(MIN).reduce((x,y)=>x+y,0);
 function minQuedan(){return Object.entries(MIN).reduce((t,[id,m])=>t+(isDone(id)?0:m),0)}
 function rStamp(){const q=minQuedan();
@@ -323,29 +322,25 @@ function pasoSug(){
 }
 function rPlan(){
   const p=pf(),r=diagScores();
-  const sug=[...new Set([r.done?METAS[p][r.weak]:null,...AKEYS.map(a=>METAS[p][a]),...METAS[p].extra].filter(Boolean))].slice(0,5);
-  return `<div class="kick">Paso 5 · 10 minutos</div><h1 class="ph">Tu plan</h1>
-  <p class="lead">Ya tienes casi todo. Solo falta decidir qué quieres conseguir y por dónde empiezas.</p>
-  ${haveBox()}
-  <div class="dls" style="margin-top:14px">${dlCard('plan')}</div>
+  const sug=[...new Set([r.done?METAS[p][r.weak]:null,...AKEYS.map(a=>METAS[p][a]),...METAS[p].extra].filter(Boolean))].slice(0,3);
+  return `<div class="kick">Paso 5 · 5 minutos</div><h1 class="ph">Tu plan</h1>
+  <p class="lead">Tres decisiones y listo: qué quieres conseguir, por dónde empiezas y qué te dices para no dejarlo.</p>
   <div class="gap" style="margin-top:14px">
-  <div class="card ex">${exHead(13,'Tus tres objetivos a 90 días','Cada uno con una cifra y una forma de medirlo. Si no se puede medir, todavía es un deseo.',true)}
-    ${r.done?`<p class="how">Te proponemos empezar por tu área más baja, <b>${AREAS[r.weak].l}</b>. Toca una sugerencia para usarla o escribe la tuya.</p>`:''}
-    <div class="chips" style="margin-bottom:12px">${sug.map(m=>`<button class="chip" data-meta="${esc(m)}">+ ${m}</button>`).join('')}</div>
-    ${[1,2,3].map(i=>`<div style="margin-bottom:14px"><label class="l" for="f-obj${i}">Objetivo ${i}</label>${inp('obj'+i,'Qué quieres conseguir, con cifra')}${inp('objM'+i,'Cómo lo vas a medir')}</div>`).join('')}</div>
+  <div class="card ex">${exHead(13,'Tu objetivo a 90 días','Uno solo, con una cifra. Si no se puede medir, todavía es un deseo.',true)}
+    ${r.done?`<p class="how">Te proponemos empezar por tu prioridad, <b>${AREAS[r.weak].l}</b>. Toca una idea o escribe la tuya.</p>`:''}
+    <div class="chips left" style="margin-bottom:12px">${sug.map(m=>`<button class="chip" data-meta="${esc(m)}">+ ${m}</button>`).join('')}</div>
+    ${inp('obj1','Qué quieres conseguir, con cifra')}${inp('objM1','Cómo lo vas a medir')}
+    <details class="mas" ${val('obj2')||val('obj3')?'open':''}><summary>Añadir otro objetivo</summary>
+      ${[2,3].map(i=>`<div style="margin-top:12px"><label class="l" for="f-obj${i}">Objetivo ${i}</label>${inp('obj'+i,'Qué quieres conseguir, con cifra')}${inp('objM'+i,'Cómo lo vas a medir')}</div>`).join('')}</details></div>
 
-  <div class="card ex">${exHead(14,'La prueba de los 10 segundos','Enseña tu perfil durante diez segundos a tres personas que no te conozcan bien. Apunta qué creen que haces.')}
-    ${bioText()?`<div class="have" style="margin-bottom:10px"><div class="k">Tu frase</div><p>${esc(bioText())}</p></div>`:''}
-    ${[1,2,3].map(i=>inp('diez'+i,'Persona '+i+' dijo…')).join('')}
-    <p class="how" style="margin-top:10px">Si lo que dicen no se parece a tu frase, ya sabes qué cambiar primero.</p></div>
+  <div class="card ex">${exHead(14,'Tu primer paso','Lo que vas a hacer esta semana. Pequeño, concreto y con día.',true)}
+    <div class="chips left" style="margin-bottom:12px">${pasoSug().slice(0,3).map(t=>`<button class="chip" data-paso="${esc(t)}">+ ${esc(t.length>70?t.slice(0,68)+'…':t)}</button>`).join('')}</div>
+    ${inp('paso1','Lo primero que voy a hacer')}<div style="margin-top:8px">${segK('pasoD1',DIAS,'days')}</div>
+    <details class="mas" ${val('paso2')||val('paso3')?'open':''}><summary>Añadir otro paso</summary>
+      ${[2,3].map(i=>`<div style="margin-top:12px">${inp('paso'+i,'Paso '+i)}<div style="margin-top:8px">${segK('pasoD'+i,DIAS,'days')}</div></div>`).join('')}</details></div>
 
-  <div class="card ex">${exHead(15,'Tus tres siguientes pasos','Lo que vas a hacer esta semana. Pequeño, concreto y con día. Puedes partir de lo que ya has apuntado.',true)}
-    <div class="chips left">${pasoSug().map(t=>`<button class="chip" data-paso="${esc(t)}">+ ${esc(t.length>70?t.slice(0,68)+'…':t)}</button>`).join('')}</div>
-    ${[1,2,3].map(i=>`<div style="margin-bottom:14px">${inp('paso'+i,'Paso '+i)}<div style="margin-top:8px">${segK('pasoD'+i,DIAS,'days')}</div></div>`).join('')}</div>
-
-  <div class="card ex">${exHead(16,'Una nota para dentro de tres meses','Imagina que han pasado 90 días y todo sigue igual.',true)}
-    <div class="gap"><div><label class="l" for="f-futuro">¿Qué habrá pasado para que no cambie nada?</label>${ta('futuro','Sé sincero contigo',2)}</div>
-    <div><label class="l" for="f-teDirias">¿Qué te dirías hoy para que no ocurra?</label>${ta('teDirias','Escríbete a ti',2)}</div></div></div>
+  <div class="card ex">${exHead(15,'Una nota para ti','Dentro de tres meses puede que todo siga igual. ¿Qué te dirías hoy para que no pase?',true)}
+    ${ta('teDirias','Escríbete a ti',2)}</div>
   </div>`;
 }
 function updBio(){
@@ -800,7 +795,7 @@ const PUENTE={
   charlas(){return [
     'Hasta aquí, entender.',
     'A partir de aquí, <b>hacer</b>.',
-    'Vamos a convertir todo lo anterior en tres objetivos y un primer paso.',
+    'Vamos a convertir todo lo anterior en un objetivo y un primer paso.',
     'Pequeño. Que puedas empezar mañana.']},
   plan(){return [
     'Ya está todo.',
@@ -901,7 +896,7 @@ document.addEventListener('click',async e=>{
   if(d.intro!==undefined){introI=+d.intro;go('inicio');return}
   if(d.go){if(d.reto)introI=0;if(d.next&&PUENTE[cur]&&!(S.puente||{})[cur]){puente(cur,d.go);return}go(d.go);return}
   if(d.setk){S[d.setk]=d.v;save();b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));if(/^pil/.test(d.setk)){updPil();rMapaRes()}return}
-  if(d.paso){const i=[1,2,3].find(n=>!val('paso'+n));if(!i)return;S['paso'+i]=d.paso;save();const f=$('#f-paso'+i);if(f)f.value=d.paso;b.disabled=true;return}
+  if(d.paso){S.paso1=d.paso;save();const f=$('#f-paso1');if(f){f.value=d.paso;f.focus()}return}
   if(b.id==='nextMito'){const ids=Object.keys(S.mito);const m=mitoCard();S.cardMito=ids[(ids.indexOf(m.id)+1)%ids.length];save();showCard();return}
   if(b.id==='copyCode'){const code='ICON1:'+btoa(unescape(encodeURIComponent(JSON.stringify(S))));try{await navigator.clipboard.writeText(code);b.textContent='Código copiado';setTimeout(()=>b.textContent='Copiar mi código de guardado',2000)}catch(err){const h=$('#codeHost');h.innerHTML='<p class="count" style="margin-top:10px">Selecciona el código y cópialo:</p><textarea readonly></textarea>';const t=h.querySelector('textarea');t.value=code;t.focus();t.select()}return}
   if(b.id==='restore'){const raw=($('#codeIn').value||'').trim();const msg=$('#restoreMsg');try{if(!raw.startsWith('ICON1:'))throw 0;const o=JSON.parse(decodeURIComponent(escape(atob(raw.slice(6)))));if(!o||typeof o!=='object')throw 0;S=o;['diag','mito','prueba','mapa','lucia','marta','plan','visto','met'].forEach(k=>{if(typeof S[k]!=='object'||!S[k]||Array.isArray(S[k]))S[k]={}});if(!Array.isArray(S.dani))S.dani=[];if(!Array.isArray(S.hist))S.hist=[];Object.keys(MET_DEF).forEach(k=>{if(!Array.isArray(S.met[k]))S.met[k]=JSON.parse(JSON.stringify(MET_DEF[k].ex))});save();introI=1;go('inicio');const m2=$('#restoreMsg');if(m2)m2.textContent='Cuaderno recuperado.'}catch(err){msg.textContent='Ese código no es válido. Cópialo completo, empezando por ICON1:'}return}
@@ -915,7 +910,7 @@ document.addEventListener('click',async e=>{
   if(d.ctab){S.casoTab=d.ctab;save();document.querySelectorAll('.ctab').forEach(x=>x.setAttribute('aria-selected',x===b));$('#casoPanel').innerHTML=rCaso(d.ctab);afterCaso();return}
   if(d.dani!==undefined){const i=+d.dani,p=S.dani.indexOf(i);if(p>=0)S.dani.splice(p,1);else if(S.dani.length<3)S.dani.push(i);save();$('#daniOpts').innerHTML=rDaniOpts();return}
   if(d.marta!==undefined){S.marta[d.marta]=d.v;save();b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));updMarta();return}
-  if(d.meta){const i=[1,2,3].find(n=>!val('obj'+n));if(!i)return;S['obj'+i]=d.meta;save();const f=$('#f-obj'+i);if(f)f.value=d.meta;b.disabled=true;return}
+  if(d.meta){S.obj1=d.meta;save();const f=$('#f-obj1');if(f){f.value=d.meta;f.focus()}return}
   if(d.tool){S.toolTab=d.tool;save();document.querySelectorAll('[data-tool]').forEach(x=>x.setAttribute('aria-selected',x===b));$('#toolPanel').innerHTML=rTool(d.tool);afterTool();return}
   if(d.mtab){S.metTab=d.mtab;save();document.querySelectorAll('[data-mtab]').forEach(x=>x.setAttribute('aria-selected',x===b));buildMet();return}
   if(d.mdel!==undefined){S.met[S.metTab].splice(+d.mdel,1);save();buildMet();return}
