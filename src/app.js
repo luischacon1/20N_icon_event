@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795216163';
+import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795216867';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -151,6 +151,7 @@ function rCasos(){
   if(!S.casoTab)S.casoTab='lucia';
   return `<div class="kick">Paso 3 · 15 minutos</div><h1 class="ph">Los tres casos</h1>
   <p class="lead">Tres casos que María Muñoz, Ro Sánchez y Jorge Platero resolvieron en directo. Mira a cuál te pareces, ponte en su lugar y escribe tu propio caso.</p>
+  <img class="cimg solo" src="${CONFIG.fotos.mesa}" alt="La mesa de debate del evento" loading="lazy">
   <div class="card ex">${exHead(5,'¿A quién te pareces?','Cuatro preguntas para ver qué caso se acerca más a tu punto de partida.')}
     ${MAPA.map((q,i)=>`<div class="q"><p><b>${q.q}</b></p><div class="mx">${q.o.map((o,j)=>`<button class="opt ${S.mapa[i]===j?'on':''}" data-mapa="${i}" data-v="${j}"><span class="o">${'ABC'[j]}</span><span>${o}</span></button>`).join('')}</div></div>`).join('')}
     <div id="mapaRes"></div></div>
@@ -246,7 +247,7 @@ function rCharlas(){
   const list=CHARLAS.length?CHARLAS:(D?[1,2,3].map(n=>({q:'Charla '+n,t:'Título de la charla',ideas:[],p:''})):[]);
   return `<div class="kick">Paso 4 · 10 minutos</div><h1 class="ph">Ideas clave</h1>
   <p class="lead">Las tres charlas del evento, resumidas, con una pregunta para llevar cada una a tu caso.</p>
-  ${list.map((c,i)=>`<div class="card ex"><div class="exn">${esc(c.q)}</div><h3>${esc(c.t)}</h3>
+  ${list.map((c,i)=>`<div class="card ex">${c.img?`<img class="cimg" src="${c.img}" alt="${esc(c.q)} durante su charla" loading="lazy">`:''}<div class="exn">${esc(c.q)}</div><h3>${esc(c.t)}</h3>
     ${c.ideas.length?`<ul>${c.ideas.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:pend('tres ideas clave de la charla y una pregunta para el alumno.')}
     ${c.p?`<div style="margin-top:12px"><label class="l" for="f-charla${i}">${esc(c.p)}</label>${ta('charla'+i,'Tu respuesta',2)}</div>`:''}</div>`).join('')}
   <div class="block"><h2>Un consejo de cada ponente</h2><div class="said">${CONSEJOS.map(x=>`<div class="q2"><p>${esc(x.f)}</p><div class="who">${esc(x.q)}</div></div>`).join('')}</div></div>
@@ -717,7 +718,7 @@ let introI=S.perfil?INTRO.length:0;
 function rInicio(){
   const n=INTRO.length,i=Math.min(introI,n),s=INTRO[i];
   const dots=`<div class="idots">${[...Array(n+1)].map((_,j)=>`<button data-intro="${j}" aria-label="Pantalla ${j+1}" ${j===i?'aria-current="true"':''}></button>`).join('')}</div>`;
-  if(s)return `<section class="intro" id="intro">${s.k?`<div class="kick">${s.k()}</div>`:''}<h1>${s.h}</h1>${s.p?`<p>${s.p()}</p>`:''}${s.x?s.x():''}
+  if(s)return `<section class="intro" id="intro">${i===0?`<img class="cimg ihero" src="${CONFIG.fotos.portada}" alt="Jornada ICON × Nebrija, 20 de noviembre de 2026">`:''}${s.k?`<div class="kick">${s.k()}</div>`:''}<h1>${s.h}</h1>${s.p?`<p>${s.p()}</p>`:''}${s.x?s.x():''}
     <div class="row"><button class="btn" data-intro="${i+1}">Continuar →</button></div>${dots}
     <button class="linkbtn iskip" data-intro="${n}">Saltar</button></section>`;
   return `<section class="intro" id="intro"><div class="kick">Empezamos por tu diagnóstico</div><h1>¿Eres artista o trabajas en la industria?</h1>

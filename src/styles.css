@@ -384,3 +384,9 @@ h4.mini{margin:0 0 10px;font-family:var(--f-text);font-size:12px;letter-spacing:
 .retos li span{display:block;padding-left:16px;position:relative;color:var(--ink)}
 .retos li span::before{content:"";position:absolute;left:2px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--teal)}
 .warn{background:#fff6dd;border:1px solid #f0d58a;border-radius:12px;padding:12px 14px;margin-top:12px;color:#5b4500}
+
+/* Fotos del evento */
+.cimg{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:14px;background:var(--tint)}
+.cimg.solo{margin:14px 0 4px}
+.cimg.ihero{aspect-ratio:21/9;margin-bottom:18px;border-radius:16px}
+.gate{position:fixed;inset:0;overflow:auto;padding:24px 20px;background:linear-gradient(rgba(12,14,13,.72),rgba(12,14,13,.86)),url(../assets/fotos/portada.jpg) center/cover no-repeat}

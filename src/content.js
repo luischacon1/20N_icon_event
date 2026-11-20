@@ -9,6 +9,7 @@ export const CONFIG = {
   eventDate: '20 · 11 · 2026',
   venue: 'Universidad Nebrija',
   logos: {teal:'assets/logo-teal.png', light:'assets/logo-light.png', dark:'assets/logo-dark.png'},
+  fotos: {portada:'assets/fotos/portada.jpg', mesa:'assets/fotos/mesa.jpg'},
 
   /* ACCESO · la contraseña no se guarda en claro: aquí va su SHA-256 (en minúsculas y sin espacios).
      Contraseña actual: ICONREDES. Para cambiarla: npm run hash -- "NuevaClave" y pega aquí el resultado. */
@@ -155,7 +156,7 @@ export const CASOS = {
    {q:'Ponente', t:'Título de la charla', ideas:['Idea 1','Idea 2','Idea 3'], p:'Pregunta para el alumno'}
    ============================================================ */
 export const CHARLAS = [
-  {q:'Ana Pavlyuk · Estratega de contenido y crecimiento', t:'El talento no es suficiente',
+  {img:'assets/fotos/ana.jpg', q:'Ana Pavlyuk · Estratega de contenido y crecimiento', t:'El talento no es suficiente',
    ideas:['La música también es un negocio. El talento te hace bueno, pero no garantiza que te conozcan.',
      'No tienes 80.000 balas: cuida cada vídeo como cuidas cada canción. Mejor dos buenos a la semana que ocho flojos.',
      'Tu perfil no es un catálogo. Nadie entra en redes a que le vendan algo: que sea un sitio donde quedarse.',
@@ -164,7 +165,7 @@ export const CHARLAS = [
      'Una canción no caduca a los 15 días: puedes seguir empujándola meses después.',
      'Esto vale también para managers, A&R y productores.'],
    p:'¿Cuál de estos errores estás cometiendo ahora y qué vas a cambiar esta semana?'},
-  {q:'Álvaro Rebollo · Los Amigos Digitales', t:'Qué mirar de verdad en los datos',
+  {img:'assets/fotos/alvaro.jpg', q:'Álvaro Rebollo · Los Amigos Digitales', t:'Qué mirar de verdad en los datos',
    ideas:['Las redes no son tuyas: cambian las reglas, o desaparecen, de un día para otro.',
      'En redes, mira comentarios y compartidos antes que seguidores y me gusta.',
      'En YouTube, la retención: ¿se quedan hasta el final?',
@@ -173,7 +174,7 @@ export const CHARLAS = [
      'Pagar por entrar en playlists va contra las normas de Spotify y te puede penalizar.',
      'Está donde esté tu audiencia, no en todas las redes.'],
    p:'¿Qué dato mirabas antes que no te ayuda a decidir, y cuál vas a mirar ahora?'},
-  {q:'María Muñoz · The Orchard', t:'De seguidores a comunidad',
+  {img:'assets/fotos/maria.jpg', q:'María Muñoz · The Orchard', t:'De seguidores a comunidad',
    ideas:['Tener oyentes no es tener fans: de miles de seguidores, muy pocos compran una entrada.',
      'Tu proyecto no es un centro comercial; es un club al que apetece pertenecer.',
      'La pregunta clave: ¿pasa algo entre tus fans cuando tú no publicas?',
