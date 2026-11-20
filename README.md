@@ -22,6 +22,8 @@ src/gate.js         Comprobación de contraseña; carga app.js solo al entrar
 src/styles.css      Estilos. Colores de marca en :root
 assets/             Logos
 scripts/hash.mjs    Genera el hash de una contraseña nueva
+scripts/xlsx/       Script que genera las dos hojas de cálculo descargables (python3, openpyxl)
+assets/descargas/   Descargables: informe de audiencia y plan de lanzamiento (XLSX), dosier (PDF)
 ```
 
 ## Publicarlo en iconmbs.com

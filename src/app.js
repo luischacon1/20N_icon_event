@@ -279,6 +279,7 @@ function rPlan(){
   return `<div class="kick">Paso 5 · 10 minutos</div><h1 class="ph">Tu plan</h1>
   <p class="lead">Ya tienes casi todo. Solo falta decidir qué quieres conseguir y por dónde empiezas.</p>
   ${haveBox()}
+  <div class="dls" style="margin-top:14px">${dlCard('plan')}</div>
   <div class="gap" style="margin-top:14px">
   <div class="card ex">${exHead(13,'Tus tres objetivos a 90 días','Cada uno con una cifra y una forma de medirlo. Si no se puede medir, todavía es un deseo.',true)}
     ${r.done?`<p class="how">Te proponemos empezar por tu área más baja, <b>${AREAS[r.weak].l}</b>. Toca una sugerencia para usarla o escribe la tuya.</p>`:''}
@@ -354,6 +355,7 @@ function rHoja(){
   <div id="copyHost"></div>
 
   <div class="block"><h2>Tus imágenes para stories</h2><p class="sub">Tres imágenes hechas con tus respuestas. Súbelas etiquetando a ${esc(RETO.cuenta)}: es tu primera acción del reto.</p>
+    <div class="dls" style="margin-bottom:14px">${dlCard('informe')}</div>
     <div id="cardHost"><p class="count">Creando tus imágenes…</p></div>
     <div class="row" style="margin-top:6px"><button class="btn alt" id="mkCard">Actualizar las imágenes</button>${Object.keys(S.mito).length>1?'<button class="btn alt" id="nextMito">Otra frase en la de opinión</button>':''}</div>
     <p class="count" style="margin-top:8px">En el móvil, mantén pulsada una imagen para guardarla. En el ordenador, clic derecho y "Guardar imagen".</p></div>
@@ -455,13 +457,16 @@ function calRows(){
     rows.push([d.toLocaleDateString('es-ES'),w.n,it.f,it.t,it.h||'',it.cta?CAL_CTA[obj]:'','']) }));
   return rows;
 }
-const DESCARGAS=[
-  {t:'Checklist de lanzamiento',d:'Todo lo que hay que tener listo desde cuatro semanas antes hasta la semana después.',f:'PDF',href:'assets/descargas/checklist-lanzamiento.pdf',name:'ICON-checklist-lanzamiento.pdf'},
-  {t:'Plantilla de dosier en una página',d:'Lo que un sello, un programador o un artista necesita saber de ti, en una hoja.',f:'PDF',href:'assets/descargas/plantilla-dosier.pdf',name:'ICON-plantilla-dosier.pdf'},
-  {t:'Calendario de contenidos · 4 semanas',d:'Ideas, ganchos y fechas según tu perfil. Se abre en Excel, Sheets o Notion.',f:'CSV',id:'dlCal'},
-  {t:'Plantilla de métricas',d:'Qué apuntar de cada publicación y de cada canción para saber qué funciona.',f:'CSV',id:'dlMet'},
-  {t:'Tu hoja de ruta',d:'Tu plan con lo que has escrito en el cuaderno.',f:'TXT',id:'dlHoja'}
-];
+const DL={
+  plan:{t:'Plan de lanzamiento de un single',f:'XLSX',href:'assets/descargas/plan-lanzamiento-single.xlsx',name:'ICON-plan-lanzamiento-single.xlsx',
+    d:()=>pf()==='profesional'?'Lleva el control del lanzamiento de un artista: 35 tareas con fechas, responsables y contactos.':'Tu lanzamiento semana a semana: 35 tareas con fechas, responsables y contactos.'},
+  informe:{t:'Informe semanal de audiencia',f:'XLSX',href:'assets/descargas/informe-semanal-audiencia.xlsx',name:'ICON-informe-semanal-audiencia.xlsx',
+    d:()=>`Seguidores, oyentes y alcance semana a semana. Suma solo el alcance de lo que publiques etiquetando a ${RETO.cuenta}.`},
+  dosier:{t:'Plantilla de dosier en una página',d:()=>'Lo que un sello, un programador o un artista necesita saber de ti, en una hoja.',f:'PDF',href:'assets/descargas/plantilla-dosier.pdf',name:'ICON-plantilla-dosier.pdf'},
+  cal:{t:'Calendario de contenidos · 4 semanas',d:()=>'Ideas, ganchos y fechas según tu perfil. Se abre en Excel, Sheets o Notion.',f:'CSV',id:'dlCal'},
+  hoja:{t:'Tu hoja de ruta',d:()=>'Tu plan con lo que has escrito en el cuaderno.',f:'TXT',id:'dlHoja'}
+};
+const dlCard=k=>{const x=DL[k];return `<div class="dlc"><span class="dlf">${x.f}</span><div><b>${x.t}</b><span>${x.d()}</span></div>${x.href?`<a class="btn sm" href="${x.href}" download="${x.name}">Descargar</a>`:`<button class="btn sm" id="${x.id}">Descargar</button>`}</div>`};
 
 /* ---------- Herramientas: calendario, métricas y recursos ---------- */
 const MET_DEF={
@@ -496,7 +501,7 @@ function rHerramientas(){
     </div></section>`;
 }
 function rTool(k){
-  if(k==='descargas')return `<div class="dls">${DESCARGAS.map(x=>`<div class="dlc"><span class="dlf">${x.f}</span><div><b>${x.t}</b><span>${x.d}</span></div>${x.href?`<a class="btn sm" href="${x.href}" download="${x.name}">Descargar</a>`:`<button class="btn sm" id="${x.id}">Descargar</button>`}</div>`).join('')}</div>`;
+  if(k==='descargas')return `<div class="dls">${['informe','plan','dosier','cal','hoja'].map(dlCard).join('')}</div>`;
   if(k==='calendario'){
     const d=new Date();const dow=(d.getDay()+6)%7;d.setDate(d.getDate()+(dow===0?0:7-dow));
     const iso=d.toISOString().slice(0,10);
@@ -582,13 +587,13 @@ const INTRO=[
   {h:'Queríamos que marcara un antes y un después en tu carrera.',p:'Seas artista o profesional de la industria.'},
   {h:'Por eso hemos preparado esto.',p:'Un diagnóstico, un plan a tu medida y plantillas descargables. Vinieras o no al evento.'},
   {h:'Primero, un diagnóstico de tu caso.',p:'Con él ajustamos tu plan y tus recursos.'},
-  {k:'Reto ICON',h:'Quien mejores resultados consiga gana una asesoría 1:1.',p:()=>`Con profesionales de ICON y de la industria, para llevar su caso al siguiente nivel. Cuenta el alcance de lo que publiques etiquetando a <a href="${esc(RETO.cuentaUrl)}" target="_blank" rel="noopener">${esc(RETO.cuenta)}</a> hasta el ${esc(RETO.finTexto)}.`}
+  {k:'Reto ICON',h:'Quien mejores resultados consiga gana una asesoría 1:1.',p:()=>`Con profesionales de ICON y de la industria, para llevar su caso al siguiente nivel. Cuenta el alcance de lo que publiques etiquetando a <a href="${esc(RETO.cuentaUrl)}" target="_blank" rel="noopener">${esc(RETO.cuenta)}</a> hasta el ${esc(RETO.finTexto)}.`,x:()=>`<a class="ilink" href="${DL.informe.href}" download="${DL.informe.name}">Descarga la plantilla para medir tu alcance ↓</a>`}
 ];
 let introI=S.perfil?INTRO.length:0;
 function rInicio(){
   const n=INTRO.length,i=Math.min(introI,n),s=INTRO[i];
   const dots=`<div class="idots">${[...Array(n+1)].map((_,j)=>`<button data-intro="${j}" aria-label="Pantalla ${j+1}" ${j===i?'aria-current="true"':''}></button>`).join('')}</div>`;
-  if(s)return `<section class="intro" id="intro">${s.k?`<div class="kick">${s.k} · ${retoQueda()}</div>`:''}<h1>${s.h}</h1>${s.p?`<p>${typeof s.p==='function'?s.p():s.p}</p>`:''}
+  if(s)return `<section class="intro" id="intro">${s.k?`<div class="kick">${s.k} · ${retoQueda()}</div>`:''}<h1>${s.h}</h1>${s.p?`<p>${typeof s.p==='function'?s.p():s.p}</p>`:''}${s.x?s.x():''}
     <div class="row"><button class="btn" data-intro="${i+1}">Continuar →</button></div>${dots}
     <button class="linkbtn iskip" data-intro="${n}">Saltar</button></section>`;
   return `<section class="intro" id="intro"><h1>¿Eres artista o trabajas en la industria?</h1>
@@ -689,7 +694,6 @@ document.addEventListener('click',async e=>{
   if(b.id==='mclr'){S.met[S.metTab]=[JSON.parse(JSON.stringify(MET_DEF[S.metTab].blank))];save();buildMet();return}
   if(b.id==='cgen'){genCal();return}
   if(b.id==='dlCal'){dl('ICON-calendario-contenidos.csv',csv(calRows()),'text/csv');return}
-  if(b.id==='dlMet'){const r=[];Object.entries({contenido:'CONTENIDO EN REDES',musica:'CANCIONES'}).forEach(([k,l])=>{r.push([l],MET_DEF[k].cols.map(c=>c[1]),...S.met[k].map(x=>MET_DEF[k].cols.map(c=>x[c[0]])),[])});dl('ICON-plantilla-metricas.csv',csv(r),'text/csv');return}
   if(b.id==='dlHoja'){dl('ICON-mi-hoja-de-ruta.txt',hojaText(),'text/plain');return}
   if(b.id==='ccopy'){try{await navigator.clipboard.writeText(S.calText);b.textContent='Copiado';setTimeout(()=>b.textContent='Copiar calendario',1800)}catch(err){const h=$('#cph');let t=h.querySelector('textarea');if(!t){t=document.createElement('textarea');t.className='copyfb';t.readOnly=true;h.after(t)}t.value=S.calText;t.focus();t.select()}return}
   if(b.id==='copyAll'){const t=hojaText();try{await navigator.clipboard.writeText(t);b.textContent='Copiada';setTimeout(()=>b.textContent='Copiar mi hoja de ruta',1800)}catch(err){const h=$('#copyHost');h.innerHTML='<p class="count" style="margin-top:10px">Selecciona el texto y cópialo:</p><textarea class="copyfb" readonly></textarea>';const ta=h.querySelector('textarea');ta.value=t;ta.focus();ta.select()}return}

@@ -357,3 +357,5 @@ h4.mini{margin:0 0 10px;font-family:var(--f-text);font-size:12px;letter-spacing:
 .dlc b{display:block}.dlc span:not(.dlf){font-size:15px;color:var(--muted)}
 .cards figcaption a{display:inline-block;margin-top:4px;font-size:14px}
 @media (max-width:520px){.dlc{grid-template-columns:auto 1fr}.dlc .btn{grid-column:1/-1}}
+
+.ilink{font-weight:700;color:var(--teal-text)}
