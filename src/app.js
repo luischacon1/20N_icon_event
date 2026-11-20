@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795217488';
+import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795217746';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -28,6 +28,38 @@ const qText=q=>q.t||(pf()==='profesional'?q.p:q.a);
 const rolDe=n=>(PONENTES[n]||{}).rol||'';
 const quien=n=>`<b>${esc(n)}</b>${rolDe(n)?`<span class="rol">${esc(rolDe(n))}</span>`:''}`;
 const ponentes=(titulo,ns)=>`<div class="pons"><div class="k">${titulo}</div>${ns.map(n=>`<div class="pon"><b>${esc(n)}</b><span class="rol">${esc(rolDe(n))}</span><p>${esc(PONENTES[n].bio)}</p></div>`).join('')}</div>`;
+
+/* ---------- Acompañamiento: frases que aparecen antes de cada ejercicio ---------- */
+const GUIA={
+  1:['Ya tienes tu diagnóstico.','Ahora, lo más básico y lo más difícil: decir quién eres en una frase.','Ana Pavlyuk lo planteó así: ¿por qué alguien debería quedarse a escucharte?'],
+  2:['Bien. Ya sabes cómo presentarte.','Ahora decide qué enseñas y qué no. Nadie tiene que hacer nada que no quiera.'],
+  3:['Lo último de este paso.','Sé realista con tu tiempo: mejor dos piezas buenas a la semana que ocho flojas.'],
+  4:['Ya has votado.','Ahora quédate con una sola: la frase que más te ha hecho dudar.'],
+  5:['Antes de leer los casos, veamos a cuál te pareces tú.'],
+  6:['Ahora ponte en su lugar.','No hay respuesta correcta: importa por qué eliges lo que eliges.'],
+  7:['Ahora ponte en su lugar.','Tiene dos ofertas y poco tiempo. ¿Qué harías primero?'],
+  8:['Ahora ponte en su lugar.','No todo el mundo quiere exponerse igual. ¿Y tú?'],
+  9:['Ya has resuelto el caso de otra persona.','Ahora, el tuyo. Escríbelo en tercera persona: se ve más claro.'],
+  10:['Hasta aquí, las ideas del evento.','Ahora llévalas a tu terreno. Empezamos por quién lo hace bien.'],
+  11:['Seguimos.','¿De qué puedes hablar siempre sin quedarte sin ideas?'],
+  12:['Y para cerrar este paso, lo más importante.','Si mañana solo recordaras una cosa de todo esto…'],
+  13:['Empezamos tu plan.','Tres objetivos, con una forma de medir cada uno.'],
+  14:['Antes de seguir, una prueba rápida.','Quien llega a tu perfil decide en segundos si se queda.'],
+  15:['Ya sabes a dónde vas.','Ahora, lo primero que vas a hacer. Pequeño y con día.'],
+  16:['El último ejercicio.','Escríbete a ti dentro de tres meses. Te lo vas a agradecer.']
+};
+const guiaHtml=(lines,cls)=>`<div class="guia ${cls||''}" aria-live="polite">${lines.filter(Boolean).map(t=>`<p>${t}</p>`).join('')}</div>`;
+let guiaObs=null;
+function acompana(){
+  $$q('#main .card.ex .exn').forEach(el=>{const card=el.closest('.card');if(card.dataset.g)return;card.dataset.g=1;
+    const m=el.textContent.match(/Ejercicio (\d+)/);if(m&&GUIA[m[1]])card.insertAdjacentHTML('beforebegin',guiaHtml(GUIA[m[1]]))});
+  const still=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!('IntersectionObserver' in window)||still){$$q('#main .guia p').forEach(p=>p.classList.add('on'));return}
+  if(!guiaObs)guiaObs=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;guiaObs.unobserve(e.target);
+    [...e.target.children].forEach((p,i)=>setTimeout(()=>p.classList.add('on'),250+i*900))}),{threshold:.6});
+  $$q('#main .guia:not([data-o])').forEach(g=>{g.dataset.o=1;guiaObs.observe(g)});
+}
+const $$q=s=>[...document.querySelectorAll(s)];
 
 /* ---------- Tiempo ---------- */
 const MIN={diagnostico:10,mitos:10,casos:15,charlas:10,plan:10,hoja:5};
@@ -351,7 +383,7 @@ function rHoja(){
   const D=hojaDoc(),r=D.r;const weeks=D.weeks;const mc=D.mc;
   const back=new Date();back.setDate(back.getDate()+30);
   return `<div class="kick">Paso 6 · 5 minutos</div><h1 class="ph">Tu hoja de ruta</h1>
-  <p class="lead">Tu plan para el próximo mes, hecho con tus respuestas: qué hacer cada semana, tus retos y lo que has aprendido.</p>
+  ${guiaHtml([val('nombre')?`<b>${esc(val('nombre'))}</b>, esta es tu hoja de ruta.`:'Esta es tu hoja de ruta.','La hemos montado con todo lo que nos has contado, y es solo tuya.',r.done?`Partes de un nivel <b>${r.lv[1]}</b> y tu prioridad es <b>${AREAS[r.weak].l}</b>.`:null,'Recoge lo que deberías llevarte en tu caso y lo que te toca aplicar este mes.','Descárgala, léela entera y pon la primera tarea en tu agenda.'],'gbig')}
   ${r.done?'':'<p class="warn">Te falta el diagnóstico del paso 1. Sin él, tu hoja de ruta sale incompleta. <button class="linkbtn" data-go="diagnostico">Hacerlo ahora</button></p>'}
   <div class="row" style="margin:14px 0 18px"><button class="btn xl" id="dlHoja">Descargar mi hoja de ruta en PDF</button><button class="btn alt" id="copyAll">Copiar como texto</button></div>
   <div id="copyHost"></div>
@@ -366,11 +398,11 @@ function rHoja(){
     ${r.done?`<p><b>${r.lv[1]}</b> · <span class="num">${r.total} sobre 100</span>. Área a trabajar: <b>${AREAS[r.weak].l}</b>.</p>`:'<p class="empty">Haz el diagnóstico del paso 1 para ver tu nivel.</p>'}
     ${mc?`<p>Mi punto de partida se parece al de <b>${CASOS[mc].n}</b>.</p>`:''}
     ${val('meLlevo')?kv('Lo que me llevo',val('meLlevo')):''}
-    ${D.ins.length?`<h2>Lo que he aprendido</h2>${D.ins.map(([k,v])=>`<div class="kv"><div class="k">${k}</div><div class="v">${esc(v)}</div></div>`).join('')}`:''}
+    ${D.ins.length?`<h2>Lo que te llevas en tu caso</h2>${D.ins.map(([k,v])=>`<div class="kv"><div class="k">${k}</div><div class="v">${esc(v)}</div></div>`).join('')}`:''}
     <h2>Mis objetivos a 90 días</h2>${list([1,2,3].map(i=>val('obj'+i)&&(val('obj'+i)+(val('objM'+i)?` (lo mido con: ${val('objM'+i)})`:''))))}
     <h2>Mis próximas cuatro semanas</h2>
     <div class="wk">${weeks.map((w,i)=>`<div class="w4"><div class="h">Semana ${i+1}</div>${w.map((t,j)=>`<label><input type="checkbox" data-plan="${i}-${j}" ${S.plan[i+'-'+j]?'checked':''}><span>${esc(t)}</span></label>`).join('')}</div>`).join('')}</div>
-    <h2>Mis retos del mes</h2>
+    <h2>Lo que te toca aplicar: tus retos del mes</h2>
     <ol class="retos">${D.retos.map((x,i)=>`<li><b>Semana ${i+1} · ${x.t}</b>${x.d.map(t=>`<span>${esc(t)}</span>`).join('')}</li>`).join('')}</ol>
     ${val('teDirias')?`<h2>Lo que me digo hoy</h2><p style="color:var(--ink)">${esc(val('teDirias'))}</p>`:''}
   </div>
@@ -552,19 +584,20 @@ async function dlHojaPdf(){
   font(0,11,[255,255,255]);doc.text(clean([pf()==='profesional'?'Profesional de la industria':'Artista o productor',new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})].join(' · ')),M,63);
   y=86;
   if(bioText()){font(1,8.5,TT);doc.text('MI FRASE',M,y);y+=6;P(bioText(),{s:14,b:1,gap:4})}
+  P(`${val('nombre')?clean(val('nombre'))+': hemos':'Hemos'} montado esta hoja de ruta con lo que nos has contado en el cuaderno. Recoge lo que deberías llevarte en tu caso y lo que te toca aplicar durante el próximo mes. Léela entera y pon la primera tarea en tu agenda.`,{gap:1.5});P('El equipo de ICON',{b:1,c:TT,gap:5});
   // Punto de partida
   H('1 · Dónde estás');
   if(r.done){P(`${r.lv[1]} · ${r.total} sobre 100`,{b:1,s:12,gap:1});P(r.lv[2],{c:G,gap:4});
     AKEYS.forEach(k=>{need(8);font(k===r.weak,10,K);doc.text(AREAS[k].l,M,y);doc.setFillColor(...TINT);doc.rect(M+38,y-3.2,100,3.6,'F');doc.setFillColor(...(k===r.weak?K:T));doc.rect(M+38,y-3.2,Math.max(1,r.pc[k]),3.6,'F');font(0,9.5,G);doc.text(String(r.pc[k]),M+142,y);if(k===r.weak){font(1,8.5,K);doc.text('PRIORIDAD',M+152,y)}y+=7});y+=2}
   else P('Haz el diagnóstico del paso 1 para ver aquí tu nivel y tu área prioritaria.',{c:G});
   // Aprendizajes
-  if(D.ins.length){H('2 · Lo que has aprendido');D.ins.forEach(([k,v])=>KV(k,v))}
+  if(D.ins.length){H('2 · Lo que te llevas en tu caso');D.ins.forEach(([k,v])=>KV(k,v))}
   // Plan
   H('3 · Qué hacer las próximas cuatro semanas');
   if(D.objs.length){font(1,8.5,TT);need(8);doc.text('TUS OBJETIVOS A 90 DÍAS',M,y);y+=5.5;D.objs.forEach(o=>B(o));y+=2}
   D.weeks.forEach((w,i)=>{need(14);P('Semana '+(i+1),{b:1,s:11,gap:1.5});w.forEach(t=>B(t,{box:1}));y+=2});
   // Retos
-  H('4 · Tus retos del mes');
+  H('4 · Lo que te toca aplicar: tus retos del mes');
   P(`Cuenta el alcance de todo lo que publiques etiquetando a ${RETO.cuenta} hasta el ${RETO.finTexto}. Quien más consiga gana un diagnóstico de carrera y una asesoría 1:1.`,{c:G,gap:4});
   D.retos.forEach((x,i)=>{need(20);doc.setFillColor(...T);doc.circle(M+3.5,y-1.5,3.5,'F');font(1,10,[255,255,255]);doc.text(String(i+1),M+3.5,y-.2,{align:'center'});font(1,11,K);doc.text(clean(`Semana ${i+1} · ${x.t}`),M+10,y);y+=6.5;x.d.forEach(t=>B(t,{box:1,in:10}));y+=2.5});
   // Recursos
@@ -836,7 +869,7 @@ function go(id,push){
   if(id==='hoja')showCard();
   if(id==='herramientas')afterTool();
   if(push!==false&&location.hash!=='#'+id){try{history.replaceState(null,'','#'+id)}catch(e){location.hash=id}}
-  window.scrollTo(0,0);
+  window.scrollTo(0,0);acompana();
 }
 function afterCaso(){if(S.casoTab==='lucia')updLucia();if(S.casoTab==='marta')updMarta()}
 
@@ -862,6 +895,7 @@ document.addEventListener('change',e=>{
   if(t.dataset.prueba){S.prueba[t.dataset.prueba]=t.checked;save();updMitoCount()}
   if(t.dataset.plan!==undefined){S.plan[t.dataset.plan]=t.checked;save()}
 });
+document.addEventListener('click',()=>setTimeout(acompana,60));
 document.addEventListener('click',async e=>{
   const b=e.target.closest('button');if(!b)return;const d=b.dataset;
   if(d.intro!==undefined){introI=+d.intro;go('inicio');return}
