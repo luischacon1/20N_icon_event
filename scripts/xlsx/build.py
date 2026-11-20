@@ -145,7 +145,12 @@ guide(wb,'Plan de lanzamiento de un single',[
  ('p','2 · Asigna un responsable a cada tarea, aunque seas tú en todas.'),
  ('p','3 · Cambia el estado a «En curso» o «Hecho» según avances. Arriba verás el porcentaje completado.'),
  ('p','4 · Adapta las semanas: la columna «Semana» indica cuántas semanas antes (−) o después (+) de la salida va cada tarea.'),
- ('p','5 · En «Contactos» apunta playlists, medios, radios y salas a quienes vas a escribir, y cuándo lo hiciste.'),
+ ('p','5 · En «Contactos» apunta playlists, creadores, medios, radios y salas a quienes vas a escribir, y cuándo lo hiciste.'),
+ ('h','Sobre las playlists'),
+ ('i','Si estás empezando, no pagues por entrar en playlists. Antes, invierte en tu propio contenido orgánico.'),
+ ('p','Pagar por una playlist va contra las normas de Spotify, suele traer escuchas vacías y te puede penalizar. Es lo que se explicó en el evento.'),
+ ('p','Sí puedes intentar entrar gratis: escribe a curadores independientes de tu género, de persona a persona.'),
+ ('p','Y no son solo playlists: pide a gente que use tu canción en sus vídeos, busca microcreadores a los que les guste tu música, prueba una tendencia con tu canción.'),
  ('h','Tres cosas que no se pueden dejar para el final'),
  ('p','Subir la canción a la distribuidora con margen: sin eso no hay pitch editorial ni pre-save.'),
  ('p','Dejar por escrito el reparto de autoría antes de publicar.'),
@@ -164,8 +169,8 @@ blocks=[('Canción',[('Grabación final',-8),('Mezcla',-7),('Máster',-6)]),
 ('Imagen',[('Sesión de fotos',-7),('Portada del single',-6),('Fotos de prensa',-6),('Rodaje de videoclip o visualizer',-5),('Adaptaciones para redes y cabeceras',-5),('Edición final de vídeo',-3)]),
 ('Papeles',[('Reparto de autoría por escrito y firmado',-6),('Créditos, letra y metadatos revisados',-5),('Registro de la obra en tu entidad de gestión (p. ej. SGAE)',-5),('Bio actualizada',-4),('Dosier de una página',-4)]),
 ('Distribución',[('Subir canción, portada y metadatos a la distribuidora',-4),('Pitch editorial en Spotify for Artists',-4),('Enlace de pre-save',-3),('Perfiles de artista al día (Spotify, Apple Music, YouTube)',-3)]),
-('Medios y playlists',[('Lista de contactos: playlists, medios, radios y salas',-5),('Envío a medios con enlace privado',-3),('Envío a curadores de playlists',-2),('Seguimiento a quien no ha contestado',-1)]),
-('Contenido',[('Concepto de campaña y cuenta atrás',-4),('Grabar 8-10 piezas de vídeo corto',-3),('Primer avance con llamada a guardar',-2),('Anuncio de fecha',-2),('Cuenta atrás diaria',-1),('Día de salida: enlace en bio y pieza principal',0),('Una pieza diaria los tres primeros días',0),('Compartir reacciones de la comunidad',1)]),
+('Medios y playlists',[('Lista de contactos: playlists, medios, radios y salas',-5),('Envío a medios con enlace privado',-3),('Escribir a curadores de playlists independientes (gratis, sin pagar)',-2),('Pedir a creadores y microinfluencers afines que usen tu canción en sus vídeos',-2),('Seguimiento a quien no ha contestado',-1)]),
+('Contenido',[('Concepto de campaña y cuenta atrás',-4),('Grabar 8-10 piezas de vídeo corto',-3),('Primer avance con llamada a guardar',-2),('Anuncio de fecha',-2),('Cuenta atrás diaria',-1),('Día de salida: enlace en bio y pieza principal',0),('Una pieza diaria los tres primeros días',0),('Probar una tendencia con tu canción',0),('Compartir los vídeos que otros hagan con tu canción',1)]),
 ('Medir',[('Revisar datos de la primera semana',1),('Amplificar solo lo que ha funcionado',1),('Apuntar tres aprendizajes',2)])]
 r=6;first=6
 for b,ts in blocks:
@@ -189,6 +194,7 @@ ws.conditional_formatting.add(f'E{first}:E{last}',FormulaRule(formula=[f'$E{firs
 ws.freeze_panes='B6'
 ws=wb.create_sheet('Contactos');base(ws,[14,28,24,26,13,30,13,14,30])
 title(ws,'Contactos','A quién vas a escribir y en qué punto está cada conversación.')
+ws['A3']='No pagues por entrar en playlists: escribe gratis a curadores independientes. Apunta también creadores y microinfluencers que puedan usar tu canción en sus vídeos.';ws['A3'].font=F(size=10,bold=True,color=TEAL)
 head(ws,4,['Tipo','Nombre','Persona de contacto','Correo o perfil','Seguidores u oyentes','Enlace','Contactado el','Estado','Notas'])
 ex=['Playlist','Nombre de la playlist (ejemplo)','Nombre del curador','correo@ejemplo.com',12500,'https://…',datetime.date(2027,1,8),'Enviado','Le encajan temas de pop indie en español']
 for i in range(40):
@@ -198,7 +204,7 @@ for i in range(40):
         if i==0:c.value=ex[k-1]
         if k==5:c.number_format='#,##0'
         if k==7:c.number_format='dd/mm/yyyy'
-dv=DataValidation(type='list',formula1='"Playlist,Medio,Radio,Sala,Artista,Otro"',allow_blank=True);ws.add_data_validation(dv);dv.add('A5:A44')
+dv=DataValidation(type='list',formula1='"Playlist,Creador,Medio,Radio,Sala,Artista,Otro"',allow_blank=True);ws.add_data_validation(dv);dv.add('A5:A44')
 dv=DataValidation(type='list',formula1='"Por enviar,Enviado,Seguimiento,Sí,No"',allow_blank=True);ws.add_data_validation(dv);dv.add('H5:H44')
 ws.freeze_panes='A5'
 wb.save('ICON-plan-lanzamiento-single.xlsx')

@@ -404,3 +404,5 @@ h4.mini{margin:0 0 10px;font-family:var(--f-text);font-size:12px;letter-spacing:
 .carta:has(.iend.on) .il{opacity:1}
 .carta .iskip{margin-top:18px}
 .carta:has(.iend.on) .iskip{display:none}
+
+.dlc .uso.aviso{background:#fff6dd;border-radius:8px;padding:8px 10px;color:#5b4500!important}

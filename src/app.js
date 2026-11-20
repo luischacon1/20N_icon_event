@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795217098';
+import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795217215';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -585,8 +585,9 @@ function calRows(){
 }
 const DL={
   plan:{t:'Plan de lanzamiento de un single',f:'XLSX',href:'assets/descargas/plan-lanzamiento-single.xlsx',name:'ICON-plan-lanzamiento-single.xlsx',
-    d:()=>pf()==='profesional'?'Lleva el control del lanzamiento de un artista: 35 tareas con fechas, responsables y contactos.':'Tu lanzamiento semana a semana: 35 tareas con fechas, responsables y contactos.',
-    uso:'Cuando tengas fecha de salida: ponla en la hoja «Plan» y las fechas límite se calculan solas.'},
+    d:()=>pf()==='profesional'?'Lleva el control del lanzamiento de un artista: tareas con fechas, responsables y contactos.':'Tu lanzamiento semana a semana: tareas con fechas, responsables y contactos.',
+    uso:'Cuando tengas fecha de salida: ponla en la hoja «Plan» y las fechas límite se calculan solas.',
+    aviso:'Si estás empezando, no pagues por entrar en playlists: invierte antes en tu contenido orgánico. Escribe gratis a curadores independientes, y pide a creadores y microinfluencers que usen tu canción en sus vídeos.'},
   informe:{t:'Informe semanal de audiencia',f:'XLSX',href:'assets/descargas/informe-semanal-audiencia.xlsx',name:'ICON-informe-semanal-audiencia.xlsx',
     d:()=>`Seguidores, oyentes y alcance semana a semana. Suma solo el alcance de lo que publiques etiquetando a ${RETO.cuenta}.`,
     uso:'Cada lunes, diez minutos: apunta tus cifras y cada pieza publicada. Es tu marcador del reto.'},
@@ -594,7 +595,7 @@ const DL={
   cal:{t:'Calendario de contenidos · 4 semanas',d:()=>'Ideas, ganchos y fechas según tu perfil.',f:'XLSX',id:'dlCal',uso:'Cada domingo: elige las piezas de la semana y marca «Hecho» según publiques.'},
   hoja:{t:'Tu hoja de ruta',d:()=>'Tu plan del mes, tus retos y lo que has aprendido.',f:'PDF',id:'dlHoja2',uso:'Hoy: léela entera y pon la primera tarea en tu agenda.'}
 };
-const dlCard=(k,uso)=>{const x=DL[k];return `<div class="dlc"><span class="dlf">${x.f}</span><div><b>${x.t}</b><span>${x.d()}</span>${uso&&x.uso?`<span class="uso"><b>Cómo usarlo.</b> ${x.uso}</span>`:''}</div>${x.href?`<a class="btn sm" href="${x.href}" download="${x.name}">Descargar</a>`:`<button class="btn sm" id="${x.id}">Descargar</button>`}</div>`};
+const dlCard=(k,uso)=>{const x=DL[k];return `<div class="dlc"><span class="dlf">${x.f}</span><div><b>${x.t}</b><span>${x.d()}</span>${uso&&x.uso?`<span class="uso"><b>Cómo usarlo.</b> ${x.uso}</span>`:''}${x.aviso?`<span class="uso aviso"><b>Ojo con las playlists.</b> ${x.aviso}</span>`:''}</div>${x.href?`<a class="btn sm" href="${x.href}" download="${x.name}">Descargar</a>`:`<button class="btn sm" id="${x.id}">Descargar</button>`}</div>`};
 
 /* ---------- Herramientas: calendario, métricas y recursos ---------- */
 const MET_DEF={
