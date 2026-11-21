@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795219036';
+import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795219369';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -24,10 +24,24 @@ const vLabel={mito:'Mito',realidad:'Realidad',depende:'Depende'};
 const pf=()=>S.perfil||(S.mapa[0]===2?'profesional':'artista');
 const qText=q=>q.t||(pf()==='profesional'?q.p:q.a);
 
+/* ---------- Sonido (sintetizado, sin archivos). Se puede silenciar desde la cabecera ---------- */
+let AC=null;
+function audio(){if(S.sonido===0)return null;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}catch(e){return null}}
+function nota(c,f,t,d,tipo,g,f2){const o=c.createOscillator(),v=c.createGain();o.type=tipo||'sine';o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);
+  v.gain.setValueAtTime(0.0001,t);v.gain.exponentialRampToValueAtTime(g||.08,t+.012);v.gain.exponentialRampToValueAtTime(0.0001,t+d);o.connect(v).connect(c.destination);o.start(t);o.stop(t+d+.05)}
+function snd(k){const c=audio();if(!c||c.state!=='running')return;const t=c.currentTime+.02;
+  if(k==='tick')nota(c,880,t,.07,'sine',.035,620);
+  if(k==='tada')[523.25,659.25,783.99,1046.5].forEach((f,i)=>nota(c,f,t+i*.09,i===3?.7:.22,'triangle',.09));
+  if(k==='fanfarria'){[392,523.25,659.25,783.99].forEach((f,i)=>nota(c,f,t+i*.11,.2,'triangle',.1));[523.25,659.25,783.99,1046.5].forEach(f=>nota(c,f,t+.48,1.1,'triangle',.07));[2093,2637,3136].forEach((f,i)=>nota(c,f,t+.6+i*.08,.35,'sine',.03))}
+  if(k==='pum'){nota(c,160,t,.28,'sine',.35,45);nota(c,1318.5,t+.06,.5,'triangle',.06);nota(c,1975.5,t+.14,.45,'sine',.04)}
+}
+const ICO_SON='<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+const ICO_MUDO='<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+
 /* ---------- Ponentes ---------- */
 const rolDe=n=>(PONENTES[n]||{}).rol||'';
-const quien=n=>`<b>${esc(n)}</b>${rolDe(n)?`<span class="rol">${esc(rolDe(n))}</span>`:''}`;
-const ponentes=(titulo,ns)=>`<div class="pons"><div class="k">${titulo}</div>${ns.map(n=>`<div class="pon"><b>${esc(n)}</b><span class="rol">${esc(rolDe(n))}</span><p>${esc(PONENTES[n].bio)}</p></div>`).join('')}</div>`;
+const quien=n=>`${(PONENTES[n]||{}).foto?`<img class="av" src="${PONENTES[n].foto}" alt="" loading="lazy">`:''}<span class="qn"><b>${esc(n)}</b>${rolDe(n)?`<span class="rol">${esc(rolDe(n))}</span>`:''}</span>`;
+const ponentes=(titulo,ns)=>`<div class="pons"><div class="k">${titulo}</div>${ns.map(n=>`<div class="pon">${PONENTES[n].foto?`<img src="${PONENTES[n].foto}" alt="${esc(n)}" loading="lazy">`:''}<div><b>${esc(n)}</b><span class="rol">${esc(rolDe(n))}</span><p>${esc(PONENTES[n].bio)}</p></div></div>`).join('')}</div>`;
 
 /* ---------- Acompañamiento: frases que aparecen antes de cada ejercicio ---------- */
 const GUIA={
@@ -65,12 +79,12 @@ const MIN={diagnostico:10,mitos:10,casos:15,charlas:10,plan:5,hoja:5};
 const TOTAL_MIN=Object.values(MIN).reduce((x,y)=>x+y,0);
 function minQuedan(){return Object.entries(MIN).reduce((t,[id,m])=>t+(isDone(id)?0:m),0)}
 function rStamp(){const q=minQuedan();
-  $('#stamp').innerHTML=`<span class="timechip" title="Tiempo que te queda para completar el cuaderno"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v4l2.5 2M9 2h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>${q===0?'Completado':q===TOTAL_MIN?`${q} min`:`Te quedan ${q} min`}</span><button class="retochip" data-go="inicio" data-reto="1"><b>Reto 1:1</b> · ${retoQueda()}</button>`}
+  $('#stamp').innerHTML=`<button class="sndchip" id="sndBtn" aria-label="${S.sonido===0?'Activar sonido':'Silenciar'}" aria-pressed="${S.sonido!==0}">${S.sonido===0?ICO_MUDO:ICO_SON}</button><span class="timechip" title="Tiempo que te queda para completar el cuaderno"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v4l2.5 2M9 2h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>${q===0?'Completado':q===TOTAL_MIN?`${q} min`:`<span class="xh">Te quedan </span>${q} min`}</span><button class="retochip" data-go="inicio" data-reto="1"><b>Reto<span class="xh"> 1:1</span></b> · ${retoQueda()}</button>`}
 
 /* ---------- Reto ---------- */
 const RETO=CONFIG.reto;
 function retoDias(){const ms=new Date(RETO.fin)-new Date();return ms<=0?0:Math.ceil(ms/864e5)}
-function retoQueda(){const d=retoDias();return d===0?'Reto cerrado':d===1?'Último día':`Quedan ${d} días`}
+function retoQueda(){const d=retoDias();return d===0?'Reto cerrado':d===1?'Último día':`<span class="xh">Quedan </span>${d} días`}
 
 /* Enlaces a ICON con UTM para medir qué paso del cuaderno trae cada visita */
 function iconUrl(url,paso){try{const u=new URL(url);Object.entries(CONFIG.utm||{}).forEach(([k,v])=>u.searchParams.set(k,v));u.searchParams.set('utm_content',paso);return u.toString()}catch(e){return url}}
@@ -136,6 +150,7 @@ function rDiagRes(){
   updAreaProg();
   const r=diagScores(),el=$('#diagRes');if(!el)return;
   if(!r.done){el.innerHTML=`<p class="count" style="margin-top:14px">Llevas ${r.n} de ${QTOTAL} preguntas.</p>`;return}
+  if(!S.sonDiag){S.sonDiag=1;save();snd('tada')}
   const today=new Date().toISOString().slice(0,10);
   const prev=[...S.hist].reverse().find(h=>h.d!==today);
   el.innerHTML=`<div class="block"><div class="card ex">
@@ -380,7 +395,7 @@ function rHoja(){
   return `<div class="kick">Paso 6 · 5 minutos</div><h1 class="ph">Tu hoja de ruta</h1>
   ${guiaHtml([val('nombre')?`<b>${esc(val('nombre'))}</b>, esta es tu hoja de ruta.`:'Esta es tu hoja de ruta.','La hemos montado con todo lo que nos has contado, y es solo tuya.',r.done?`Partes de un nivel <b>${r.lv[1]}</b> y tu prioridad es <b>${AREAS[r.weak].l}</b>.`:null,'Recoge lo que deberías llevarte en tu caso y lo que te toca aplicar este mes.','Descárgala, léela entera y pon la primera tarea en tu agenda.'],'gbig')}
   ${r.done?'':'<p class="warn">Te falta el diagnóstico del paso 1. Sin él, tu hoja de ruta sale incompleta. <button class="linkbtn" data-go="diagnostico">Hacerlo ahora</button></p>'}
-  <div class="row" style="margin:14px 0 18px"><button class="btn xl" id="dlHoja">Descargar mi hoja de ruta en PDF</button><button class="btn alt" id="copyAll">Copiar como texto</button></div>
+  <div class="row" style="margin:14px 0 18px"><button class="btn xl" id="dlHoja">Descargar mi hoja de ruta <span class="xh">en PDF</span></button><button class="btn alt" id="copyAll">Copiar como texto</button></div>
   <div id="copyHost"></div>
   <div class="hgrid">
   <div class="sheet" id="sheet">
@@ -401,11 +416,12 @@ function rHoja(){
     <ol class="retos">${D.retos.map((x,i)=>`<li><b>Semana ${i+1} · ${x.t}</b>${x.d.map(t=>`<span>${esc(t)}</span>`).join('')}</li>`).join('')}</ol>
     ${val('teDirias')?`<h2>Lo que me digo hoy</h2><p style="color:var(--ink)">${esc(val('teDirias'))}</p>`:''}
   </div>
-  <aside class="hres"><h2>Tus recursos</h2><p class="sub">Descárgalos ahora. Los usarás durante el mes.</p>
+  <aside class="hres"><h2>Tus recursos</h2>${guiaHtml(['Esto es lo que te llevas para trabajar el mes.','Cada recurso tiene su momento: debajo te decimos cuándo usarlo.','Empieza por el informe de audiencia. Es tu marcador del reto.'])}
     <div class="dls">${['hoja','informe','cal','plan','dosier'].map(k=>dlCard(k,true)).join('')}</div></aside>
   </div>
 
-  <div class="block"><h2>Tus imágenes para stories</h2><p class="sub">Tres imágenes hechas con tus respuestas. Súbelas etiquetando a ${esc(RETO.cuenta)}: es tu primera acción del reto.</p>
+  ${guiaHtml(['Y ahora, lo primero que puedes hacer hoy mismo.','Tres imágenes hechas con tus respuestas, listas para tus historias.','Súbelas y ya has empezado el reto.'])}
+  <div class="block" style="margin-top:8px"><h2>Tus imágenes para stories</h2><p class="sub">Tres imágenes hechas con tus respuestas. Súbelas etiquetando a ${esc(RETO.cuenta)}: es tu primera acción del reto.</p>
     <div id="cardHost"><p class="count">Creando tus imágenes…</p></div>
     <div class="row" style="margin-top:6px"><button class="btn alt" id="mkCard">Actualizar las imágenes</button>${Object.keys(S.mito).length>1?'<button class="btn alt" id="nextMito">Otra frase en la de opinión</button>':''}</div>
     <p class="count" style="margin-top:8px">En el móvil, «Subir a Instagram» abre el menú de compartir con la imagen lista: elige Instagram y después Historia.</p></div>
@@ -620,7 +636,7 @@ async function dlHojaPdf(){
   need(38);y+=4;doc.setFillColor(...K);doc.roundedRect(M,y,W,30,3,3,'F');font(1,13,[255,255,255]);doc.text('Esto es la punta del iceberg',M+7,y+10);
   font(0,10,[211,220,218]);doc.text('Cuéntanos tu caso y vemos cómo llevarlo más lejos.',M+7,y+16.5);
   font(1,10.5,[63,210,199]);doc.textWithLink(clean(CONFIG.equipo.boton)+' >',M+7,y+24,{url:CONFIG.equipo.url});
-  foot();dl('ICON-mi-hoja-de-ruta.pdf',doc.output('blob'));
+  foot();dl('ICON-mi-hoja-de-ruta.pdf',doc.output('blob'));snd('pum');
 }
 
 const csv=rows=>'\ufeff'+rows.map(r=>r.map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
@@ -781,8 +797,8 @@ function introPlay(seen,onSeen){
   const L=[...box.querySelectorAll('.il')],end=box.querySelector('.iend');let k=0;
   const still=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const done=()=>{clearTimeout(introT);L.forEach(x=>{x.classList.add('on');x.classList.remove('now')});end.classList.add('on');onSeen()};
-  const step=()=>{clearTimeout(introT);if(k>=L.length){L.forEach(x=>x.classList.remove('now'));end.classList.add('on');onSeen();end.scrollIntoView({block:'nearest',behavior:'smooth'});return}
-    L.forEach(x=>x.classList.remove('now'));const el=L[k++];el.classList.add('on','now');el.scrollIntoView({block:'nearest',behavior:'smooth'});
+  const step=()=>{clearTimeout(introT);if(k>=L.length){L.forEach(x=>x.classList.remove('now'));end.classList.add('on');if(!box.classList.contains('puente'))snd('tada');onSeen();end.scrollIntoView({block:'nearest',behavior:'smooth'});return}
+    L.forEach(x=>x.classList.remove('now'));const el=L[k++];el.classList.add('on','now');snd('tick');el.scrollIntoView({block:'nearest',behavior:'smooth'});
     introT=setTimeout(step,850+el.textContent.length*26)};
   if(seen||still){done();return}
   if(box.classList.contains('puente'))box.onclick=e=>{if(e.target.closest('a,button'))return;step()};
@@ -815,9 +831,14 @@ const PUENTE={
     'Pequeño. Que puedas empezar mañana.']},
   plan(){return [
     'Ya está todo.',
-    'Tu diagnóstico, tus opiniones, tu caso y tu plan.',
-    'Lo hemos juntado en <b>una hoja de ruta para un mes</b>, con un reto por semana.',
-    `Descárgala. Y sal a la calle: cada pieza que etiquetes con ${esc(RETO.cuenta)} cuenta.`]}
+    'Hemos juntado tu diagnóstico, tus opiniones, tu caso y tu plan en <b>una hoja de ruta para un mes</b>.',
+    'Dentro vas a encontrar dónde estás y lo que te llevas en tu caso.',
+    'Después, qué hacer cada semana, con <b>un reto para cada una</b>.',
+    'Y al final, un consejo de cada ponente.',
+    'La descargas en PDF, con tu nombre.',
+    'Con ella van <b>cuatro plantillas</b>: para medir tu audiencia, planificar tu contenido, preparar un lanzamiento y presentarte en una página.',
+    'Cada una te dice cuándo usarla. No hace falta abrirlas todas hoy.',
+    `Descárgalo todo. Y sal a la calle: cada pieza que etiquetes con ${esc(RETO.cuenta)} cuenta.`]}
 };
 function puente(from,to){
   const i=STEPS.findIndex(s=>s[0]===to);S.puente=S.puente||{};S.puente[from]=1;save();
@@ -870,7 +891,7 @@ function autoPrograma(){
   const P=CONFIG.programa;if(!P.activo||!P.autoDescarga||S.progBajado)return;
   S.progBajado=1;save();
   try{const x=document.createElement('a');x.href=P.archivo;x.download=P.nombre;document.body.appendChild(x);x.click();x.remove()}catch(e){return}
-  toast('Te hemos descargado el programa formativo de ICON.');
+  toast('Te hemos descargado el programa formativo de ICON.');snd('pum');
   const m=$('#progMsg');if(m)m.textContent='El programa formativo se ha descargado. Si no lo ves, pulsa el botón.';
 }
 function softCta(id){
@@ -886,7 +907,7 @@ function go(id,push){
   if(id==='diagnostico'){rDiagRes();updBio();updPil()}
   if(id==='mitos')updMitoCount();
   if(id==='casos'){rMapaRes();afterCaso()}
-  if(id==='hoja')showCard();
+  if(id==='hoja'){showCard();if(!S.sonHoja){S.sonHoja=1;save();snd('fanfarria')}}
   if(id==='herramientas'){afterTool();autoPrograma()}
   if(push!==false&&location.hash!=='#'+id){try{history.replaceState(null,'','#'+id)}catch(e){location.hash=id}}
   window.scrollTo(0,0);acompana();
@@ -941,6 +962,7 @@ document.addEventListener('click',async e=>{
   if(d.mdel!==undefined){S.met[S.metTab].splice(+d.mdel,1);save();buildMet();return}
   if(b.id==='maddr'){S.met[S.metTab].push(JSON.parse(JSON.stringify(MET_DEF[S.metTab].blank)));save();buildMet();return}
   if(b.id==='mclr'){S.met[S.metTab]=[JSON.parse(JSON.stringify(MET_DEF[S.metTab].blank))];save();buildMet();return}
+  if(b.id==='sndBtn'){S.sonido=S.sonido===0?1:0;save();rStamp();if(S.sonido!==0)snd('tick');return}
   if(d.story!==undefined){subirStory(+d.story);return}
   if(b.id==='cgen'){genCal();return}
   if(b.id==='dlCal'||b.id==='dlHoja'||b.id==='dlHoja2'){const t=b.textContent;b.disabled=true;b.textContent='Preparando…';(b.id==='dlCal'?dlCalXlsx():dlHojaPdf()).catch(()=>{b.textContent='No se pudo crear';}).then(()=>{b.disabled=false;if(b.textContent==='Preparando…')b.textContent=t});return}

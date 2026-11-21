@@ -59,12 +59,12 @@ export const CONFIG = {
    ============================================================ */
 /* Quién es cada ponente. Se muestra allí donde se cita a alguien, para quien no estuvo en el evento. */
 export const PONENTES = {
-  'Anna Pavlyuk':{rol:'Estratega de contenido y crecimiento en redes', bio:'Hace crecer cuentas sin publicidad: millones de visualizaciones orgánicas para artistas, sellos y marcas.'},
-  'César Manzanera':{rol:'Fundador de Witis', bio:'Dirige Witis, agencia de comunicación especializada en música, tras más de diez años en agencias.'},
-  'Álvaro Rebollo':{rol:'Fundador de Los Amigos Digitales', bio:'Más de 15 años al frente del marketing digital y el streaming en BMG y Sony Music. Hoy dirige su propia agencia digital para música.'},
-  'María Muñoz':{rol:'Digital Marketing Manager en The Orchard', bio:'Ha trabajado en más de 150 lanzamientos de artistas y sellos.'},
-  'Ro Sánchez':{rol:'Brand & Product Manager en BASE85', bio:'Empezó como periodista musical y hoy desarrolla la carrera de artistas desde el management.'},
-  'Jorge Platero':{rol:'Comunicación y contenido digital en Movistar Arena', bio:'Forma parte del equipo de El Podcast del Movistar Arena, por donde pasan los artistas que actúan en el recinto.'}
+  'Anna Pavlyuk':{foto:'assets/fotos/p-anna.jpg', rol:'Estratega de contenido y crecimiento en redes', bio:'Hace crecer cuentas sin publicidad: millones de visualizaciones orgánicas para artistas, sellos y marcas.'},
+  'César Manzanera':{foto:'assets/fotos/p-cesar.jpg', rol:'Fundador de Witis', bio:'Dirige Witis, agencia de comunicación especializada en música, tras más de diez años en agencias.'},
+  'Álvaro Rebollo':{foto:'assets/fotos/p-alvaro.jpg', rol:'Fundador de Los Amigos Digitales', bio:'Más de 15 años al frente del marketing digital y el streaming en BMG y Sony Music. Hoy dirige su propia agencia digital para música.'},
+  'María Muñoz':{foto:'assets/fotos/p-maria.jpg', rol:'Digital Marketing Manager en The Orchard', bio:'Ha trabajado en más de 150 lanzamientos de artistas y sellos.'},
+  'Ro Sánchez':{foto:'assets/fotos/p-ro.jpg', rol:'Brand & Product Manager en BASE85', bio:'Empezó como periodista musical y hoy desarrolla la carrera de artistas desde el management.'},
+  'Jorge Platero':{foto:'assets/fotos/p-jorge.jpg', rol:'Comunicación y contenido digital en Movistar Arena', bio:'Forma parte del equipo de El Podcast del Movistar Arena, por donde pasan los artistas que actúan en el recinto.'}
 };
 
 /* Las frases que se debatieron en el evento. «dijeron» resume en nuestras palabras la postura de cada ponente. */

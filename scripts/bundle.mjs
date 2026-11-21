@@ -3,7 +3,7 @@ import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 const r=f=>readFileSync(new URL('../'+f,import.meta.url),'utf8');
 const MIME={pdf:'application/pdf',png:'image/png',xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',js:'text/javascript',jpg:'image/jpeg'};
 const uri=f=>'data:'+MIME[f.split('.').pop()]+';base64,'+readFileSync(new URL('../'+f,import.meta.url)).toString('base64');
-const FILES=['assets/logo-teal.png','assets/logo-light.png','assets/logo-dark.png','assets/descargas/plantilla-dosier.pdf','assets/descargas/plan-lanzamiento-single.xlsx','assets/descargas/informe-semanal-audiencia.xlsx','assets/vendor/exceljs.min.js','assets/vendor/jspdf.umd.min.js','assets/fotos/portada.jpg','assets/fotos/mesa.jpg','assets/fotos/ana.jpg','assets/fotos/alvaro.jpg','assets/fotos/maria.jpg'];
+const FILES=['assets/logo-teal.png','assets/logo-light.png','assets/logo-dark.png','assets/descargas/plantilla-dosier.pdf','assets/descargas/plan-lanzamiento-single.xlsx','assets/descargas/informe-semanal-audiencia.xlsx','assets/vendor/exceljs.min.js','assets/vendor/jspdf.umd.min.js','assets/fotos/portada.jpg','assets/fotos/mesa.jpg','assets/fotos/ana.jpg','assets/fotos/alvaro.jpg','assets/fotos/maria.jpg','assets/fotos/p-anna.jpg','assets/fotos/p-cesar.jpg','assets/fotos/p-alvaro.jpg','assets/fotos/p-maria.jpg','assets/fotos/p-ro.jpg','assets/fotos/p-jorge.jpg'];
 import {existsSync} from 'node:fs';
 const logos=Object.fromEntries(FILES.concat('assets/descargas/programa-formativo.pdf').filter(f=>existsSync(new URL('../'+f,import.meta.url))).map(f=>[f,uri(f)]));
 const inl=s=>Object.entries(logos).reduce((a,[k,v])=>a.split(k).join(v),s);

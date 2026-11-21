@@ -441,3 +441,36 @@ h4.mini{margin:0 0 10px;font-family:var(--f-text);font-size:12px;letter-spacing:
 .cta a.ctabtn.alt{background:transparent;color:var(--on-teal);border:2px solid var(--on-teal)}
 #toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);background:#141615;color:#fff;padding:13px 18px;border-radius:12px;font-weight:700;font-size:15px;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;z-index:50;max-width:calc(100vw - 32px);text-align:center}
 #toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* Sonido */
+.sndchip{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);color:var(--teal-text);padding:0}
+.sndchip[aria-pressed="false"]{color:var(--muted)}
+
+/* Móvil */
+.timechip,.retochip{min-height:40px}
+.st{min-height:44px}.chip{min-height:44px}
+.savebox textarea,.irec textarea{font-size:16px}
+.tabsbar{background:color-mix(in srgb,var(--paper) 88%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.guia.gbig p{transition-duration:.4s}
+@media (max-width:560px){
+  .xh{display:none}
+  .top{flex-wrap:nowrap!important;gap:8px;padding:12px 0 6px}
+  .logo img{height:30px}
+  .stamp{flex-wrap:nowrap;gap:5px}
+  .timechip,.retochip{padding:6px 10px;font-size:12.5px}
+  .sndchip{width:38px;height:38px}
+  .btn.xl{width:100%}
+  .nav{gap:8px}.nav .btn{flex:1;min-width:0;white-space:normal}
+  .cards figure{flex-basis:62%}
+}
+
+/* Retratos de ponentes */
+.pon{display:flex;gap:12px;align-items:flex-start}
+.pon img{width:56px;height:56px;border-radius:50%;object-fit:cover;flex:none}
+.who{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.who .av{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none}
+.who .qn{display:block}
+@media (min-width:700px){.pon{flex-direction:column}}
+@media (max-width:380px){.logo img{height:26px}.timechip,.retochip{padding:6px 8px;font-size:12px}.stamp{gap:4px}}
+
+.who{flex-wrap:nowrap;align-items:flex-start}.who .qn{flex:1;min-width:0}.who .tag{flex:none;margin-top:2px}
