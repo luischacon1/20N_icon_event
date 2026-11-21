@@ -450,7 +450,14 @@ h4.mini{margin:0 0 10px;font-family:var(--f-text);font-size:12px;letter-spacing:
 .timechip,.retochip{min-height:40px}
 .st{min-height:44px}.chip{min-height:44px}
 .savebox textarea,.irec textarea{font-size:16px}
-.tabsbar{background:color-mix(in srgb,var(--paper) 88%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+/* Barra de pasos: transparente en reposo; al quedar fija, una banda a todo el ancho de la pantalla */
+html{overflow-x:clip}
+.tabsbar{background:none;isolation:isolate}
+.tabsbar::before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);background:color-mix(in srgb,var(--paper) 90%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);opacity:0;transition:opacity .2s ease;pointer-events:none}
+.tabsbar.stuck::before{opacity:1}
+.steps{margin-inline:calc(50% - 50vw);padding:2px calc(50vw - 50%);scroll-padding-inline:calc(50vw - 50%);-webkit-mask-image:linear-gradient(to right,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%)}
+@media (min-width:900px){.tabsbar{margin-inline:-150px}.steps{justify-content:center;margin-inline:0;padding:2px;-webkit-mask-image:none;mask-image:none}}
+.iswide .tabsbar{margin-inline:0}
 .guia.gbig p{transition-duration:.4s}
 @media (max-width:560px){
   .xh{display:none}

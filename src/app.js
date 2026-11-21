@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795219369';
+import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795219976';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -390,53 +390,28 @@ function calLink(){
   return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Repetir el diagnóstico del Cuaderno ICON')}&dates=${f(d)}/${f(e)}&details=${encodeURIComponent(det)}`;
 }
 function rHoja(){
-  const D=hojaDoc(),r=D.r;const weeks=D.weeks;const mc=D.mc;
-  const back=new Date();back.setDate(back.getDate()+30);
+  const D=hojaDoc(),r=D.r;
   return `<div class="kick">Paso 6 · 5 minutos</div><h1 class="ph">Tu hoja de ruta</h1>
-  ${guiaHtml([val('nombre')?`<b>${esc(val('nombre'))}</b>, esta es tu hoja de ruta.`:'Esta es tu hoja de ruta.','La hemos montado con todo lo que nos has contado, y es solo tuya.',r.done?`Partes de un nivel <b>${r.lv[1]}</b> y tu prioridad es <b>${AREAS[r.weak].l}</b>.`:null,'Recoge lo que deberías llevarte en tu caso y lo que te toca aplicar este mes.','Descárgala, léela entera y pon la primera tarea en tu agenda.'],'gbig')}
+  ${guiaHtml([val('nombre')?`<b>${esc(val('nombre'))}</b>, esta es tu hoja de ruta.`:'Esta es tu hoja de ruta.','La hemos montado con lo que nos has contado, y es solo tuya.','Descárgala y pon la primera tarea en tu agenda.'],'gbig')}
   ${r.done?'':'<p class="warn">Te falta el diagnóstico del paso 1. Sin él, tu hoja de ruta sale incompleta. <button class="linkbtn" data-go="diagnostico">Hacerlo ahora</button></p>'}
-  <div class="row" style="margin:14px 0 18px"><button class="btn xl" id="dlHoja">Descargar mi hoja de ruta <span class="xh">en PDF</span></button><button class="btn alt" id="copyAll">Copiar como texto</button></div>
-  <div id="copyHost"></div>
+  <div class="row" style="margin:14px 0 18px"><button class="btn xl" id="dlHoja">Descargar mi hoja de ruta <span class="xh">en PDF</span></button></div>
   <div class="hgrid">
   <div class="sheet" id="sheet">
-    <div class="k" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700">${esc(val('nombre')||'Mi hoja de ruta')} · ${esc(CONFIG.eventName)} · ${esc(CONFIG.eventDate)}</div>
-    <h2>Quién soy</h2>${kv('Mi frase',bioText(),'diagnostico')}
-    <div class="two"><div><div class="k">Comparto</div>${list([val('si1'),val('si2'),val('si3')])}</div><div><div class="k">No comparto</div>${list([val('no1'),val('no2'),val('no3')])}</div></div>
-    ${kv('Mis temas',[[val('pil1'),val('pil2'),val('pil3')].filter(Boolean).join(' · '),S.pilFreq?`${S.pilFreq} publicaciones a la semana`:''].filter(Boolean).join(' · '),'plan')}
-    ${[1,2,3].some(i=>val('ref'+i))?`<div class="k" style="margin-top:6px">Mis referentes</div>${list([1,2,3].map(i=>val('ref'+i)&&(val('ref'+i)+(val('refQ'+i)?': '+val('refQ'+i):''))))}`:''}
-    <h2>Dónde estoy</h2>
-    ${r.done?`<p><b>${r.lv[1]}</b> · <span class="num">${r.total} sobre 100</span>. Área a trabajar: <b>${AREAS[r.weak].l}</b>.</p>`:'<p class="empty">Haz el diagnóstico del paso 1 para ver tu nivel.</p>'}
-    ${mc?`<p>Mi punto de partida se parece al de <b>${CASOS[mc].n}</b>.</p>`:''}
-    ${val('meLlevo')?kv('Lo que me llevo',val('meLlevo')):''}
-    ${D.ins.length?`<h2>Lo que te llevas en tu caso</h2>${D.ins.map(([k,v])=>`<div class="kv"><div class="k">${k}</div><div class="v">${esc(v)}</div></div>`).join('')}`:''}
-    <h2>Mis objetivos a 90 días</h2>${list([1,2,3].map(i=>val('obj'+i)&&(val('obj'+i)+(val('objM'+i)?` (lo mido con: ${val('objM'+i)})`:''))))}
-    <h2>Mis próximas cuatro semanas</h2>
-    <div class="wk">${weeks.map((w,i)=>`<div class="w4"><div class="h">Semana ${i+1}</div>${w.map((t,j)=>`<label><input type="checkbox" data-plan="${i}-${j}" ${S.plan[i+'-'+j]?'checked':''}><span>${esc(t)}</span></label>`).join('')}</div>`).join('')}</div>
-    <h2>Lo que te toca aplicar: tus retos del mes</h2>
-    <ol class="retos">${D.retos.map((x,i)=>`<li><b>Semana ${i+1} · ${x.t}</b>${x.d.map(t=>`<span>${esc(t)}</span>`).join('')}</li>`).join('')}</ol>
-    ${val('teDirias')?`<h2>Lo que me digo hoy</h2><p style="color:var(--ink)">${esc(val('teDirias'))}</p>`:''}
+    <div class="k">Un resumen. El detalle completo va en el PDF.</div>
+    <h2>Dónde estás</h2>
+    ${r.done?`<p><b>${r.lv[1]}</b> · <span class="num">${r.total} sobre 100</span>. Tu prioridad: <b>${AREAS[r.weak].l}</b>.</p><p>${esc(INS_AREA[r.weak])}</p>`:'<p class="empty">Haz el diagnóstico del paso 1 para ver tu nivel.</p>'}
+    ${val('obj1')||val('paso1')?`<h2>A dónde vas</h2>${val('obj1')?kv('Tu objetivo a 90 días',val('obj1')):''}${val('paso1')?kv('Tu primer paso',val('paso1')+(S.pasoD1?` (${S.pasoD1})`:'')):''}`:''}
+    <h2>Tus retos del mes</h2>
+    <ol class="retos">${D.retos.map((x,i)=>`<li><b>Semana ${i+1} · ${x.t}</b><span>${esc(x.d[0])}</span></li>`).join('')}</ol>
   </div>
-  <aside class="hres"><h2>Tus recursos</h2>${guiaHtml(['Esto es lo que te llevas para trabajar el mes.','Cada recurso tiene su momento: debajo te decimos cuándo usarlo.','Empieza por el informe de audiencia. Es tu marcador del reto.'])}
-    <div class="dls">${['hoja','informe','cal','plan','dosier'].map(k=>dlCard(k,true)).join('')}</div></aside>
+  <aside class="hres"><h2>Tus recursos</h2><p class="sub">Cada uno tiene su momento. Empieza por el informe de audiencia: es tu marcador del reto.</p>
+    <div class="dls">${['informe','cal','plan','dosier'].map(k=>dlCard(k,true)).join('')}</div></aside>
   </div>
 
-  ${guiaHtml(['Y ahora, lo primero que puedes hacer hoy mismo.','Tres imágenes hechas con tus respuestas, listas para tus historias.','Súbelas y ya has empezado el reto.'])}
-  <div class="block" style="margin-top:8px"><h2>Tus imágenes para stories</h2><p class="sub">Tres imágenes hechas con tus respuestas. Súbelas etiquetando a ${esc(RETO.cuenta)}: es tu primera acción del reto.</p>
+  ${guiaHtml(['Y ahora, lo primero que puedes hacer hoy mismo.','Súbelas a tus historias y ya has empezado el reto.'])}
+  <div class="block" style="margin-top:8px"><h2>Tus imágenes para historias</h2>
     <div id="cardHost"><p class="count">Creando tus imágenes…</p></div>
-    <div class="row" style="margin-top:6px"><button class="btn alt" id="mkCard">Actualizar las imágenes</button>${Object.keys(S.mito).length>1?'<button class="btn alt" id="nextMito">Otra frase en la de opinión</button>':''}</div>
-    <p class="count" style="margin-top:8px">En el móvil, «Subir a Instagram» abre el menú de compartir con la imagen lista: elige Instagram y después Historia.</p></div>
-
-  <div class="block"><div class="card ex savebox"><div class="exn">Importante</div><h3>Guarda una copia de tu cuaderno</h3>
-    <p>Todo lo que escribes se guarda en este navegador. Si cambias de móvil, borras el historial o lo abres en modo incógnito, se pierde.</p>
-    <ol class="how" style="margin:8px 0 0;padding-left:20px"><li>Pulsa el botón: se copia un texto largo que empieza por ICON1: y que contiene todas tus respuestas.</li><li>Pégalo en tus notas o mándatelo a ti por WhatsApp o por correo.</li><li>Para recuperarlo, abre el cuaderno en cualquier móvil u ordenador, ve al Inicio, toca "¿Ya empezaste en otro dispositivo?", pega el texto y pulsa Recuperar.</li></ol>
-    <div class="row" style="margin-top:12px"><button class="btn" id="copyCode">Copiar mi código de guardado</button></div><div id="codeHost"></div></div></div>
-
-  <div class="block"><div class="card ex"><div class="exn">Dentro de un mes</div><h3>Vuelve y compara</h3>
-    <p>Tu resultado de hoy queda guardado en tu cuaderno. Si el ${back.toLocaleDateString('es-ES',{day:'numeric',month:'long'})} abres este mismo enlace (o pegas tu código de guardado) y repites el paso 1, verás tu puntuación de hoy al lado de la nueva y sabrás cuánto has avanzado.</p>
-    
-    <div class="row"><a class="btn alt" href="${calLink()}" target="_blank" rel="noopener">Ponerme un recordatorio en Google Calendar</a></div></div></div>
-
-  <div class="block"><div class="card tocard"><div><h3 style="font-size:20px;margin-bottom:4px">Llévalo al día a día</h3><p style="margin:0">Calendario de contenidos, panel de métricas y lecturas para seguir aprendiendo.</p></div><button class="btn" data-go="herramientas">Ir a herramientas →</button></div></div>`;
+    ${Object.keys(S.mito).length>1?'<div class="row" style="margin-top:6px"><button class="btn alt sm" id="nextMito">Otra frase en la de opinión</button></div>':''}</div>`;
 }
 const INS_AREA={
   identidad:'Anna Pavlyuk lo resumió en tres preguntas: qué cuentas, a quién quieres llegar y por qué alguien debería quedarse.',
@@ -661,7 +636,7 @@ const DL={
   cal:{t:'Calendario de contenidos · 4 semanas',d:()=>'Ideas, ganchos y fechas según tu perfil.',f:'XLSX',id:'dlCal',uso:'Cada domingo: elige las piezas de la semana y marca «Hecho» según publiques.'},
   hoja:{t:'Tu hoja de ruta',d:()=>'Tu plan del mes, tus retos y lo que has aprendido.',f:'PDF',id:'dlHoja2',uso:'Hoy: léela entera y pon la primera tarea en tu agenda.'}
 };
-const dlCard=(k,uso)=>{const x=DL[k];return `<div class="dlc"><span class="dlf">${x.f}</span><div><b>${x.t}</b><span>${x.d()}</span>${uso&&x.uso?`<span class="uso"><b>Cómo usarlo.</b> ${x.uso}</span>`:''}${x.aviso?`<span class="uso aviso"><b>Ojo con las playlists.</b> ${x.aviso}</span>`:''}</div>${x.href?`<a class="btn sm" href="${x.href}" download="${x.name}">Descargar</a>`:`<button class="btn sm" id="${x.id}">Descargar</button>`}</div>`};
+const dlCard=(k,uso)=>{const x=DL[k];return `<div class="dlc"><span class="dlf">${x.f}</span><div><b>${x.t}</b>${uso&&x.uso?`<span>${x.uso}</span>`:`<span>${x.d()}</span>`}${x.aviso?`<span class="uso aviso"><b>Ojo con las playlists.</b> ${x.aviso}</span>`:''}</div>${x.href?`<a class="btn sm" href="${x.href}" download="${x.name}">Descargar</a>`:`<button class="btn sm" id="${x.id}">Descargar</button>`}</div>`};
 
 /* ---------- Herramientas: calendario, métricas y recursos ---------- */
 const MET_DEF={
@@ -859,9 +834,7 @@ function rInicio(){
     <div class="seg">${[['artista','Soy artista o productor'],['profesional','Soy otro profesional de la industria']].map(([v,l])=>`<button data-perfil="${v}" aria-pressed="${S.perfil===v}">${l}</button>`).join('')}</div>
     <div style="margin-top:22px;width:100%">${inp('nombre','Tu nombre o el de tu proyecto')}</div>
     <div class="row" style="margin-top:26px"><button class="btn" data-go="diagnostico">Empezar el diagnóstico →</button><button class="linkbtn" data-intro="0">Volver a leer la intro</button></div>
-    <details class="irec"><summary>¿Ya empezaste en otro dispositivo?</summary>
-      <textarea id="codeIn" placeholder="Pega tu código ICON1:…"></textarea>
-      <div class="row" style="margin-top:10px"><button class="btn alt sm" id="restore">Recuperar</button></div><p class="count" id="restoreMsg"></p></details></section>`;
+    </section>`;
 }
 function isDone(id){
   if(id==='diagnostico')return diagScores().done;
@@ -936,6 +909,8 @@ document.addEventListener('change',e=>{
   if(t.dataset.prueba){S.prueba[t.dataset.prueba]=t.checked;save();updMitoCount()}
   if(t.dataset.plan!==undefined){S.plan[t.dataset.plan]=t.checked;save()}
 });
+/* La banda de la barra de pasos solo aparece cuando la barra queda fija arriba */
+if('IntersectionObserver' in window){const tt=$('#tabsTop'),tb=$('#tabsbar');if(tt&&tb)new IntersectionObserver(([e])=>tb.classList.toggle('stuck',!e.isIntersecting&&e.boundingClientRect.top<0)).observe(tt)}
 document.addEventListener('click',()=>setTimeout(acompana,60));
 document.addEventListener('click',async e=>{
   const b=e.target.closest('button');if(!b)return;const d=b.dataset;
