@@ -1,4 +1,4 @@
-import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795219976';
+import {CONFIG,MITOS,CASOS,CHARLAS,CONSEJOS,PONENTES,RESOURCES,LECTURAS_ICON,CAL_WEEKS,CAL_CTA,CAL_DAYS,AREAS,TEST,AREA_INTRO,LIK,LEVELS,MAPA,CKEYS,LUCIA_CATS,DANI_OPTS,MARTA_OPTS,METAS,STEPS} from './content.js?v=1795220105';
 
 /* ---------- Estado ---------- */
 const KEY='icon-cuaderno-v2';
@@ -75,7 +75,7 @@ function acompana(){
 const $$q=s=>[...document.querySelectorAll(s)];
 
 /* ---------- Tiempo ---------- */
-const MIN={diagnostico:10,mitos:10,casos:15,charlas:10,plan:5,hoja:5};
+const MIN={diagnostico:10,mitos:6,casos:15,charlas:10,plan:5,hoja:5};
 const TOTAL_MIN=Object.values(MIN).reduce((x,y)=>x+y,0);
 function minQuedan(){return Object.entries(MIN).reduce((t,[id,m])=>t+(isDone(id)?0:m),0)}
 function rStamp(){const q=minQuedan();
@@ -169,7 +169,7 @@ function rDiagRes(){
 function mitoItems(){return MITOS.map(g=>({g:g.g,items:g.items.filter(m=>!CONFIG.soloDebatidas||m.dijeron.length)})).filter(g=>g.items.length)}
 function rMitos(){
   const all=mitoItems().flatMap(g=>g.items);
-  return `<div class="kick">Paso 2 · 10 minutos</div><h1 class="ph">Mito o realidad</h1>
+  return `<div class="kick">Paso 2 · 6 minutos</div><h1 class="ph">Mito o realidad</h1>
   <p class="lead">Las frases que se debatieron en el evento. Decide tú primero: al elegir verás qué dijo cada ponente y una prueba para hacer en tu cuenta.</p>
   ${ponentes('Quién las debatió',['Anna Pavlyuk','César Manzanera','Álvaro Rebollo'])}
   <p class="count" id="mitoCount"></p>
